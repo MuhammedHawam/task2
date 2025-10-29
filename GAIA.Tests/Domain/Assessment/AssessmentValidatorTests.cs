@@ -3,7 +3,7 @@ using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.Assessment.Validation;
 using Xunit;
 
-namespace GAIA.Domain.Tests;
+namespace GAIA.Tests.Domain.Assessment;
 
 public class AssessmentValidatorTests
 {
