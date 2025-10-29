@@ -58,16 +58,12 @@ var app = builder.Build();
 // Expose Swagger first to avoid any SPA fallback interfering
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger(c =>
-  {
-    // Serve JSON at a unique path unlikely to be intercepted by SPA middleware
-    c.RouteTemplate = "openapi/{documentName}/openapi.json";
-  });
+  // Standard Swagger UI at /swagger and spec at /swagger/v1/swagger.json
+  app.UseSwagger();
   app.UseSwaggerUI(c =>
   {
-    // Point UI to the exact JSON URL
-    c.SwaggerEndpoint("/openapi/v1/openapi.json", "GAIA API v1");
-    c.RoutePrefix = "docs"; // UI available at /docs
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "GAIA API v1");
+    c.RoutePrefix = "swagger";
   });
 }
 
