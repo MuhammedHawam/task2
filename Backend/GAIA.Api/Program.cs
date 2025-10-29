@@ -55,15 +55,19 @@ else
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-// Configure the HTTP request pipeline.
+// Expose Swagger first to avoid any SPA fallback interfering
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
-  app.UseSwaggerUI();
+  app.UseSwaggerUI(c =>
+  {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "GAIA API v1");
+    c.RoutePrefix = "swagger"; // UI at /swagger
+  });
 }
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseExceptionHandler();
 app.UseAuthorization();
