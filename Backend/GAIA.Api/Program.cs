@@ -6,6 +6,7 @@ using GAIA.Infra.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -17,6 +18,12 @@ builder.Services.AddSwaggerGen(options =>
 {
   options.EnableAnnotations();
   options.SupportNonNullableReferenceTypes();
+  options.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Title = "GAIA API",
+    Version = "v1",
+    Description = "GAIA backend HTTP API"
+  });
 
   var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
   var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
