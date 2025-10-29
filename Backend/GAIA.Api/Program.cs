@@ -1,4 +1,5 @@
 using FluentValidation.AspNetCore;
+using System.Reflection;
 using GAIA.Core.Interfaces.Chat;
 using GAIA.Core.Services.Chat;
 using GAIA.Infra.Configurations;
@@ -10,7 +11,16 @@ var configuration = builder.Configuration;
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+  // Include XML comments to enrich the OpenAPI/Swagger docs
+  var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+  var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+  if (File.Exists(xmlPath))
+  {
+    options.IncludeXmlComments(xmlPath);
+  }
+});
 builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection"));
