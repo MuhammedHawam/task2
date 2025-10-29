@@ -5,8 +5,8 @@ namespace GAIA.Domain.Assessment.Entities
   public class Assessment
   {
     public Guid Id { get; set; } // Primary Key
-    public string Title { get; set; }
-    public string Description { get; set; }
+    public required string Title { get; set; }
+    public required string Description { get; set; }
     public DateTime CreatedAt { get; set; }
     public Guid CreatedBy { get; set; }
     public Guid FrameworkId { get; set; } // Foreign Key to Framework

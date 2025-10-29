@@ -1,9 +1,11 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using GAIA.Core.Interfaces.Chat;
 using GAIA.Core.Services.Chat;
 using GAIA.Infra.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -24,6 +26,13 @@ builder.Services.AddSwaggerGen(options =>
   }
 });
 builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<GAIA.Api.Contracts.Validation.CreateAssessmentRequestValidator>();
+// Use automatic 400 responses for invalid ModelState via [ApiController]
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+  options.SuppressModelStateInvalidFilter = false;
+});
+builder.Services.AddProblemDetails();
 
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection"));
 
@@ -49,6 +58,7 @@ if (app.Environment.IsDevelopment())
   app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
 app.UseAuthorization();
 
 app.MapControllers();

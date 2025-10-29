@@ -1,4 +1,3 @@
-using FluentValidation;
 using GAIA.Api.Contracts;
 using GAIA.Core.Commands.Assessment;
 using MediatR;
@@ -11,25 +10,15 @@ namespace GAIA.Api.Controllers;
 public class AssessmentsController : ControllerBase
 {
   private readonly ISender _sender;
-  private readonly IValidator<CreateAssessmentRequest> _validator;
 
-  public AssessmentsController(ISender sender, IValidator<CreateAssessmentRequest> validator)
+  public AssessmentsController(ISender sender)
   {
     _sender = sender;
-    _validator = validator;
   }
 
   [HttpPost]
   public async Task<ActionResult<object>> Create([FromBody] CreateAssessmentRequest request, CancellationToken cancellationToken)
   {
-    var validation = await _validator.ValidateAsync(request);
-    if (!validation.IsValid)
-    {
-      return BadRequest(new
-      {
-        errors = validation.Errors.Select(e => new { field = e.PropertyName, message = e.ErrorMessage })
-      });
-    }
     var result = await _sender.Send(new CreateAssessmentCommand(
         request.Title,
         request.Description,
