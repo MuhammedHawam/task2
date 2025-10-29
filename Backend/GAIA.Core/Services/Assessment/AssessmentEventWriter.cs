@@ -15,10 +15,19 @@ namespace GAIA.Core.Services.Assessment
 
     public async Task<Guid> CreateAsync(AssessmentCreated @event, CancellationToken cancellationToken)
     {
-      var streamId = @event.Id != Guid.Empty ? @event.Id : Guid.NewGuid();
-      _session.Events.StartStream<Domain.Assessment.Entities.Assessment>(streamId, @event);
+      if (@event is null)
+      {
+        throw new System.ArgumentNullException(nameof(@event));
+      }
+
+      if (@event.Id == Guid.Empty)
+      {
+        throw new System.ArgumentException("AssessmentCreated.Id must be set by the handler.", nameof(@event.Id));
+      }
+
+      _session.Events.StartStream<Domain.Assessment.Entities.Assessment>(@event.Id, @event);
       await _session.SaveChangesAsync(cancellationToken);
-      return streamId;
+      return @event.Id;
     }
   }
 }
