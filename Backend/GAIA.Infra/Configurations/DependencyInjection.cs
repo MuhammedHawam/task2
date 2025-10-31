@@ -1,5 +1,7 @@
+using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Interfaces.Assessment;
 using GAIA.Core.Services.Assessment;
+using GAIA.Core.Services.Configuration;
 using GAIA.Domain.Assessment.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.Framework.DomainEvents;
@@ -26,6 +28,8 @@ namespace GAIA.Infra.Configurations
         options.Schema.For<Framework>();
         options.Schema.For<FrameworkNode>();
         options.Schema.For<Assessment>();
+        options.Schema.For<AssessmentDepth>();
+        options.Schema.For<AssessmentScoring>();
         options.Schema.For<InsightContent>();
 
         // Enable event sourcing if needed
@@ -41,6 +45,7 @@ namespace GAIA.Infra.Configurations
       }).UseLightweightSessions()
       .ApplyAllDatabaseChangesOnStartup();
 
+      services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
       services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
       services.AddMediatR(cfg =>
       cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));

@@ -17,7 +17,9 @@ public class AssessmentValidatorTests
       Description = "Annual security posture review.",
       CreatedAt = DateTime.UtcNow,
       CreatedBy = Guid.NewGuid(),
-      FrameworkId = Guid.NewGuid()
+      FrameworkId = Guid.NewGuid(),
+      AssessmentDepthId = Guid.NewGuid(),
+      AssessmentScoringId = Guid.NewGuid()
     };
 
     var validator = new AssessmentValidator();
@@ -37,7 +39,9 @@ public class AssessmentValidatorTests
       Description = "Desc",
       CreatedAt = DateTime.UtcNow,
       CreatedBy = Guid.NewGuid(),
-      FrameworkId = Guid.NewGuid()
+      FrameworkId = Guid.NewGuid(),
+      AssessmentDepthId = Guid.NewGuid(),
+      AssessmentScoringId = Guid.NewGuid()
     };
 
     var validator = new AssessmentValidator();
@@ -58,7 +62,9 @@ public class AssessmentValidatorTests
       Description = "Desc",
       CreatedAt = DateTime.UtcNow,
       CreatedBy = Guid.NewGuid(),
-      FrameworkId = Guid.Empty
+      FrameworkId = Guid.Empty,
+      AssessmentDepthId = Guid.NewGuid(),
+      AssessmentScoringId = Guid.NewGuid()
     };
 
     var validator = new AssessmentValidator();
@@ -79,7 +85,9 @@ public class AssessmentValidatorTests
       Description = "Desc",
       CreatedAt = DateTime.UtcNow,
       CreatedBy = Guid.Empty,
-      FrameworkId = Guid.NewGuid()
+      FrameworkId = Guid.NewGuid(),
+      AssessmentDepthId = Guid.NewGuid(),
+      AssessmentScoringId = Guid.NewGuid()
     };
 
     var validator = new AssessmentValidator();
@@ -88,5 +96,51 @@ public class AssessmentValidatorTests
 
     Assert.False(result.IsValid);
     Assert.Contains(result.Errors, e => e.PropertyName == nameof(Assessment.CreatedBy));
+  }
+
+  [Fact]
+  public void Validate_Fails_WhenAssessmentDepthIdEmpty()
+  {
+    var entity = new Assessment
+    {
+      Id = Guid.NewGuid(),
+      Title = "Title",
+      Description = "Desc",
+      CreatedAt = DateTime.UtcNow,
+      CreatedBy = Guid.NewGuid(),
+      FrameworkId = Guid.NewGuid(),
+      AssessmentDepthId = Guid.Empty,
+      AssessmentScoringId = Guid.NewGuid()
+    };
+
+    var validator = new AssessmentValidator();
+
+    var result = validator.Validate(entity);
+
+    Assert.False(result.IsValid);
+    Assert.Contains(result.Errors, e => e.PropertyName == nameof(Assessment.AssessmentDepthId));
+  }
+
+  [Fact]
+  public void Validate_Fails_WhenAssessmentScoringIdEmpty()
+  {
+    var entity = new Assessment
+    {
+      Id = Guid.NewGuid(),
+      Title = "Title",
+      Description = "Desc",
+      CreatedAt = DateTime.UtcNow,
+      CreatedBy = Guid.NewGuid(),
+      FrameworkId = Guid.NewGuid(),
+      AssessmentDepthId = Guid.NewGuid(),
+      AssessmentScoringId = Guid.Empty
+    };
+
+    var validator = new AssessmentValidator();
+
+    var result = validator.Validate(entity);
+
+    Assert.False(result.IsValid);
+    Assert.Contains(result.Errors, e => e.PropertyName == nameof(Assessment.AssessmentScoringId));
   }
 }

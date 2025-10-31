@@ -14,6 +14,8 @@ namespace GAIA.Infra.Projections
       assessment.CreatedAt = e.CreatedAt;
       assessment.CreatedBy = e.CreatedBy;
       assessment.FrameworkId = e.FrameworkId;
+      assessment.AssessmentDepthId = e.AssessmentDepthId;
+      assessment.AssessmentScoringId = e.AssessmentScoringId;
     }
   }
 }

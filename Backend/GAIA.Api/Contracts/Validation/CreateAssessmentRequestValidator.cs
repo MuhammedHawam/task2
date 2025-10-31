@@ -20,5 +20,11 @@ public class CreateAssessmentRequestValidator : AbstractValidator<CreateAssessme
 
     RuleFor(x => x.FrameworkId)
       .NotEmpty().WithMessage("FrameworkId must be a non-empty GUID.");
+
+    RuleFor(x => x.AssessmentDepthId)
+      .NotEmpty().WithMessage("AssessmentDepthId must be a non-empty GUID.");
+
+    RuleFor(x => x.AssessmentScoringId)
+      .NotEmpty().WithMessage("AssessmentScoringId must be a non-empty GUID.");
   }
 }
