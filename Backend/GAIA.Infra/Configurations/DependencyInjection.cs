@@ -34,9 +34,9 @@ namespace GAIA.Infra.Configurations
         options.Events.AddEventType(typeof(AssessmentCreated));
         options.Events.AddEventType(typeof(InsightContentCreated));
 
-        // Configure projections (Snapshot projections for aggregates)
-        // Inline lifecycle to update document state within the same transaction      
-        options.Projections.Snapshot<AssessmentProjection>(SnapshotLifecycle.Inline);
+        // Configure projections for the Assessment aggregate using a SingleStream projection
+        // Inline lifecycle updates document state within the same transaction
+        options.Projections.Add<AssessmentProjection>(ProjectionLifecycle.Inline);
 
       }).UseLightweightSessions()
       .ApplyAllDatabaseChangesOnStartup();
