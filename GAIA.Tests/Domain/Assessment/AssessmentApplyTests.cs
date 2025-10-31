@@ -13,6 +13,8 @@ public class AssessmentApplyTests
     var id = Guid.NewGuid();
     var createdBy = Guid.NewGuid();
     var frameworkId = Guid.NewGuid();
+    var assessmentDepthId = Guid.NewGuid();
+    var assessmentScoringId = Guid.NewGuid();
 
     var @event = new AssessmentCreated
     {
@@ -21,7 +23,9 @@ public class AssessmentApplyTests
       Description = "Assess risk across systems",
       CreatedAt = DateTime.UtcNow,
       CreatedBy = createdBy,
-      FrameworkId = frameworkId
+      FrameworkId = frameworkId,
+      AssessmentDepthId = assessmentDepthId,
+      AssessmentScoringId = assessmentScoringId
     };
 
     var assessment = new Assessment();
@@ -34,5 +38,7 @@ public class AssessmentApplyTests
     Assert.Equal(@event.CreatedAt, assessment.CreatedAt);
     Assert.Equal(@event.CreatedBy, assessment.CreatedBy);
     Assert.Equal(@event.FrameworkId, assessment.FrameworkId);
+    Assert.Equal(@event.AssessmentDepthId, assessment.AssessmentDepthId);
+    Assert.Equal(@event.AssessmentScoringId, assessment.AssessmentScoringId);
   }
 }
