@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,29 +7,63 @@ using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Configuration.Models;
 using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.Framework.Entities;
+using Marten;
 
 namespace GAIA.Core.Services.Configuration
 {
   public class AssessmentConfigurationService : IAssessmentConfigurationService
   {
-    private readonly IAssessmentConfigurationDataSource _dataSource;
+    private readonly IDocumentSession? _session;
+    private readonly IReadOnlyList<Framework>? _frameworkOverrides;
+    private readonly IReadOnlyList<AssessmentDepth>? _depthOverrides;
+    private readonly IReadOnlyList<AssessmentScoring>? _scoringOverrides;
 
-    public AssessmentConfigurationService(IAssessmentConfigurationDataSource dataSource)
+    public AssessmentConfigurationService(IDocumentSession session)
     {
-      _dataSource = dataSource;
+      _session = session ?? throw new ArgumentNullException(nameof(session));
+    }
+
+    // Constructor used for unit testing to inject in-memory data instead of a Marten session
+    public AssessmentConfigurationService(
+      IReadOnlyList<Framework> frameworks,
+      IReadOnlyList<AssessmentDepth> assessmentDepths,
+      IReadOnlyList<AssessmentScoring> assessmentScorings)
+    {
+      _session = null;
+      _frameworkOverrides = frameworks ?? throw new ArgumentNullException(nameof(frameworks));
+      _depthOverrides = assessmentDepths ?? throw new ArgumentNullException(nameof(assessmentDepths));
+      _scoringOverrides = assessmentScorings ?? throw new ArgumentNullException(nameof(assessmentScorings));
     }
 
     public async Task<AssessmentConfigurationOptions> GetOptionsAsync(CancellationToken cancellationToken)
     {
-      var frameworksTask = _dataSource.GetFrameworksAsync(cancellationToken);
-      var depthsTask = _dataSource.GetAssessmentDepthsAsync(cancellationToken);
-      var scoringsTask = _dataSource.GetAssessmentScoringsAsync(cancellationToken);
+      IReadOnlyList<Framework> frameworks;
+      IReadOnlyList<AssessmentDepth> depths;
+      IReadOnlyList<AssessmentScoring> scorings;
 
-      await Task.WhenAll(frameworksTask, depthsTask, scoringsTask);
+      if (_frameworkOverrides is not null && _depthOverrides is not null && _scoringOverrides is not null)
+      {
+        frameworks = _frameworkOverrides;
+        depths = _depthOverrides;
+        scorings = _scoringOverrides;
+      }
+      else
+      {
+        if (_session is null)
+        {
+          throw new InvalidOperationException("AssessmentConfigurationService requires a valid session when overrides are not provided.");
+        }
 
-      var frameworks = frameworksTask.Result;
-      var depths = depthsTask.Result;
-      var scorings = scoringsTask.Result;
+        var frameworksTask = _session.Query<Framework>().ToListAsync(cancellationToken);
+        var depthsTask = _session.Query<AssessmentDepth>().ToListAsync(cancellationToken);
+        var scoringsTask = _session.Query<AssessmentScoring>().ToListAsync(cancellationToken);
+
+        await Task.WhenAll(frameworksTask, depthsTask, scoringsTask);
+
+        frameworks = frameworksTask.Result;
+        depths = depthsTask.Result;
+        scorings = scoringsTask.Result;
+      }
 
       var depthsLookup = depths
         .GroupBy(d => d.FrameworkId)

@@ -1,9 +1,7 @@
 using System;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Services.Configuration;
 using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.Framework.Entities;
@@ -23,26 +21,27 @@ namespace GAIA.Tests.Core.Configuration
       var depthAlphaBId = Guid.NewGuid();
       var depthZetaId = Guid.NewGuid();
 
-      var dataSource = new FakeConfigurationDataSource(
-        new[]
-        {
-          new Framework { Id = frameworkZetaId, Title = "Zeta Framework" },
-          new Framework { Id = frameworkAlphaId, Title = "Alpha Framework" }
-        },
-        new[]
-        {
-          new AssessmentDepth { Id = depthAlphaBId, FrameworkId = frameworkAlphaId, Name = "B Depth" },
-          new AssessmentDepth { Id = depthAlphaAId, FrameworkId = frameworkAlphaId, Name = "A Depth" },
-          new AssessmentDepth { Id = depthZetaId, FrameworkId = frameworkZetaId, Name = "Research" }
-        },
-        new[]
-        {
-          new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthAlphaAId, Name = "Silver" },
-          new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthAlphaAId, Name = "Bronze" },
-          new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthZetaId, Name = "Gold" }
-        });
+      var frameworks = new List<Framework>
+      {
+        new Framework { Id = frameworkZetaId, Title = "Zeta Framework" },
+        new Framework { Id = frameworkAlphaId, Title = "Alpha Framework" }
+      };
 
-      var service = new AssessmentConfigurationService(dataSource);
+      var depths = new List<AssessmentDepth>
+      {
+        new AssessmentDepth { Id = depthAlphaBId, FrameworkId = frameworkAlphaId, Name = "B Depth" },
+        new AssessmentDepth { Id = depthAlphaAId, FrameworkId = frameworkAlphaId, Name = "A Depth" },
+        new AssessmentDepth { Id = depthZetaId, FrameworkId = frameworkZetaId, Name = "Research" }
+      };
+
+      var scorings = new List<AssessmentScoring>
+      {
+        new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthAlphaAId, Name = "Silver" },
+        new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthAlphaAId, Name = "Bronze" },
+        new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthZetaId, Name = "Gold" }
+      };
+
+      var service = new AssessmentConfigurationService(frameworks, depths, scorings);
 
       var result = await service.GetOptionsAsync(CancellationToken.None);
 
@@ -80,30 +79,5 @@ namespace GAIA.Tests.Core.Configuration
         });
     }
 
-    private sealed class FakeConfigurationDataSource : IAssessmentConfigurationDataSource
-    {
-      private readonly IReadOnlyList<Framework> _frameworks;
-      private readonly IReadOnlyList<AssessmentDepth> _assessmentDepths;
-      private readonly IReadOnlyList<AssessmentScoring> _assessmentScorings;
-
-      public FakeConfigurationDataSource(
-        IReadOnlyList<Framework> frameworks,
-        IReadOnlyList<AssessmentDepth> assessmentDepths,
-        IReadOnlyList<AssessmentScoring> assessmentScorings)
-      {
-        _frameworks = frameworks;
-        _assessmentDepths = assessmentDepths;
-        _assessmentScorings = assessmentScorings;
-      }
-
-      public Task<IReadOnlyList<Framework>> GetFrameworksAsync(CancellationToken cancellationToken)
-        => Task.FromResult(_frameworks);
-
-      public Task<IReadOnlyList<AssessmentDepth>> GetAssessmentDepthsAsync(CancellationToken cancellationToken)
-        => Task.FromResult(_assessmentDepths);
-
-      public Task<IReadOnlyList<AssessmentScoring>> GetAssessmentScoringsAsync(CancellationToken cancellationToken)
-        => Task.FromResult(_assessmentScorings);
-    }
   }
 }
