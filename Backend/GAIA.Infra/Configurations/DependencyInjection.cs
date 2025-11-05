@@ -46,6 +46,7 @@ namespace GAIA.Infra.Configurations
         }).UseLightweightSessions()
           .ApplyAllDatabaseChangesOnStartup();
 
+        services.AddScoped<IAssessmentConfigurationDataSource, MartenAssessmentConfigurationDataSource>();
         services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
         services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
         services.AddHostedService<AssessmentConfigurationSeedService>();

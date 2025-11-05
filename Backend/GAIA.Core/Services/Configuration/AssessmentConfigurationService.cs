@@ -6,24 +6,23 @@ using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Configuration.Models;
 using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.Framework.Entities;
-using Marten;
 
 namespace GAIA.Core.Services.Configuration
 {
   public class AssessmentConfigurationService : IAssessmentConfigurationService
   {
-    private readonly IDocumentSession _session;
+    private readonly IAssessmentConfigurationDataSource _dataSource;
 
-    public AssessmentConfigurationService(IDocumentSession session)
+    public AssessmentConfigurationService(IAssessmentConfigurationDataSource dataSource)
     {
-      _session = session;
+      _dataSource = dataSource;
     }
 
     public async Task<AssessmentConfigurationOptions> GetOptionsAsync(CancellationToken cancellationToken)
     {
-      var frameworksTask = _session.Query<Framework>().ToListAsync(cancellationToken);
-      var depthsTask = _session.Query<AssessmentDepth>().ToListAsync(cancellationToken);
-      var scoringsTask = _session.Query<AssessmentScoring>().ToListAsync(cancellationToken);
+      var frameworksTask = _dataSource.GetFrameworksAsync(cancellationToken);
+      var depthsTask = _dataSource.GetAssessmentDepthsAsync(cancellationToken);
+      var scoringsTask = _dataSource.GetAssessmentScoringsAsync(cancellationToken);
 
       await Task.WhenAll(frameworksTask, depthsTask, scoringsTask);
 
