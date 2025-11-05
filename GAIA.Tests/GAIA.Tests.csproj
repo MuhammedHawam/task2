@@ -18,6 +18,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Backend\GAIA.Api\GAIA.Api.csproj" />
+    <ProjectReference Include="..\Backend\GAIA.Core\GAIA.Core.csproj" />
     <ProjectReference Include="..\Backend\GAIA.Domain\GAIA.Domain.csproj" />
   </ItemGroup>
 </Project>
