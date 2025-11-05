@@ -6,7 +6,9 @@ namespace GAIA.Core.Commands.Assessment
      string Title,
      string Description,
      Guid CreatedBy,
-     Guid FrameworkId
+     Guid FrameworkId,
+     Guid AssessmentDepthId,
+     Guid AssessmentScoringId
  ) : IRequest<CreateAssessmentResult>;
 
   public record CreateAssessmentResult(Guid AssessmentId);

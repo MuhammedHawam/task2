@@ -23,7 +23,9 @@ public class CreateAssessmentCommandHandler : IRequestHandler<CreateAssessmentCo
       Description = request.Description,
       CreatedAt = DateTime.UtcNow,
       CreatedBy = request.CreatedBy,
-      FrameworkId = request.FrameworkId
+      FrameworkId = request.FrameworkId,
+      AssessmentDepthId = request.AssessmentDepthId,
+      AssessmentScoringId = request.AssessmentScoringId
     };
 
     var id = await _writer.CreateAsync(createdEvent, cancellationToken);
