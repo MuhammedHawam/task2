@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GAIA.Api.Contracts;
+using GAIA.Core.Assessment.Queries;
 using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Commands.Assessment;
+using GAIA.Domain.Assessment.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,11 +40,26 @@ public class AssessmentsController : ControllerBase
     return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, new { id = result.AssessmentId });
   }
 
-  [HttpGet("{id:guid}")]
-  public async Task<ActionResult<object>> GetById(Guid id, CancellationToken cancellationToken)
+  [HttpGet]
+  public async Task<ActionResult<IReadOnlyList<AssessmentResponse>>> GetAll(CancellationToken cancellationToken)
   {
-    // Placeholder to satisfy CreatedAtAction route; implemented later
-    return Ok(new { id });
+    var assessments = await _sender.Send(new GetAssessmentsQuery(), cancellationToken);
+    var response = assessments.Select(MapToResponse).ToList();
+
+    return Ok(response);
+  }
+
+  [HttpGet("{id:guid}")]
+  public async Task<ActionResult<AssessmentResponse>> GetById(Guid id, CancellationToken cancellationToken)
+  {
+    var assessment = await _sender.Send(new GetAssessmentByIdQuery(id), cancellationToken);
+
+    if (assessment is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(MapToResponse(assessment));
   }
 
   [HttpGet("configuration/options")]
@@ -69,4 +87,15 @@ public class AssessmentsController : ControllerBase
 
     return Ok(response);
   }
+
+  private static AssessmentResponse MapToResponse(Assessment assessment) => new(
+    assessment.Id,
+    assessment.Title,
+    assessment.Description,
+    assessment.CreatedAt,
+    assessment.CreatedBy,
+    assessment.FrameworkId,
+    assessment.AssessmentDepthId,
+    assessment.AssessmentScoringId
+  );
 }
