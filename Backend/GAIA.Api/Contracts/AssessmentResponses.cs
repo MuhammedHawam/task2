@@ -8,5 +8,21 @@ public record AssessmentResponse(
   Guid CreatedBy,
   Guid FrameworkId,
   Guid AssessmentDepthId,
-  Guid AssessmentScoringId
+  Guid AssessmentScoringId,
+  AssessmentDepthResponse? Depth,
+  AssessmentScoringResponse? Scoring
+);
+
+public record AssessmentDepthResponse(
+  Guid Id,
+  Guid FrameworkId,
+  string Name,
+  string? Description
+);
+
+public record AssessmentScoringResponse(
+  Guid Id,
+  Guid AssessmentDepthId,
+  string Name,
+  string? Description
 );
