@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GAIA.Api.Contracts;
+using GAIA.Api.Mappers;
 using GAIA.Core.Assessment.Queries;
 using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Commands.Assessment;
-using GAIA.Domain.Assessment.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +44,7 @@ public class AssessmentsController : ControllerBase
   public async Task<ActionResult<IReadOnlyList<AssessmentResponse>>> GetAll(CancellationToken cancellationToken)
   {
     var assessments = await _sender.Send(new GetAssessmentsQuery(), cancellationToken);
-    var response = assessments.Select(MapToResponse).ToList();
+    var response = assessments.Select(assessment => assessment.ToResponse()).ToList();
 
     return Ok(response);
   }
@@ -59,7 +59,7 @@ public class AssessmentsController : ControllerBase
       return NotFound();
     }
 
-    return Ok(MapToResponse(assessment));
+    return Ok(assessment.ToResponse());
   }
 
   [HttpGet("configuration/options")]
@@ -87,15 +87,4 @@ public class AssessmentsController : ControllerBase
 
     return Ok(response);
   }
-
-  private static AssessmentResponse MapToResponse(Assessment assessment) => new(
-    assessment.Id,
-    assessment.Title,
-    assessment.Description,
-    assessment.CreatedAt,
-    assessment.CreatedBy,
-    assessment.FrameworkId,
-    assessment.AssessmentDepthId,
-    assessment.AssessmentScoringId
-  );
 }
