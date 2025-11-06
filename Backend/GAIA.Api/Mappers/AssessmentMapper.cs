@@ -23,7 +23,7 @@ public static class AssessmentMapper
     depth.Id,
     depth.FrameworkId,
     depth.Name,
-    depth.Description
+    depth.Depth
   );
 
   private static AssessmentScoringResponse ToResponse(this AssessmentScoring scoring) => new(

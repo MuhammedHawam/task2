@@ -37,13 +37,13 @@ public class AssessmentsControllerTests
       AssessmentScoringId = scoringId
     };
 
-    var depth = new AssessmentDepth
-    {
-      Id = depthId,
-      FrameworkId = assessment.FrameworkId,
-      Name = "Advanced",
-      Description = "Deep dive across all domains"
-    };
+      var depth = new AssessmentDepth
+      {
+        Id = depthId,
+        FrameworkId = assessment.FrameworkId,
+        Name = "Advanced",
+        Depth = 2
+      };
 
     var scoring = new AssessmentScoring
     {
@@ -65,15 +65,16 @@ public class AssessmentsControllerTests
 
     // Assert
     var okResult = Assert.IsType<OkObjectResult>(result.Result);
-    var response = Assert.IsType<List<AssessmentResponse>>(okResult.Value);
-    var item = Assert.Single(response);
+      var response = Assert.IsType<List<AssessmentResponse>>(okResult.Value);
+      var item = Assert.Single(response);
 
-    Assert.Equal(assessmentId, item.Id);
-    Assert.Equal("Security Review", item.Title);
-    Assert.NotNull(item.Depth);
-    Assert.Equal(depthId, item.Depth!.Id);
-    Assert.NotNull(item.Scoring);
-    Assert.Equal(scoringId, item.Scoring!.Id);
+      Assert.Equal(assessmentId, item.Id);
+      Assert.Equal("Security Review", item.Title);
+      Assert.NotNull(item.Depth);
+      Assert.Equal(depthId, item.Depth!.Id);
+      Assert.Equal(2, item.Depth.Depth);
+      Assert.NotNull(item.Scoring);
+      Assert.Equal(scoringId, item.Scoring!.Id);
   }
 
   [Fact]
@@ -96,13 +97,13 @@ public class AssessmentsControllerTests
       AssessmentScoringId = scoringId
     };
 
-    var depth = new AssessmentDepth
-    {
-      Id = depthId,
-      FrameworkId = assessment.FrameworkId,
-      Name = "Baseline",
-      Description = "Initial readiness"
-    };
+      var depth = new AssessmentDepth
+      {
+        Id = depthId,
+        FrameworkId = assessment.FrameworkId,
+        Name = "Baseline",
+        Depth = 1
+      };
 
     var scoring = new AssessmentScoring
     {
@@ -125,14 +126,15 @@ public class AssessmentsControllerTests
 
     // Assert
     var okResult = Assert.IsType<OkObjectResult>(result.Result);
-    var response = Assert.IsType<AssessmentResponse>(okResult.Value);
+      var response = Assert.IsType<AssessmentResponse>(okResult.Value);
 
-    Assert.Equal(assessmentId, response.Id);
-    Assert.Equal("Privacy Review", response.Title);
-    Assert.NotNull(response.Depth);
-    Assert.Equal(depthId, response.Depth!.Id);
-    Assert.NotNull(response.Scoring);
-    Assert.Equal(scoringId, response.Scoring!.Id);
+      Assert.Equal(assessmentId, response.Id);
+      Assert.Equal("Privacy Review", response.Title);
+      Assert.NotNull(response.Depth);
+      Assert.Equal(depthId, response.Depth!.Id);
+      Assert.Equal(1, response.Depth.Depth);
+      Assert.NotNull(response.Scoring);
+      Assert.Equal(scoringId, response.Scoring!.Id);
   }
 
   [Fact]

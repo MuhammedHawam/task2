@@ -29,7 +29,8 @@ namespace GAIA.Infra.Configurations
         options.Schema.For<Framework>();
         options.Schema.For<FrameworkNode>();
         options.Schema.For<Assessment>();
-        options.Schema.For<AssessmentDepth>();
+        var assessmentDepth = options.Schema.For<AssessmentDepth>();
+        assessmentDepth.UniqueIndex(x => x.FrameworkId, x => x.Depth);
         options.Schema.For<AssessmentScoring>();
         options.Schema.For<InsightContent>();
 
@@ -43,14 +44,14 @@ namespace GAIA.Infra.Configurations
         // Inline lifecycle updates document state within the same transaction
         options.Projections.Add<AssessmentProjection>(ProjectionLifecycle.Inline);
 
-        }).UseLightweightSessions()
-          .ApplyAllDatabaseChangesOnStartup();
+      }).UseLightweightSessions()
+        .ApplyAllDatabaseChangesOnStartup();
 
-        services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
-        services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
-        services.AddHostedService<AssessmentConfigurationSeedService>();
-        services.AddMediatR(cfg =>
-          cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
+      services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
+      services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
+      services.AddHostedService<AssessmentConfigurationSeedService>();
+      services.AddMediatR(cfg =>
+        cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
     }
   }
 }
