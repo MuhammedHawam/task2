@@ -1,3 +1,4 @@
+using GAIA.Core.Assessment.Interfaces;
 using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Interfaces.Assessment;
 using GAIA.Core.Services.Assessment;
@@ -9,6 +10,7 @@ using GAIA.Domain.Framework.Entities;
 using GAIA.Domain.InsightContent.DomainEvents;
 using GAIA.Domain.InsightContent.Entities;
 using GAIA.Infra.Projections;
+using GAIA.Infra.Repositories;
 using GAIA.Infra.SeedData;
 using Marten;
 using Marten.Events.Projections;
@@ -47,6 +49,7 @@ namespace GAIA.Infra.Configurations
           .ApplyAllDatabaseChangesOnStartup();
 
         services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
+        services.AddScoped<IAssessmentRepository, AssessmentRepository>();
         services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
         services.AddHostedService<AssessmentConfigurationSeedService>();
         services.AddMediatR(cfg =>
