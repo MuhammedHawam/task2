@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GAIA.Api.Contracts;
+using GAIA.Api.Mappers;
+using GAIA.Core.Assessment.Queries;
 using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Commands.Assessment;
 using MediatR;
@@ -37,11 +40,26 @@ public class AssessmentsController : ControllerBase
     return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, new { id = result.AssessmentId });
   }
 
-  [HttpGet("{id:guid}")]
-  public async Task<ActionResult<object>> GetById(Guid id, CancellationToken cancellationToken)
+  [HttpGet]
+  public async Task<ActionResult<IReadOnlyList<AssessmentResponse>>> GetAll(CancellationToken cancellationToken)
   {
-    // Placeholder to satisfy CreatedAtAction route; implemented later
-    return Ok(new { id });
+    var assessments = await _sender.Send(new GetAssessmentsQuery(), cancellationToken);
+    var response = assessments.Select(assessment => assessment.ToResponse()).ToList();
+
+    return Ok(response);
+  }
+
+  [HttpGet("{id:guid}")]
+  public async Task<ActionResult<AssessmentResponse>> GetById(Guid id, CancellationToken cancellationToken)
+  {
+    var assessment = await _sender.Send(new GetAssessmentByIdQuery(id), cancellationToken);
+
+    if (assessment is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(assessment.ToResponse());
   }
 
   [HttpGet("configuration/options")]
