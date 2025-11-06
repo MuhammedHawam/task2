@@ -174,6 +174,12 @@ public class AssessmentsControllerTests
       return Task.FromResult(response is null ? default! : (TResponse)response);
     }
 
+    public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest
+    {
+      _responseFactory(request!, cancellationToken);
+      return Task.CompletedTask;
+    }
+
     public Task<object?> Send(object request, CancellationToken cancellationToken)
     {
       return Task.FromResult(_responseFactory(request, cancellationToken));
