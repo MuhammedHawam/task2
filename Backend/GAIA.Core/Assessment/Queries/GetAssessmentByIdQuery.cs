@@ -7,7 +7,15 @@ using MediatR;
 
 namespace GAIA.Core.Assessment.Queries;
 
-public record GetAssessmentByIdQuery(Guid AssessmentId) : IRequest<AssessmentDetails?>;
+public sealed class GetAssessmentByIdQuery : IRequest<AssessmentDetails?>
+{
+  public GetAssessmentByIdQuery(Guid assessmentId)
+  {
+    AssessmentId = assessmentId;
+  }
+
+  public Guid AssessmentId { get; }
+}
 
 public class GetAssessmentByIdQueryHandler : IRequestHandler<GetAssessmentByIdQuery, AssessmentDetails?>
 {

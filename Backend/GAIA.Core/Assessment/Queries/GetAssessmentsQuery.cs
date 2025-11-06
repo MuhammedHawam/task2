@@ -10,7 +10,9 @@ using MediatR;
 
 namespace GAIA.Core.Assessment.Queries;
 
-public record GetAssessmentsQuery() : IRequest<IReadOnlyList<AssessmentDetails>>;
+public sealed class GetAssessmentsQuery : IRequest<IReadOnlyList<AssessmentDetails>>
+{
+}
 
 public class GetAssessmentsQueryHandler : IRequestHandler<GetAssessmentsQuery, IReadOnlyList<AssessmentDetails>>
 {
