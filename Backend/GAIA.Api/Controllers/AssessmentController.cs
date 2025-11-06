@@ -76,6 +76,7 @@ public class AssessmentsController : ControllerBase
             .Select(depth => new AssessmentDepthOptionsDto(
               depth.Id,
               depth.Name,
+              depth.Depth,
               depth.AssessmentScorings
                 .Select(scoring => new AssessmentScoringOptionsDto(scoring.Id, scoring.Name))
                 .ToList()

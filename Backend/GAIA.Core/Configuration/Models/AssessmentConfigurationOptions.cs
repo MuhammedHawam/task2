@@ -14,6 +14,7 @@ namespace GAIA.Core.Configuration.Models
   public record AssessmentDepthOption(
     Guid Id,
     string Name,
+    int Depth,
     IReadOnlyList<AssessmentScoringOption> AssessmentScorings
   );
 

@@ -27,12 +27,12 @@ namespace GAIA.Tests.Core.Configuration
         new Framework { Id = frameworkAlphaId, Title = "Alpha Framework" }
       };
 
-      var depths = new List<AssessmentDepth>
-      {
-        new AssessmentDepth { Id = depthAlphaBId, FrameworkId = frameworkAlphaId, Name = "B Depth" },
-        new AssessmentDepth { Id = depthAlphaAId, FrameworkId = frameworkAlphaId, Name = "A Depth" },
-        new AssessmentDepth { Id = depthZetaId, FrameworkId = frameworkZetaId, Name = "Research" }
-      };
+        var depths = new List<AssessmentDepth>
+        {
+          new AssessmentDepth { Id = depthAlphaBId, FrameworkId = frameworkAlphaId, Name = "B Depth", Depth = 2 },
+          new AssessmentDepth { Id = depthAlphaAId, FrameworkId = frameworkAlphaId, Name = "A Depth", Depth = 1 },
+          new AssessmentDepth { Id = depthZetaId, FrameworkId = frameworkZetaId, Name = "Research", Depth = 1 }
+        };
 
       var scorings = new List<AssessmentScoring>
       {

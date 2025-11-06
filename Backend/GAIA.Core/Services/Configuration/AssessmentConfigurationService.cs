@@ -78,11 +78,13 @@ namespace GAIA.Core.Services.Configuration
         {
           var depthOptions = depthsLookup.TryGetValue(framework.Id, out var depthList)
             ? depthList
-                .OrderBy(depth => depth.Name)
+                .OrderBy(depth => depth.Depth)
+                .ThenBy(depth => depth.Name)
                 .Select(depth =>
                   new AssessmentDepthOption(
                     depth.Id,
                     depth.Name,
+                    depth.Depth,
                     scoringLookup.TryGetValue(depth.Id, out var scoringList)
                       ? scoringList
                           .OrderBy(scoring => scoring.Name)

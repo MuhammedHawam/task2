@@ -37,21 +37,21 @@ public class AssessmentsControllerTests
       AssessmentScoringId = scoringId
     };
 
-    var depth = new AssessmentDepth
-    {
-      Id = depthId,
-      FrameworkId = assessment.FrameworkId,
-      Name = "Advanced",
-      Description = "Deep dive across all domains"
-    };
+      var depth = new AssessmentDepth
+      {
+        Id = depthId,
+        FrameworkId = assessment.FrameworkId,
+        Name = "Advanced",
+        Depth = 2
+      };
 
-    var scoring = new AssessmentScoring
-    {
-      Id = scoringId,
-      AssessmentDepthId = depthId,
-      Name = "Weighted",
-      Description = "Weighted scoring model"
-    };
+      var scoring = new AssessmentScoring
+      {
+        Id = scoringId,
+        AssessmentDepthId = depthId,
+        Name = "Weighted",
+        Description = "Weighted scoring model"
+      };
 
     var details = new AssessmentDetails(assessment, depth, scoring);
     var controller = CreateController((request, _) => request switch
@@ -96,21 +96,21 @@ public class AssessmentsControllerTests
       AssessmentScoringId = scoringId
     };
 
-    var depth = new AssessmentDepth
-    {
-      Id = depthId,
-      FrameworkId = assessment.FrameworkId,
-      Name = "Baseline",
-      Description = "Initial readiness"
-    };
+      var depth = new AssessmentDepth
+      {
+        Id = depthId,
+        FrameworkId = assessment.FrameworkId,
+        Name = "Baseline",
+        Depth = 1
+      };
 
-    var scoring = new AssessmentScoring
-    {
-      Id = scoringId,
-      AssessmentDepthId = depthId,
-      Name = "Simple",
-      Description = "Simple scoring"
-    };
+      var scoring = new AssessmentScoring
+      {
+        Id = scoringId,
+        AssessmentDepthId = depthId,
+        Name = "Simple",
+        Description = "Simple scoring"
+      };
 
     var details = new AssessmentDetails(assessment, depth, scoring);
 
