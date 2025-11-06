@@ -9,6 +9,7 @@ using GAIA.Domain.Framework.Entities;
 using GAIA.Domain.InsightContent.DomainEvents;
 using GAIA.Domain.InsightContent.Entities;
 using GAIA.Infra.Projections;
+using GAIA.Infra.SeedData;
 using Marten;
 using Marten.Events.Projections;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,13 +43,14 @@ namespace GAIA.Infra.Configurations
         // Inline lifecycle updates document state within the same transaction
         options.Projections.Add<AssessmentProjection>(ProjectionLifecycle.Inline);
 
-      }).UseLightweightSessions()
-      .ApplyAllDatabaseChangesOnStartup();
+        }).UseLightweightSessions()
+          .ApplyAllDatabaseChangesOnStartup();
 
-      services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
-      services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
-      services.AddMediatR(cfg =>
-      cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
+        services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
+        services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
+        services.AddHostedService<AssessmentConfigurationSeedService>();
+        services.AddMediatR(cfg =>
+          cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
     }
   }
 }

@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.188">
+  <PropertyGroup>
+    <ProjectGuid>{F69D3B1D-3FA2-414E-9BCF-2C6FA1183F29}</ProjectGuid>
+    <TargetFramework>net9.0</TargetFramework>
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
+</Project>
