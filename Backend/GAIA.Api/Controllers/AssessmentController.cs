@@ -68,20 +68,21 @@ public class AssessmentsController : ControllerBase
     var options = await _configurationService.GetOptionsAsync(cancellationToken);
 
     var response = new AssessmentConfigurationOptionsResponse(
-      options.Frameworks
-        .Select(framework => new FrameworkOptionsDto(
-          framework.Id,
-          framework.Name,
-          framework.AssessmentDepths
-            .Select(depth => new AssessmentDepthOptionsDto(
-              depth.Id,
-              depth.Name,
-              depth.AssessmentScorings
-                .Select(scoring => new AssessmentScoringOptionsDto(scoring.Id, scoring.Name))
-                .ToList()
-            ))
-            .ToList()
-        ))
+        options.Frameworks
+          .Select(framework => new FrameworkOptionsDto(
+            framework.Id,
+            framework.Name,
+            framework.AssessmentDepths
+              .Select(depth => new AssessmentDepthOptionsDto(
+                depth.Id,
+                depth.Name,
+                depth.Depth,
+                depth.AssessmentScorings
+                  .Select(scoring => new AssessmentScoringOptionsDto(scoring.Id, scoring.Name))
+                  .ToList()
+              ))
+              .ToList()
+          ))
         .ToList()
     );
 
