@@ -9,23 +9,23 @@ using Xunit;
 
 namespace GAIA.Tests.Core.Configuration
 {
-  public class AssessmentConfigurationServiceTests
-  {
-    [Fact]
-    public async Task GetOptionsAsync_MapsHierarchyWithOrderedChildren()
+    public class AssessmentConfigurationServiceTests
     {
-      var frameworkAlphaId = Guid.NewGuid();
-      var frameworkZetaId = Guid.NewGuid();
-
-      var depthAlphaAId = Guid.NewGuid();
-      var depthAlphaBId = Guid.NewGuid();
-      var depthZetaId = Guid.NewGuid();
-
-      var frameworks = new List<Framework>
+      [Fact]
+      public async Task GetOptionsAsync_MapsHierarchyWithOrderedChildren()
       {
-        new Framework { Id = frameworkZetaId, Title = "Zeta Framework" },
-        new Framework { Id = frameworkAlphaId, Title = "Alpha Framework" }
-      };
+        var frameworkAlphaId = Guid.NewGuid();
+        var frameworkZetaId = Guid.NewGuid();
+
+        var depthAlphaAId = Guid.NewGuid();
+        var depthAlphaBId = Guid.NewGuid();
+        var depthZetaId = Guid.NewGuid();
+
+        var frameworks = new List<Framework>
+        {
+          new Framework { Id = frameworkZetaId, Title = "Zeta Framework" },
+          new Framework { Id = frameworkAlphaId, Title = "Alpha Framework" }
+        };
 
         var depths = new List<AssessmentDepth>
         {
@@ -34,50 +34,52 @@ namespace GAIA.Tests.Core.Configuration
           new AssessmentDepth { Id = depthZetaId, FrameworkId = frameworkZetaId, Name = "Research", Depth = 1 }
         };
 
-      var scorings = new List<AssessmentScoring>
-      {
-        new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthAlphaAId, Name = "Silver" },
-        new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthAlphaAId, Name = "Bronze" },
-        new AssessmentScoring { Id = Guid.NewGuid(), AssessmentDepthId = depthZetaId, Name = "Gold" }
-      };
-
-      var service = new AssessmentConfigurationService(frameworks, depths, scorings);
-
-      var result = await service.GetOptionsAsync(CancellationToken.None);
-
-      Assert.Collection(result.Frameworks,
-        framework =>
+        var scorings = new List<AssessmentScoring>
         {
-          Assert.Equal(frameworkAlphaId, framework.Id);
-          Assert.Equal("Alpha Framework", framework.Name);
+          new AssessmentScoring { Id = Guid.NewGuid(), FrameworkId = frameworkAlphaId, Name = "Silver" },
+          new AssessmentScoring { Id = Guid.NewGuid(), FrameworkId = frameworkAlphaId, Name = "Bronze" },
+          new AssessmentScoring { Id = Guid.NewGuid(), FrameworkId = frameworkZetaId, Name = "Gold" }
+        };
 
-          Assert.Collection(framework.AssessmentDepths,
-            depth =>
-            {
-              Assert.Equal("A Depth", depth.Name);
-              Assert.Collection(depth.AssessmentScorings,
-                scoring => Assert.Equal("Bronze", scoring.Name),
-                scoring => Assert.Equal("Silver", scoring.Name));
-            },
-            depth =>
-            {
-              Assert.Equal("B Depth", depth.Name);
-              Assert.Empty(depth.AssessmentScorings);
-            });
-        },
-        framework =>
-        {
-          Assert.Equal(frameworkZetaId, framework.Id);
-          Assert.Equal("Zeta Framework", framework.Name);
+        var service = new AssessmentConfigurationService(frameworks, depths, scorings);
 
-          Assert.Single(framework.AssessmentDepths);
-          var depth = framework.AssessmentDepths[0];
-          Assert.Equal("Research", depth.Name);
+        var result = await service.GetOptionsAsync(CancellationToken.None);
 
-          Assert.Single(depth.AssessmentScorings);
-          Assert.Equal("Gold", depth.AssessmentScorings[0].Name);
-        });
-    }
+        Assert.Collection(result.Frameworks,
+          framework =>
+          {
+            Assert.Equal(frameworkAlphaId, framework.Id);
+            Assert.Equal("Alpha Framework", framework.Name);
+
+            Assert.Collection(framework.AssessmentDepths,
+              depth =>
+              {
+                Assert.Equal("A Depth", depth.Name);
+                Assert.Collection(depth.AssessmentScorings,
+                  scoring => Assert.Equal("Bronze", scoring.Name),
+                  scoring => Assert.Equal("Silver", scoring.Name));
+              },
+              depth =>
+              {
+                Assert.Equal("B Depth", depth.Name);
+                Assert.Collection(depth.AssessmentScorings,
+                  scoring => Assert.Equal("Bronze", scoring.Name),
+                  scoring => Assert.Equal("Silver", scoring.Name));
+              });
+          },
+          framework =>
+          {
+            Assert.Equal(frameworkZetaId, framework.Id);
+            Assert.Equal("Zeta Framework", framework.Name);
+
+            Assert.Single(framework.AssessmentDepths);
+            var depth = framework.AssessmentDepths[0];
+            Assert.Equal("Research", depth.Name);
+
+            Assert.Collection(depth.AssessmentScorings,
+              scoring => Assert.Equal("Gold", scoring.Name));
+          });
+      }
 
   }
 }

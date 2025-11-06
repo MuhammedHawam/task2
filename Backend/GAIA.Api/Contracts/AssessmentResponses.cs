@@ -22,7 +22,7 @@ public record AssessmentDepthResponse(
 
 public record AssessmentScoringResponse(
   Guid Id,
-  Guid AssessmentDepthId,
+  Guid FrameworkId,
   string Name,
   string? Description
 );

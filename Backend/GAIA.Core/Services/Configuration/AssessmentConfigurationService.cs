@@ -70,12 +70,21 @@ namespace GAIA.Core.Services.Configuration
         .ToDictionary(g => g.Key, g => g.ToList());
 
       var scoringLookup = scorings
-        .GroupBy(s => s.AssessmentDepthId)
-        .ToDictionary(g => g.Key, g => g.ToList());
+        .GroupBy(s => s.FrameworkId)
+        .ToDictionary(
+          g => g.Key,
+          g => (IReadOnlyList<AssessmentScoringOption>)g
+            .OrderBy(scoring => scoring.Name)
+            .Select(scoring => new AssessmentScoringOption(scoring.Id, scoring.Name))
+            .ToList());
 
       var frameworkOptions = frameworks
         .Select(framework =>
         {
+          var frameworkScorings = scoringLookup.TryGetValue(framework.Id, out var scoringOptions)
+            ? scoringOptions
+            : Array.Empty<AssessmentScoringOption>();
+
           var depthOptions = depthsLookup.TryGetValue(framework.Id, out var depthList)
             ? depthList
                 .OrderBy(depth => depth.Depth)
@@ -85,12 +94,7 @@ namespace GAIA.Core.Services.Configuration
                     depth.Id,
                     depth.Name,
                     depth.Depth,
-                    scoringLookup.TryGetValue(depth.Id, out var scoringList)
-                      ? scoringList
-                          .OrderBy(scoring => scoring.Name)
-                          .Select(scoring => new AssessmentScoringOption(scoring.Id, scoring.Name))
-                          .ToList()
-                      : new List<AssessmentScoringOption>()))
+                    frameworkScorings))
                 .ToList()
             : new List<AssessmentDepthOption>();
 

@@ -28,7 +28,7 @@ public static class AssessmentMapper
 
   private static AssessmentScoringResponse ToResponse(this AssessmentScoring scoring) => new(
     scoring.Id,
-    scoring.AssessmentDepthId,
+    scoring.FrameworkId,
     scoring.Name,
     scoring.Description
   );

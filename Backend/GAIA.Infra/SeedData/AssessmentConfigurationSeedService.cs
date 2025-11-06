@@ -101,42 +101,42 @@ namespace GAIA.Infra.SeedData
         new AssessmentScoring
         {
           Id = SeedIds.ScoringCyberSecurityBronze,
-          AssessmentDepthId = SeedIds.DepthCyberSecurityInitial,
+          FrameworkId = SeedIds.FrameworkCyberSecurity,
           Name = "Bronze",
           Description = "Minimum viable implementation of foundational controls."
         },
         new AssessmentScoring
         {
           Id = SeedIds.ScoringCyberSecurityGold,
-          AssessmentDepthId = SeedIds.DepthCyberSecurityInitial,
+          FrameworkId = SeedIds.FrameworkCyberSecurity,
           Name = "Gold",
           Description = "Established and repeatable cybersecurity practices."
         },
         new AssessmentScoring
         {
           Id = SeedIds.ScoringCyberSecurityPlatinum,
-          AssessmentDepthId = SeedIds.DepthCyberSecurityAdvanced,
+          FrameworkId = SeedIds.FrameworkCyberSecurity,
           Name = "Platinum",
           Description = "Optimized security program with measurable outcomes."
         },
         new AssessmentScoring
         {
           Id = SeedIds.ScoringPrivacySilver,
-          AssessmentDepthId = SeedIds.DepthPrivacyBaseline,
+          FrameworkId = SeedIds.FrameworkPrivacy,
           Name = "Silver",
           Description = "Foundational privacy controls aligned to regulatory expectations."
         },
         new AssessmentScoring
         {
           Id = SeedIds.ScoringPrivacyGold,
-          AssessmentDepthId = SeedIds.DepthPrivacyBaseline,
+          FrameworkId = SeedIds.FrameworkPrivacy,
           Name = "Gold",
           Description = "Proactive privacy guardrails supported by automation."
         },
         new AssessmentScoring
         {
           Id = SeedIds.ScoringPrivacyPlatinum,
-          AssessmentDepthId = SeedIds.DepthPrivacyEnhanced,
+          FrameworkId = SeedIds.FrameworkPrivacy,
           Name = "Platinum",
           Description = "Privacy-by-design embedded across product lifecycle."
         }

@@ -25,17 +25,17 @@ public class AssessmentsControllerTests
     var depthId = Guid.NewGuid();
     var scoringId = Guid.NewGuid();
 
-    var assessment = new Assessment
-    {
-      Id = assessmentId,
-      Title = "Security Review",
-      Description = "Annual security assessment",
-      CreatedAt = DateTime.UtcNow,
-      CreatedBy = Guid.NewGuid(),
-      FrameworkId = Guid.NewGuid(),
-      AssessmentDepthId = depthId,
-      AssessmentScoringId = scoringId
-    };
+      var assessment = new Assessment
+      {
+        Id = assessmentId,
+        Title = "Security Review",
+        Description = "Annual security assessment",
+        CreatedAt = DateTime.UtcNow,
+        CreatedBy = Guid.NewGuid(),
+        FrameworkId = Guid.NewGuid(),
+        AssessmentDepthId = depthId,
+        AssessmentScoringId = scoringId
+      };
 
       var depth = new AssessmentDepth
       {
@@ -48,7 +48,7 @@ public class AssessmentsControllerTests
       var scoring = new AssessmentScoring
       {
         Id = scoringId,
-        AssessmentDepthId = depthId,
+        FrameworkId = assessment.FrameworkId,
         Name = "Weighted",
         Description = "Weighted scoring model"
       };
@@ -84,17 +84,17 @@ public class AssessmentsControllerTests
     var depthId = Guid.NewGuid();
     var scoringId = Guid.NewGuid();
 
-    var assessment = new Assessment
-    {
-      Id = assessmentId,
-      Title = "Privacy Review",
-      Description = "Privacy compliance assessment",
-      CreatedAt = DateTime.UtcNow,
-      CreatedBy = Guid.NewGuid(),
-      FrameworkId = Guid.NewGuid(),
-      AssessmentDepthId = depthId,
-      AssessmentScoringId = scoringId
-    };
+      var assessment = new Assessment
+      {
+        Id = assessmentId,
+        Title = "Privacy Review",
+        Description = "Privacy compliance assessment",
+        CreatedAt = DateTime.UtcNow,
+        CreatedBy = Guid.NewGuid(),
+        FrameworkId = Guid.NewGuid(),
+        AssessmentDepthId = depthId,
+        AssessmentScoringId = scoringId
+      };
 
       var depth = new AssessmentDepth
       {
@@ -107,7 +107,7 @@ public class AssessmentsControllerTests
       var scoring = new AssessmentScoring
       {
         Id = scoringId,
-        AssessmentDepthId = depthId,
+        FrameworkId = assessment.FrameworkId,
         Name = "Simple",
         Description = "Simple scoring"
       };
