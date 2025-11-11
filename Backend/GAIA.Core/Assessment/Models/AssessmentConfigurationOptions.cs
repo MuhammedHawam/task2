@@ -5,14 +5,14 @@ namespace GAIA.Core.Assessment.Models
   public record FrameworkConfigurationOption(
     Guid Id,
     string Name,
-    IReadOnlyList<AssessmentDepthOption> AssessmentDepths
+    IReadOnlyList<AssessmentDepthOption> AssessmentDepths,
+    IReadOnlyList<AssessmentScoringOption> AssessmentScorings
   );
 
   public record AssessmentDepthOption(
     Guid Id,
     string Name,
-    int Depth,
-    IReadOnlyList<AssessmentScoringOption> AssessmentScorings
+    int Depth
   );
 
   public record AssessmentScoringOption(

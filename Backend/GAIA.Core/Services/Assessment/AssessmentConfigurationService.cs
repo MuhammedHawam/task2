@@ -54,9 +54,9 @@ namespace GAIA.Core.Services.Configuration
 
         await Task.WhenAll(frameworksTask, depthsTask, scoringsTask);
 
-        frameworks = frameworksTask.Result;
-        depths = depthsTask.Result;
-        scorings = scoringsTask.Result;
+        frameworks = await frameworksTask;
+        depths = await depthsTask;
+        scorings = await scoringsTask;
       }
 
       var depthsLookup = depths
@@ -75,9 +75,9 @@ namespace GAIA.Core.Services.Configuration
       var frameworkOptions = frameworks
         .Select(framework =>
         {
-          var frameworkScorings = scoringLookup.TryGetValue(framework.Id, out var scoringOptions)
-           ? scoringOptions
-           : Array.Empty<AssessmentScoringOption>();
+          var scoringOptions = scoringLookup.TryGetValue(framework.Id, out var frameworkScorings)
+            ? frameworkScorings
+            : Array.Empty<AssessmentScoringOption>();
 
           var depthOptions = depthsLookup.TryGetValue(framework.Id, out var depthList)
             ? depthList
@@ -87,15 +87,15 @@ namespace GAIA.Core.Services.Configuration
                   new AssessmentDepthOption(
                     depth.Id,
                     depth.Name,
-                    depth.Depth,
-                    frameworkScorings))
+                    depth.Depth))
                 .ToList()
             : new List<AssessmentDepthOption>();
 
           return new FrameworkConfigurationOption(
             framework.Id,
-            framework.Title ?? string.Empty,
-            depthOptions
+            framework.Title,
+            depthOptions,
+            scoringOptions
           );
         })
         .OrderBy(option => option.Name)

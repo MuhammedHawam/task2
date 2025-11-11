@@ -2,7 +2,10 @@ using GAIA.Api.Contracts;
 using GAIA.Core.Assessment.Interfaces;
 using GAIA.Core.Commands.Assessment;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
 
 namespace GAIA.Api.Controllers;
 
@@ -40,7 +43,43 @@ public class AssessmentsController : ControllerBase
     return Ok(new { id });
   }
 
+  /// <summary>
+  /// Retrieves the available assessment configuration options grouped by framework.
+  /// </summary>
+  /// <remarks>
+  /// Provides the list of frameworks along with their supported assessment depths and scoring profiles.
+  ///
+  /// Sample request:
+  /// <code>GET /assessments/configuration/options</code>
+  ///
+  /// Sample response:
+  /// {
+  ///   "frameworks": [
+  ///     {
+  ///       "id": "ad2c63f9-b856-4e36-91f9-5da7b42e1f33",
+  ///       "name": "Cybersecurity Maturity",
+  ///       "assessmentDepths": [
+  ///         { "id": "982b6a76-a312-46c5-9a9d-34175e5b56dd", "name": "Initial", "depth": 1 }
+  ///       ],
+  ///       "assessmentScorings": [
+  ///         { "id": "d758ff3c-fb19-4a88-bb29-9a48b204361e", "name": "Bronze" }
+  ///       ]
+  ///     }
+  ///   ]
+  /// }
+  ///
+  /// Possible status codes:
+  /// * 200 - Configuration options retrieved successfully.
+  /// * 500 - An unexpected error occurred while retrieving the options.
+  /// </remarks>
   [HttpGet("configuration/options")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    Summary = "Get assessment configuration options",
+    Description = "Returns the available frameworks with their assessment depths and scoring profiles so that clients can populate configuration UI."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Configuration options retrieved successfully.", typeof(AssessmentConfigurationOptionsResponse))]
+  [SwaggerResponse(StatusCodes.Status500InternalServerError, "Unexpected error while retrieving configuration options.")]
   public async Task<ActionResult<AssessmentConfigurationOptionsResponse>> GetConfigurationOptions(CancellationToken cancellationToken)
   {
     var options = await _configurationService.GetOptionsAsync(cancellationToken);
@@ -50,16 +89,16 @@ public class AssessmentsController : ControllerBase
         .Select(framework => new FrameworkOptionsDto(
           framework.Id,
           framework.Name,
-          framework.AssessmentDepths
-            .Select(depth => new AssessmentDepthOptionsDto(
-              depth.Id,
-              depth.Name,
-              depth.Depth,
-              depth.AssessmentScorings
-                .Select(scoring => new AssessmentScoringOptionsDto(scoring.Id, scoring.Name))
-                .ToList()
-            ))
-            .ToList()
+            framework.AssessmentDepths
+              .Select(depth => new AssessmentDepthOptionsDto(
+                depth.Id,
+                depth.Name,
+                depth.Depth
+              ))
+              .ToList(),
+            framework.AssessmentScorings
+              .Select(scoring => new AssessmentScoringOptionsDto(scoring.Id, scoring.Name))
+              .ToList()
         ))
         .ToList()
     );

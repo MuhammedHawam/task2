@@ -5,11 +5,11 @@ namespace GAIA.Domain.Framework.Entities
   public class Framework
   {
     public Guid Id { get; set; } // Primary Key
-    public string Title { get; set; }
-    public string Description { get; set; }
+    public required string Title { get; set; }
+    public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public Guid CreatedBy { get; set; }
-    public FrameworkNode Root { get; set; } // Root FrameworkNode    
+    public FrameworkNode Root { get; set; } = null!; // Root FrameworkNode    
     
     // Apply method for domain events
     public void Apply(FrameworkCreated e)
