@@ -30,7 +30,8 @@ namespace GAIA.Infra.Configurations
         options.Schema.For<Assessment>();
         options.Schema.For<InsightContent>();
         options.Schema.For<AssessmentDepth>()
-                  .UniqueIndex(depth => new { depth.FrameworkId, depth.Depth }); options.Schema.For<AssessmentScoring>();
+          .UniqueIndex(depth => depth.FrameworkId, depth => depth.Depth);
+        options.Schema.For<AssessmentScoring>();
         // Enable event sourcing if needed
         options.Events.AddEventType(typeof(FrameworkCreated));
         options.Events.AddEventType(typeof(FrameworkNodeCreated));
