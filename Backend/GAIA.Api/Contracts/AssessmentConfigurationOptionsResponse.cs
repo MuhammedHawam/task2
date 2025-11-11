@@ -14,6 +14,7 @@ namespace GAIA.Api.Contracts
   public record AssessmentDepthOptionsDto(
     Guid Id,
     string Name,
+    int Depth,
     IReadOnlyList<AssessmentScoringOptionsDto> AssessmentScorings
   );
 

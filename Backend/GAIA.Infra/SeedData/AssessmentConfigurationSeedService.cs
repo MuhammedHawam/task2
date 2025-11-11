@@ -70,6 +70,7 @@ namespace GAIA.Infra.SeedData
         {
           Id = SeedIds.DepthCyberSecurityInitial,
           FrameworkId = SeedIds.FrameworkCyberSecurity,
+          Depth = 1,
           Name = "Initial",
           Description = "Introductory security capabilities focused on core hygiene."
         },
@@ -77,6 +78,7 @@ namespace GAIA.Infra.SeedData
         {
           Id = SeedIds.DepthCyberSecurityAdvanced,
           FrameworkId = SeedIds.FrameworkCyberSecurity,
+          Depth = 2,
           Name = "Advanced",
           Description = "Advanced security practices emphasizing continuous improvement."
         },
@@ -84,6 +86,7 @@ namespace GAIA.Infra.SeedData
         {
           Id = SeedIds.DepthPrivacyBaseline,
           FrameworkId = SeedIds.FrameworkPrivacy,
+          Depth = 1,
           Name = "Baseline",
           Description = "Baseline privacy safeguards for regulated data."
         },
@@ -91,6 +94,7 @@ namespace GAIA.Infra.SeedData
         {
           Id = SeedIds.DepthPrivacyEnhanced,
           FrameworkId = SeedIds.FrameworkPrivacy,
+          Depth = 2,
           Name = "Enhanced",
           Description = "Enhanced privacy controls for data minimization and subject rights."
         }
@@ -101,6 +105,7 @@ namespace GAIA.Infra.SeedData
         new AssessmentScoring
         {
           Id = SeedIds.ScoringCyberSecurityBronze,
+          FrameworkId = SeedIds.FrameworkCyberSecurity,
           AssessmentDepthId = SeedIds.DepthCyberSecurityInitial,
           Name = "Bronze",
           Description = "Minimum viable implementation of foundational controls."
@@ -108,6 +113,7 @@ namespace GAIA.Infra.SeedData
         new AssessmentScoring
         {
           Id = SeedIds.ScoringCyberSecurityGold,
+          FrameworkId = SeedIds.FrameworkCyberSecurity,
           AssessmentDepthId = SeedIds.DepthCyberSecurityInitial,
           Name = "Gold",
           Description = "Established and repeatable cybersecurity practices."
@@ -115,6 +121,7 @@ namespace GAIA.Infra.SeedData
         new AssessmentScoring
         {
           Id = SeedIds.ScoringCyberSecurityPlatinum,
+          FrameworkId = SeedIds.FrameworkCyberSecurity,
           AssessmentDepthId = SeedIds.DepthCyberSecurityAdvanced,
           Name = "Platinum",
           Description = "Optimized security program with measurable outcomes."
@@ -122,6 +129,7 @@ namespace GAIA.Infra.SeedData
         new AssessmentScoring
         {
           Id = SeedIds.ScoringPrivacySilver,
+          FrameworkId = SeedIds.FrameworkPrivacy,
           AssessmentDepthId = SeedIds.DepthPrivacyBaseline,
           Name = "Silver",
           Description = "Foundational privacy controls aligned to regulatory expectations."
@@ -129,6 +137,7 @@ namespace GAIA.Infra.SeedData
         new AssessmentScoring
         {
           Id = SeedIds.ScoringPrivacyGold,
+          FrameworkId = SeedIds.FrameworkPrivacy,
           AssessmentDepthId = SeedIds.DepthPrivacyBaseline,
           Name = "Gold",
           Description = "Proactive privacy guardrails supported by automation."
@@ -136,6 +145,7 @@ namespace GAIA.Infra.SeedData
         new AssessmentScoring
         {
           Id = SeedIds.ScoringPrivacyPlatinum,
+          FrameworkId = SeedIds.FrameworkPrivacy,
           AssessmentDepthId = SeedIds.DepthPrivacyEnhanced,
           Name = "Platinum",
           Description = "Privacy-by-design embedded across product lifecycle."

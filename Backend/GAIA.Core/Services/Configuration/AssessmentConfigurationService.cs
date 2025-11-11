@@ -65,41 +65,43 @@ namespace GAIA.Core.Services.Configuration
         scorings = scoringsTask.Result;
       }
 
-      var depthsLookup = depths
-        .GroupBy(d => d.FrameworkId)
-        .ToDictionary(g => g.Key, g => g.ToList());
+        var depthsLookup = depths
+          .GroupBy(d => d.FrameworkId)
+          .ToDictionary(g => g.Key, g => g.ToList());
 
-      var scoringLookup = scorings
-        .GroupBy(s => s.AssessmentDepthId)
-        .ToDictionary(g => g.Key, g => g.ToList());
+        var scoringLookup = scorings
+          .GroupBy(s => s.AssessmentDepthId)
+          .ToDictionary(g => g.Key, g => g.ToList());
 
-      var frameworkOptions = frameworks
-        .Select(framework =>
-        {
-          var depthOptions = depthsLookup.TryGetValue(framework.Id, out var depthList)
-            ? depthList
-                .OrderBy(depth => depth.Name)
-                .Select(depth =>
-                  new AssessmentDepthOption(
-                    depth.Id,
-                    depth.Name,
-                    scoringLookup.TryGetValue(depth.Id, out var scoringList)
-                      ? scoringList
-                          .OrderBy(scoring => scoring.Name)
-                          .Select(scoring => new AssessmentScoringOption(scoring.Id, scoring.Name))
-                          .ToList()
-                      : new List<AssessmentScoringOption>()))
-                .ToList()
-            : new List<AssessmentDepthOption>();
+        var frameworkOptions = frameworks
+          .Select(framework =>
+          {
+            var depthOptions = depthsLookup.TryGetValue(framework.Id, out var depthList)
+              ? depthList
+                  .OrderBy(depth => depth.Depth)
+                  .ThenBy(depth => depth.Name, StringComparer.OrdinalIgnoreCase)
+                  .Select(depth =>
+                    new AssessmentDepthOption(
+                      depth.Id,
+                      depth.Name,
+                      depth.Depth,
+                      scoringLookup.TryGetValue(depth.Id, out var scoringList)
+                        ? scoringList
+                            .OrderBy(scoring => scoring.Name)
+                            .Select(scoring => new AssessmentScoringOption(scoring.Id, scoring.Name))
+                            .ToList()
+                        : new List<AssessmentScoringOption>()))
+                  .ToList()
+              : new List<AssessmentDepthOption>();
 
-          return new FrameworkConfigurationOption(
-            framework.Id,
-            framework.Title ?? string.Empty,
-            depthOptions
-          );
-        })
-        .OrderBy(option => option.Name)
-        .ToList();
+            return new FrameworkConfigurationOption(
+              framework.Id,
+              framework.Title ?? string.Empty,
+              depthOptions
+            );
+          })
+          .OrderBy(option => option.Name)
+          .ToList();
 
       return new AssessmentConfigurationOptions(frameworkOptions);
     }

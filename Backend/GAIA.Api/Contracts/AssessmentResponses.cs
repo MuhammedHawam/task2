@@ -17,11 +17,13 @@ public record AssessmentDepthResponse(
   Guid Id,
   Guid FrameworkId,
   string Name,
+  int Depth,
   string? Description
 );
 
 public record AssessmentScoringResponse(
   Guid Id,
+  Guid FrameworkId,
   Guid AssessmentDepthId,
   string Name,
   string? Description
