@@ -9,7 +9,7 @@ namespace GAIA.Domain.Framework.Entities
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public Guid CreatedBy { get; set; }
-    public FrameworkNode Root { get; set; } = null!; // Root FrameworkNode    
+    public required FrameworkNode Root { get; set; } // Root FrameworkNode    
     
     // Apply method for domain events
     public void Apply(FrameworkCreated e)
