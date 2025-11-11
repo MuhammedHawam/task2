@@ -1,4 +1,4 @@
-using GAIA.Domain.Assessment.DomainEvents;
+using GAIA.Domain.DomainEvents;
 
 namespace GAIA.Domain.Assessment.Entities
 {

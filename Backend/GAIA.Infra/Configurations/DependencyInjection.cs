@@ -2,7 +2,7 @@ using GAIA.Core.Configuration.Interfaces;
 using GAIA.Core.Interfaces.Assessment;
 using GAIA.Core.Services.Assessment;
 using GAIA.Core.Services.Configuration;
-using GAIA.Domain.Assessment.DomainEvents;
+using GAIA.Domain.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.Framework.DomainEvents;
 using GAIA.Domain.Framework.Entities;
