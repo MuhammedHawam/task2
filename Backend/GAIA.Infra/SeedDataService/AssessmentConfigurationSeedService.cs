@@ -65,24 +65,28 @@ public class AssessmentConfigurationSeedService : IHostedService
       {
         Id = SeedIds.DepthCyberSecurityInitial,
         FrameworkId = SeedIds.FrameworkCyberSecurity,
+        Depth = 1,
         Name = "Initial",
       },
       new AssessmentDepth
       {
         Id = SeedIds.DepthCyberSecurityAdvanced,
         FrameworkId = SeedIds.FrameworkCyberSecurity,
+        Depth = 2,
         Name = "Advanced",
       },
       new AssessmentDepth
       {
         Id = SeedIds.DepthPrivacyBaseline,
         FrameworkId = SeedIds.FrameworkPrivacy,
+        Depth = 1,
         Name = "Baseline",
       },
       new AssessmentDepth
       {
         Id = SeedIds.DepthPrivacyEnhanced,
         FrameworkId = SeedIds.FrameworkPrivacy,
+        Depth = 2,
         Name = "Enhanced",
       }
     };
@@ -113,21 +117,21 @@ public class AssessmentConfigurationSeedService : IHostedService
       new AssessmentScoring
       {
         Id = SeedIds.ScoringPrivacySilver,
-        FrameworkId = SeedIds.FrameworkCyberSecurity,
+        FrameworkId = SeedIds.FrameworkPrivacy,
         Name = "Silver",
         Description = "Foundational privacy controls aligned to regulatory expectations."
       },
       new AssessmentScoring
       {
         Id = SeedIds.ScoringPrivacyGold,
-        FrameworkId = SeedIds.FrameworkCyberSecurity,
+        FrameworkId = SeedIds.FrameworkPrivacy,
         Name = "Gold",
         Description = "Proactive privacy guardrails supported by automation."
       },
       new AssessmentScoring
       {
         Id = SeedIds.ScoringPrivacyPlatinum,
-        FrameworkId = SeedIds.FrameworkCyberSecurity,
+        FrameworkId = SeedIds.FrameworkPrivacy,
         Name = "Platinum",
         Description = "Privacy-by-design embedded across product lifecycle."
       }
