@@ -336,3 +336,6 @@ C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\B
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Api\bin\Debug\net9.0\FluentValidation.dll
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Api\bin\Debug\net9.0\FluentValidation.AspNetCore.dll
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Api\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Api\bin\Debug\net9.0\GAIA.Api.xml
+C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.Annotations.dll
+C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Api\obj\Debug\net9.0\GAIA.Api.xml

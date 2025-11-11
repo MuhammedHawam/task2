@@ -1,8 +1,9 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
-    "title": "GAIA.Api",
-    "version": "1.0"
+    "title": "GAIA API",
+    "description": "GAIA backend HTTP API",
+    "version": "v1"
   },
   "paths": {
     "/api/Ai/chat": {
@@ -32,6 +33,125 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/assessments": {
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssessmentResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssessmentResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssessmentResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Assessments"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssessmentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssessmentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssessmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/assessments/{id}": {
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/assessments/configuration/options": {
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentConfigurationOptionsResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentConfigurationOptionsResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentConfigurationOptionsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -78,6 +198,188 @@
   },
   "components": {
     "schemas": {
+      "AssessmentConfigurationOptionsResponse": {
+        "type": "object",
+        "properties": {
+          "frameworks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FrameworkOptionsDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssessmentDepthOptionsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "assessmentScorings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssessmentScoringOptionsDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssessmentDepthResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "frameworkId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssessmentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "frameworkId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assessmentDepthId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assessmentScoringId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "depth": {
+            "$ref": "#/components/schemas/AssessmentDepthResponse"
+          },
+          "scoring": {
+            "$ref": "#/components/schemas/AssessmentScoringResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssessmentScoringOptionsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssessmentScoringResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assessmentDepthId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateAssessmentRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the assessment."
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the assessment."
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Identifier of the user creating the assessment (UUID).",
+            "format": "uuid"
+          },
+          "frameworkId": {
+            "type": "string",
+            "description": "Identifier of the framework this assessment uses (UUID).",
+            "format": "uuid"
+          },
+          "assessmentDepthId": {
+            "type": "string",
+            "description": "Identifier of the chosen assessment depth",
+            "format": "uuid"
+          },
+          "assessmentScoringId": {
+            "type": "string",
+            "description": "Identifier of the chosen assessment scoring model",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body used to create a new assessment."
+      },
+      "FrameworkOptionsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "assessmentDepths": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssessmentDepthOptionsDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "WeatherForecast": {
         "type": "object",
         "properties": {

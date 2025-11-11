@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GAIA.Api</name>
+    </assembly>
+    <members>
+        <member name="T:GAIA.Api.Contracts.CreateAssessmentRequest">
+            <summary>
+            Request body used to create a new assessment.
+            </summary>
+            <remarks>
+            Consumed by POST /assessments.
+            </remarks>
+            <param name="Title">Title of the assessment.</param>
+            <param name="Description">Detailed description of the assessment.</param>
+            <param name="CreatedBy">Identifier of the user creating the assessment (UUID).</param>
+            <param name="FrameworkId">Identifier of the framework this assessment uses (UUID).</param>
+        </member>
+        <member name="M:GAIA.Api.Contracts.CreateAssessmentRequest.#ctor(System.String,System.String,System.Guid,System.Guid,System.Guid,System.Guid)">
+            <summary>
+            Request body used to create a new assessment.
+            </summary>
+            <remarks>
+            Consumed by POST /assessments.
+            </remarks>
+            <param name="Title">Title of the assessment.</param>
+            <param name="Description">Detailed description of the assessment.</param>
+            <param name="CreatedBy">Identifier of the user creating the assessment (UUID).</param>
+            <param name="FrameworkId">Identifier of the framework this assessment uses (UUID).</param>
+        </member>
+        <member name="P:GAIA.Api.Contracts.CreateAssessmentRequest.Title">
+            <summary>Title of the assessment.</summary>
+        </member>
+        <member name="P:GAIA.Api.Contracts.CreateAssessmentRequest.Description">
+            <summary>Detailed description of the assessment.</summary>
+        </member>
+        <member name="P:GAIA.Api.Contracts.CreateAssessmentRequest.CreatedBy">
+            <summary>Identifier of the user creating the assessment (UUID).</summary>
+        </member>
+        <member name="P:GAIA.Api.Contracts.CreateAssessmentRequest.FrameworkId">
+            <summary>Identifier of the framework this assessment uses (UUID).</summary>
+        </member>
+    </members>
+</doc>
