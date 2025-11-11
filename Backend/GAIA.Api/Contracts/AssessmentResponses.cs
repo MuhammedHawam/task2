@@ -16,6 +16,7 @@ public record AssessmentResponse(
 public record AssessmentDepthResponse(
   Guid Id,
   Guid FrameworkId,
+  int Depth,
   string Name,
   string? Description
 );

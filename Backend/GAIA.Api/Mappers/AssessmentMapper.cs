@@ -22,6 +22,7 @@ public static class AssessmentMapper
   private static AssessmentDepthResponse ToResponse(this AssessmentDepth depth) => new(
     depth.Id,
     depth.FrameworkId,
+    depth.Depth,
     depth.Name,
     depth.Description
   );

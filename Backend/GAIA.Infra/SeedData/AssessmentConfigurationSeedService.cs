@@ -70,6 +70,7 @@ namespace GAIA.Infra.SeedData
         {
           Id = SeedIds.DepthCyberSecurityInitial,
           FrameworkId = SeedIds.FrameworkCyberSecurity,
+          Depth = 1,
           Name = "Initial",
           Description = "Introductory security capabilities focused on core hygiene."
         },
@@ -77,6 +78,7 @@ namespace GAIA.Infra.SeedData
         {
           Id = SeedIds.DepthCyberSecurityAdvanced,
           FrameworkId = SeedIds.FrameworkCyberSecurity,
+          Depth = 2,
           Name = "Advanced",
           Description = "Advanced security practices emphasizing continuous improvement."
         },
@@ -84,6 +86,7 @@ namespace GAIA.Infra.SeedData
         {
           Id = SeedIds.DepthPrivacyBaseline,
           FrameworkId = SeedIds.FrameworkPrivacy,
+          Depth = 1,
           Name = "Baseline",
           Description = "Baseline privacy safeguards for regulated data."
         },
@@ -91,6 +94,7 @@ namespace GAIA.Infra.SeedData
         {
           Id = SeedIds.DepthPrivacyEnhanced,
           FrameworkId = SeedIds.FrameworkPrivacy,
+          Depth = 2,
           Name = "Enhanced",
           Description = "Enhanced privacy controls for data minimization and subject rights."
         }

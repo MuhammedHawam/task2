@@ -25,25 +25,26 @@ public class AssessmentsControllerTests
     var depthId = Guid.NewGuid();
     var scoringId = Guid.NewGuid();
 
-    var assessment = new Assessment
-    {
-      Id = assessmentId,
-      Title = "Security Review",
-      Description = "Annual security assessment",
-      CreatedAt = DateTime.UtcNow,
-      CreatedBy = Guid.NewGuid(),
-      FrameworkId = Guid.NewGuid(),
-      AssessmentDepthId = depthId,
-      AssessmentScoringId = scoringId
-    };
+      var assessment = new Assessment
+      {
+        Id = assessmentId,
+        Title = "Security Review",
+        Description = "Annual security assessment",
+        CreatedAt = DateTime.UtcNow,
+        CreatedBy = Guid.NewGuid(),
+        FrameworkId = Guid.NewGuid(),
+        AssessmentDepthId = depthId,
+        AssessmentScoringId = scoringId
+      };
 
-    var depth = new AssessmentDepth
-    {
-      Id = depthId,
-      FrameworkId = assessment.FrameworkId,
-      Name = "Advanced",
-      Description = "Deep dive across all domains"
-    };
+      var depth = new AssessmentDepth
+      {
+        Id = depthId,
+        FrameworkId = assessment.FrameworkId,
+        Depth = 2,
+        Name = "Advanced",
+        Description = "Deep dive across all domains"
+      };
 
     var scoring = new AssessmentScoring
     {
@@ -68,12 +69,13 @@ public class AssessmentsControllerTests
     var response = Assert.IsType<List<AssessmentResponse>>(okResult.Value);
     var item = Assert.Single(response);
 
-    Assert.Equal(assessmentId, item.Id);
-    Assert.Equal("Security Review", item.Title);
-    Assert.NotNull(item.Depth);
-    Assert.Equal(depthId, item.Depth!.Id);
-    Assert.NotNull(item.Scoring);
-    Assert.Equal(scoringId, item.Scoring!.Id);
+      Assert.Equal(assessmentId, item.Id);
+      Assert.Equal("Security Review", item.Title);
+      Assert.NotNull(item.Depth);
+      Assert.Equal(depthId, item.Depth!.Id);
+      Assert.Equal(2, item.Depth.Depth);
+      Assert.NotNull(item.Scoring);
+      Assert.Equal(scoringId, item.Scoring!.Id);
   }
 
   [Fact]
@@ -84,25 +86,26 @@ public class AssessmentsControllerTests
     var depthId = Guid.NewGuid();
     var scoringId = Guid.NewGuid();
 
-    var assessment = new Assessment
-    {
-      Id = assessmentId,
-      Title = "Privacy Review",
-      Description = "Privacy compliance assessment",
-      CreatedAt = DateTime.UtcNow,
-      CreatedBy = Guid.NewGuid(),
-      FrameworkId = Guid.NewGuid(),
-      AssessmentDepthId = depthId,
-      AssessmentScoringId = scoringId
-    };
+      var assessment = new Assessment
+      {
+        Id = assessmentId,
+        Title = "Privacy Review",
+        Description = "Privacy compliance assessment",
+        CreatedAt = DateTime.UtcNow,
+        CreatedBy = Guid.NewGuid(),
+        FrameworkId = Guid.NewGuid(),
+        AssessmentDepthId = depthId,
+        AssessmentScoringId = scoringId
+      };
 
-    var depth = new AssessmentDepth
-    {
-      Id = depthId,
-      FrameworkId = assessment.FrameworkId,
-      Name = "Baseline",
-      Description = "Initial readiness"
-    };
+      var depth = new AssessmentDepth
+      {
+        Id = depthId,
+        FrameworkId = assessment.FrameworkId,
+        Depth = 1,
+        Name = "Baseline",
+        Description = "Initial readiness"
+      };
 
     var scoring = new AssessmentScoring
     {
@@ -127,12 +130,13 @@ public class AssessmentsControllerTests
     var okResult = Assert.IsType<OkObjectResult>(result.Result);
     var response = Assert.IsType<AssessmentResponse>(okResult.Value);
 
-    Assert.Equal(assessmentId, response.Id);
-    Assert.Equal("Privacy Review", response.Title);
-    Assert.NotNull(response.Depth);
-    Assert.Equal(depthId, response.Depth!.Id);
-    Assert.NotNull(response.Scoring);
-    Assert.Equal(scoringId, response.Scoring!.Id);
+      Assert.Equal(assessmentId, response.Id);
+      Assert.Equal("Privacy Review", response.Title);
+      Assert.NotNull(response.Depth);
+      Assert.Equal(depthId, response.Depth!.Id);
+      Assert.Equal(1, response.Depth.Depth);
+      Assert.NotNull(response.Scoring);
+      Assert.Equal(scoringId, response.Scoring!.Id);
   }
 
   [Fact]
