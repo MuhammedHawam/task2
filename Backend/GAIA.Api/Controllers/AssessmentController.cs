@@ -1,5 +1,8 @@
 using GAIA.Api.Contracts;
+using GAIA.Api.Contracts.Assessment;
+using GAIA.Api.Mappers;
 using GAIA.Core.Assessment.Interfaces;
+using GAIA.Core.Assessment.Queries;
 using GAIA.Core.Commands.Assessment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,27 +21,42 @@ public class AssessmentsController : ControllerBase
     _configurationService = configurationService;
   }
 
-  [HttpPost]
-  public async Task<ActionResult<object>> Create([FromBody] CreateAssessmentRequest request, CancellationToken cancellationToken)
-  {
-    var result = await _sender.Send(new CreateAssessmentCommand(
-        request.Title,
-        request.Description,
-        request.CreatedBy,
-        request.FrameworkId,
-        request.AssessmentDepthId,
-        request.AssessmentScoringId
-    ), cancellationToken);
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyList<AssessmentResponse>>> GetAll(CancellationToken cancellationToken)
+    {
+      var assessments = await _sender.Send(new GetAssessmentsQuery(), cancellationToken);
+      var response = assessments.Select(assessment => assessment.ToResponse()).ToList();
 
-    return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, new { id = result.AssessmentId });
-  }
+      return Ok(response);
+    }
 
-  [HttpGet("{id:guid}")]
-  public async Task<ActionResult<object>> GetById(Guid id, CancellationToken cancellationToken)
-  {
-    // Placeholder to satisfy CreatedAtAction route; implemented later
-    return Ok(new { id });
-  }
+    [HttpPost]
+    public async Task<ActionResult<object>> Create([FromBody] CreateAssessmentRequest request, CancellationToken cancellationToken)
+    {
+      var result = await _sender.Send(new CreateAssessmentCommand(
+          request.Title,
+          request.Description,
+          request.CreatedBy,
+          request.FrameworkId,
+          request.AssessmentDepthId,
+          request.AssessmentScoringId
+      ), cancellationToken);
+
+      return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, new { id = result.AssessmentId });
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<AssessmentResponse>> GetById(Guid id, CancellationToken cancellationToken)
+    {
+      var assessment = await _sender.Send(new GetAssessmentByIdQuery(id), cancellationToken);
+
+      if (assessment is null)
+      {
+        return NotFound();
+      }
+
+      return Ok(assessment.ToResponse());
+    }
 
   [HttpGet("configuration/options")]
   public async Task<ActionResult<AssessmentConfigurationOptionsResponse>> GetConfigurationOptions(CancellationToken cancellationToken)
