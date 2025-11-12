@@ -1,5 +1,5 @@
 using GAIA.Core.Assessment.Interfaces;
-using GAIA.Domain.DomainEvents;
+using GAIA.Domain.Assessment.DomainEvents;
 using Marten;
 
 namespace GAIA.Core.Services.Assessment

@@ -1,5 +1,5 @@
+using GAIA.Domain.Assessment.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
-using GAIA.Domain.DomainEvents;
 using Marten.Events.Aggregation;
 
 namespace GAIA.Infra.Projections
