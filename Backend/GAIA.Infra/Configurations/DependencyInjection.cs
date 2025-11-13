@@ -1,4 +1,6 @@
 using GAIA.Core.Assessment.Interfaces;
+using GAIA.Core.Documents.Interfaces;
+using GAIA.Core.Documents.Services;
 using GAIA.Core.Services.Assessment;
 using GAIA.Core.Services.Configuration;
 using GAIA.Domain.Assessment.DomainEvents;
@@ -8,10 +10,12 @@ using GAIA.Domain.Framework.Entities;
 using GAIA.Domain.InsightContent.DomainEvents;
 using GAIA.Domain.InsightContent.Entities;
 using GAIA.Infra.Projections;
+using GAIA.Infra.Repositories;
 using GAIA.Infra.SeedDataService;
 using JasperFx.Events.Projections;
 using Marten;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace GAIA.Infra.Configurations
 {
@@ -19,6 +23,14 @@ namespace GAIA.Infra.Configurations
   {
     public static void AddInfrastructure(this IServiceCollection services, string connectionString)
     {
+      services.AddDbContext<ApplicationDbContext>(options =>
+      {
+        options.UseNpgsql(connectionString, builder =>
+        {
+          builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+        });
+      });
+
       services.AddMarten(options =>
       {
         // Set the connection string for PostgreSQL
@@ -49,6 +61,8 @@ namespace GAIA.Infra.Configurations
       services.AddHostedService<AssessmentConfigurationSeedService>();
       services.AddMediatR(cfg =>
       cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
+      services.AddScoped<IDocumentRepository, DocumentRepository>();
+      services.AddScoped<IDocumentService, DocumentService>();
     }
   }
 }
