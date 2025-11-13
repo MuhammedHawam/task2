@@ -1,4 +1,6 @@
 using GAIA.Core.Assessment.Interfaces;
+using GAIA.Core.Documents.Interfaces;
+using GAIA.Core.Documents.Services;
 using GAIA.Core.Services.Assessment;
 using GAIA.Core.Services.Configuration;
 using GAIA.Domain.Assessment.DomainEvents;
@@ -8,9 +10,11 @@ using GAIA.Domain.Framework.Entities;
 using GAIA.Domain.InsightContent.DomainEvents;
 using GAIA.Domain.InsightContent.Entities;
 using GAIA.Infra.Projections;
+using GAIA.Infra.Repositories;
 using GAIA.Infra.SeedDataService;
 using JasperFx.Events.Projections;
 using Marten;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GAIA.Infra.Configurations
@@ -19,6 +23,12 @@ namespace GAIA.Infra.Configurations
   {
     public static void AddInfrastructure(this IServiceCollection services, string connectionString)
     {
+      services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(connectionString));
+
+      services.AddScoped<IDocumentRepository, DocumentRepository>();
+      services.AddScoped<IDocumentService, DocumentService>();
+
       services.AddMarten(options =>
       {
         // Set the connection string for PostgreSQL
@@ -30,7 +40,8 @@ namespace GAIA.Infra.Configurations
         options.Schema.For<Assessment>();
         options.Schema.For<InsightContent>();
         options.Schema.For<AssessmentDepth>()
-                  .UniqueIndex(depth => new { depth.FrameworkId, depth.Depth }); options.Schema.For<AssessmentScoring>();
+          .UniqueIndex(depth => new { depth.FrameworkId, depth.Depth });
+        options.Schema.For<AssessmentScoring>();
         // Enable event sourcing if needed
         options.Events.AddEventType(typeof(FrameworkCreated));
         options.Events.AddEventType(typeof(FrameworkNodeCreated));
@@ -48,7 +59,7 @@ namespace GAIA.Infra.Configurations
       services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
       services.AddHostedService<AssessmentConfigurationSeedService>();
       services.AddMediatR(cfg =>
-      cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
+        cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
     }
   }
 }
