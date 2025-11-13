@@ -1,5 +1,8 @@
 using GAIA.Api.Contracts;
+using GAIA.Api.Contracts.Assessment;
+using GAIA.Api.Mappers;
 using GAIA.Core.Assessment.Interfaces;
+using GAIA.Core.Assessment.Queries;
 using GAIA.Core.Commands.Assessment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +21,30 @@ public class AssessmentsController : ControllerBase
     _configurationService = configurationService;
   }
 
+  [HttpGet]
+  public async Task<ActionResult<IReadOnlyList<AssessmentResponse>>> GetAll(CancellationToken cancellationToken)
+  {
+    var assessments = await _sender.Send(new GetAssessmentsQuery(), cancellationToken);
+    var response = assessments.Select(assessment => assessment.ToResponse()).ToList();
+
+    return Ok(response);
+  }
+
+  [HttpGet("{id:guid}")]
+  public async Task<ActionResult<AssessmentResponse>> GetById(Guid id, CancellationToken cancellationToken)
+  {
+    var assessment = await _sender.Send(new GetAssessmentByIdQuery(id), cancellationToken);
+
+    if (assessment is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(assessment.ToResponse());
+  }
+
   [HttpPost]
-  public async Task<ActionResult<object>> Create([FromBody] CreateAssessmentRequest request, CancellationToken cancellationToken)
+  public async Task<ActionResult<AssessmentResponse>> Create([FromBody] CreateAssessmentRequest request, CancellationToken cancellationToken)
   {
     var result = await _sender.Send(new CreateAssessmentCommand(
         request.Title,
@@ -30,14 +55,14 @@ public class AssessmentsController : ControllerBase
         request.AssessmentScoringId
     ), cancellationToken);
 
-    return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, new { id = result.AssessmentId });
-  }
+    var createdAssessment = await _sender.Send(new GetAssessmentByIdQuery(result.AssessmentId), cancellationToken);
 
-  [HttpGet("{id:guid}")]
-  public async Task<ActionResult<object>> GetById(Guid id, CancellationToken cancellationToken)
-  {
-    // Placeholder to satisfy CreatedAtAction route; implemented later
-    return Ok(new { id });
+    if (createdAssessment is null)
+    {
+      return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, new { id = result.AssessmentId });
+    }
+
+    return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, createdAssessment.ToResponse());
   }
 
   [HttpGet("configuration/options")]
