@@ -21,8 +21,8 @@ namespace GAIA.Core.Assessment.Queries
       AssessmentScoring? scoring = null;
 
       var query = _querySession.Query<Domain.Assessment.Entities.Assessment>()
-        .Include(a => a.AssessmentDepthId, loaded => depth = loaded)
-        .Include(a => a.AssessmentScoringId, loaded => scoring = loaded);
+        .Include<AssessmentDepth>(a => a.AssessmentDepthId, loaded => { depth = loaded; })
+        .Include<AssessmentScoring>(a => a.AssessmentScoringId, loaded => { scoring = loaded; });
 
       var assessment = await query
         .Where(a => a.Id == request.AssessmentId)
