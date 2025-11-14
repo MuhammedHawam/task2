@@ -17,13 +17,13 @@ public class GetAssessmentByIdQueryHandler : IRequestHandler<GetAssessmentByIdQu
 
   public async Task<AssessmentDetails?> Handle(GetAssessmentByIdQuery request, CancellationToken cancellationToken)
   {
-    AssessmentDepth? depth;
-    AssessmentScoring? scoring;
+    AssessmentDepth? depth = null;
+    AssessmentScoring? scoring = null;
 
     var assessment = await _querySession.Query<Domain.Assessment.Entities.Assessment>()
       .Where(a => a.Id == request.AssessmentId)
-      .Include(a => a.AssessmentDepthId, out depth)
-      .Include(a => a.AssessmentScoringId, out scoring)
+      .Include<Domain.Assessment.Entities.Assessment, AssessmentDepth>(a => a.AssessmentDepthId, loaded => depth = loaded)
+      .Include<Domain.Assessment.Entities.Assessment, AssessmentScoring>(a => a.AssessmentScoringId, loaded => scoring = loaded)
       .SingleOrDefaultAsync(cancellationToken);
 
     if (assessment is null)
