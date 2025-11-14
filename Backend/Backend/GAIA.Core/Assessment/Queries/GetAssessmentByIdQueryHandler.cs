@@ -17,13 +17,13 @@ namespace GAIA.Core.Assessment.Queries
 
     public async Task<AssessmentDetails?> Handle(GetAssessmentByIdQuery request, CancellationToken cancellationToken)
     {
-      AssessmentDepth? depth = null;
-      AssessmentScoring? scoring = null;
+      AssessmentDepth? depth;
+      AssessmentScoring? scoring;
 
       var assessment = await _querySession.Query<Domain.Assessment.Entities.Assessment>()
         .Where(a => a.Id == request.AssessmentId)
-        .Include<AssessmentDepth>(a => a.AssessmentDepthId, loaded => depth = loaded)
-        .Include<AssessmentScoring>(a => a.AssessmentScoringId, loaded => scoring = loaded)
+        .Include(a => a.AssessmentDepthId, out depth)
+        .Include(a => a.AssessmentScoringId, out scoring)
         .SingleOrDefaultAsync(cancellationToken);
 
       if (assessment is null)
