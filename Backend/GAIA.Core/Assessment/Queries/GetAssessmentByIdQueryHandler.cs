@@ -1,6 +1,9 @@
 using GAIA.Domain.Assessment.Entities;
 using Marten;
+using Marten.Linq;
 using MediatR;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GAIA.Core.Assessment.Queries;
 
@@ -15,27 +18,24 @@ public class GetAssessmentByIdQueryHandler : IRequestHandler<GetAssessmentByIdQu
 
   public async Task<AssessmentDetails?> Handle(GetAssessmentByIdQuery request, CancellationToken cancellationToken)
   {
-    var assessment = await _querySession.LoadAsync<Domain.Assessment.Entities.Assessment>(request.AssessmentId, cancellationToken);
+      AssessmentDepth? depth = null;
+      AssessmentScoring? scoring = null;
 
-    if (assessment is null)
-    {
-      return null;
-    }
+      var assessment = await _querySession.Query<Domain.Assessment.Entities.Assessment>()
+        .Where(a => a.Id == request.AssessmentId)
+        .Include<AssessmentDepth>(a => a.AssessmentDepthId, loaded => depth = loaded)
+        .Include<AssessmentScoring>(a => a.AssessmentScoringId, loaded => scoring = loaded)
+        .SingleOrDefaultAsync(cancellationToken);
 
-    var depthTask = assessment.AssessmentDepthId != Guid.Empty
-      ? _querySession.LoadAsync<AssessmentDepth>(assessment.AssessmentDepthId, cancellationToken)
-      : Task.FromResult<AssessmentDepth?>(null);
-
-    var scoringTask = assessment.AssessmentScoringId != Guid.Empty
-      ? _querySession.LoadAsync<AssessmentScoring>(assessment.AssessmentScoringId, cancellationToken)
-      : Task.FromResult<AssessmentScoring?>(null);
-
-    await Task.WhenAll(depthTask, scoringTask);
+      if (assessment is null)
+      {
+        return null;
+      }
 
     return new AssessmentDetails(
       assessment,
-      depthTask.Result,
-      scoringTask.Result
+        depth,
+        scoring
     );
   }
 }
