@@ -2,11 +2,11 @@ using GAIA.Api.Contracts.Assessment;
 using GAIA.Core.Assessment.Queries;
 using GAIA.Domain.Assessment.Entities;
 
-namespace GAIA.Api.Mappers;
-
-public static class AssessmentMapper
+namespace GAIA.Api.Mappers
 {
-  public static AssessmentResponse ToResponse(this AssessmentDetails details) => new(
+  public static class AssessmentMapper
+  {
+    public static AssessmentResponse ToResponse(this AssessmentDetails details) => new(
     details.Assessment.Id,
     details.Assessment.Title,
     details.Assessment.Description,
@@ -19,17 +19,18 @@ public static class AssessmentMapper
     details.Scoring?.ToResponse()
   );
 
-  private static AssessmentDepthResponse ToResponse(this AssessmentDepth depth) => new(
-    depth.Id,
-    depth.FrameworkId,
-    depth.Name,
-    depth.Depth
-  );
+    private static AssessmentDepthResponse ToResponse(this AssessmentDepth depth) => new(
+      depth.Id,
+      depth.FrameworkId,
+      depth.Name,
+      depth.Depth
+    );
 
-  private static AssessmentScoringResponse ToResponse(this AssessmentScoring scoring) => new(
-    scoring.Id,
-    scoring.FrameworkId,
-    scoring.Name,
-    scoring.Description
-  );
+    private static AssessmentScoringResponse ToResponse(this AssessmentScoring scoring) => new(
+      scoring.Id,
+      scoring.FrameworkId,
+      scoring.Name,
+      scoring.Description
+    );
+  }
 }

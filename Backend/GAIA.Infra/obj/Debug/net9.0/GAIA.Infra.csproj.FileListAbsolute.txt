@@ -25,7 +25,6 @@ C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\B
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\obj\Debug\net9.0\GAIA.Infra.csproj.CoreCompileInputs.cache
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\obj\Debug\net9.0\GAIA.Infra.sourcelink.json
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\bin\Debug\net9.0\GAIA.Infra.deps.json
-C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\bin\Debug\net9.0\GAIA.Infra.runtimeconfig.json
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\bin\Debug\net9.0\GAIA.Infra.dll
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\bin\Debug\net9.0\GAIA.Infra.pdb
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\bin\Debug\net9.0\GAIA.Core.dll
@@ -36,5 +35,4 @@ C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\B
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\obj\Debug\net9.0\GAIA.Infra.dll
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\obj\Debug\net9.0\refint\GAIA.Infra.dll
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\obj\Debug\net9.0\GAIA.Infra.pdb
-C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\obj\Debug\net9.0\GAIA.Infra.genruntimeconfig.cache
 C:\Users\mhawwam\OneDrive - Deloitte (O365D)\Documents\GAIA\GAIA Solution\GAIA\Backend\GAIA.Infra\obj\Debug\net9.0\ref\GAIA.Infra.dll

@@ -1,10 +1,7 @@
 using GAIA.Core.Assessment.Interfaces;
 using GAIA.Core.Services.Assessment;
-using GAIA.Core.Services.Configuration;
 using GAIA.Domain.Assessment.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
-using GAIA.Domain.Framework.DomainEvents;
-using GAIA.Domain.Framework.Entities;
 using GAIA.Domain.InsightContent.DomainEvents;
 using GAIA.Domain.InsightContent.Entities;
 using GAIA.Infra.Projections;
@@ -25,15 +22,11 @@ namespace GAIA.Infra.Configurations
         options.Connection(connectionString);
         options.DatabaseSchemaName = "marten";
         // Register entities for Marten
-        options.Schema.For<Framework>();
-        options.Schema.For<FrameworkNode>();
         options.Schema.For<Assessment>();
         options.Schema.For<InsightContent>();
         options.Schema.For<AssessmentDepth>()
-                  .UniqueIndex(depth => new { depth.FrameworkId, depth.Depth }); options.Schema.For<AssessmentScoring>();
-        // Enable event sourcing if needed
-        options.Events.AddEventType(typeof(FrameworkCreated));
-        options.Events.AddEventType(typeof(FrameworkNodeCreated));
+                  .UniqueIndex(depth => depth.FrameworkId, depth => depth.Depth);
+        options.Schema.For<AssessmentScoring>();
         options.Events.AddEventType(typeof(AssessmentCreated));
         options.Events.AddEventType(typeof(InsightContentCreated));
 
@@ -45,7 +38,6 @@ namespace GAIA.Infra.Configurations
       .ApplyAllDatabaseChangesOnStartup();
 
       services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
-      services.AddScoped<IAssessmentConfigurationService, AssessmentConfigurationService>();
       services.AddHostedService<AssessmentConfigurationSeedService>();
       services.AddMediatR(cfg =>
       cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));

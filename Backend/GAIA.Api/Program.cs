@@ -1,14 +1,16 @@
+using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using GAIA.Api.Contracts.Assessment.Validation;
 using GAIA.Core.Interfaces.Chat;
 using GAIA.Core.Services.Chat;
+using GAIA.Domain.Framework;
 using GAIA.Infra.Configurations;
+using GAIA.Infra.EFCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-var configuration = builder.Configuration;
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,11 +19,11 @@ builder.Services.AddSwaggerGen(options =>
 {
   options.EnableAnnotations();
   options.SupportNonNullableReferenceTypes();
-  options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+  options.SwaggerDoc("v1", new OpenApiInfo
   {
     Title = "GAIA API",
     Version = "v1",
-    Description = "GAIA backend HTTP API"
+    Description = "GAIA backend HTTP API",
   });
 
   var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -33,16 +35,16 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<GAIA.Api.Contracts.Validation.CreateAssessmentRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateAssessmentRequestValidator>();
 // Use automatic 400 responses for invalid ModelState via [ApiController]
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-  options.SuppressModelStateInvalidFilter = false;
-});
+builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = false; });
 
 builder.Services.AddProblemDetails();
 
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddInfraEfCore(builder.Configuration.GetRequiredSection("DbConnections:EfCoreConnection"));
+
+builder.Services.LoadFrameworkModule();
 
 // Use real or mock service based on configuration
 if (builder.Configuration.GetValue<bool>("UseMockService"))
@@ -56,7 +58,7 @@ else
 
 var app = builder.Build();
 
-
+await app.Services.MigrateDatabase();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -64,6 +66,7 @@ if (app.Environment.IsDevelopment())
   app.UseSwagger();
   app.UseSwaggerUI();
 }
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseExceptionHandler();

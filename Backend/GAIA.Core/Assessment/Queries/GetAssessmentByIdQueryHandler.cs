@@ -2,40 +2,41 @@ using GAIA.Domain.Assessment.Entities;
 using Marten;
 using MediatR;
 
-namespace GAIA.Core.Assessment.Queries;
-
-public class GetAssessmentByIdQueryHandler : IRequestHandler<GetAssessmentByIdQuery, AssessmentDetails?>
+namespace GAIA.Core.Assessment.Queries
 {
-  private readonly IQuerySession _querySession;
-
-  public GetAssessmentByIdQueryHandler(IQuerySession querySession)
+  public class GetAssessmentByIdQueryHandler : IRequestHandler<GetAssessmentByIdQuery, AssessmentDetails?>
   {
-    _querySession = querySession;
-  }
+    private readonly IQuerySession _querySession;
 
-  public async Task<AssessmentDetails?> Handle(GetAssessmentByIdQuery request, CancellationToken cancellationToken)
-  {
-    var assessment = await _querySession.LoadAsync<Domain.Assessment.Entities.Assessment>(request.AssessmentId, cancellationToken);
-
-    if (assessment is null)
+    public GetAssessmentByIdQueryHandler(IQuerySession querySession)
     {
-      return null;
+      _querySession = querySession;
     }
 
-    var depthTask = assessment.AssessmentDepthId != Guid.Empty
-      ? _querySession.LoadAsync<AssessmentDepth>(assessment.AssessmentDepthId, cancellationToken)
-      : Task.FromResult<AssessmentDepth?>(null);
+    public async Task<AssessmentDetails?> Handle(GetAssessmentByIdQuery request, CancellationToken cancellationToken)
+    {
+      AssessmentDepth? depth = null;
+      AssessmentScoring? scoring = null;
 
-    var scoringTask = assessment.AssessmentScoringId != Guid.Empty
-      ? _querySession.LoadAsync<AssessmentScoring>(assessment.AssessmentScoringId, cancellationToken)
-      : Task.FromResult<AssessmentScoring?>(null);
+      var query = _querySession.Query<Domain.Assessment.Entities.Assessment>()
+                .Include<AssessmentDepth>(a => a.AssessmentDepthId, loaded => { depth = loaded; })
+                .Include<AssessmentScoring>(a => a.AssessmentScoringId, loaded => { scoring = loaded; });
 
-    await Task.WhenAll(depthTask, scoringTask);
 
-    return new AssessmentDetails(
-      assessment,
-      depthTask.Result,
-      scoringTask.Result
-    );
+      var assessment = await query
+        .Where(a => a.Id == request.AssessmentId)
+        .SingleOrDefaultAsync(cancellationToken);
+
+      if (assessment is null)
+      {
+        return null;
+      }
+
+      return new AssessmentDetails(
+        assessment,
+        depth,
+        scoring
+      );
+    }
   }
 }

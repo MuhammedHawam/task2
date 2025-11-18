@@ -9,8 +9,8 @@
       "GAIA.Core/1.0.0": {
         "dependencies": {
           "GAIA.Domain": "1.0.0",
-          "Marten": "8.13.1",
-          "MediatR": "13.0.0",
+          "Marten": "8.15.2",
+          "MediatR": "13.1.0",
           "Microsoft.Extensions.Configuration": "9.0.9"
         },
         "runtime": {
@@ -25,11 +25,11 @@
           }
         }
       },
-      "FluentValidation/12.0.0": {
+      "FluentValidation/12.1.0": {
         "runtime": {
           "lib/net8.0/FluentValidation.dll": {
             "assemblyVersion": "12.0.0.0",
-            "fileVersion": "12.0.0.0"
+            "fileVersion": "12.1.0.0"
           }
         }
       },
@@ -91,7 +91,7 @@
         }
       },
       "ImTools/4.0.0": {},
-      "JasperFx/1.9.0": {
+      "JasperFx/1.10.0": {
         "dependencies": {
           "FastExpressionCompiler": "5.1.1",
           "ImTools": "4.0.0",
@@ -100,30 +100,29 @@
           "Microsoft.Extensions.Hosting": "9.0.0",
           "Microsoft.Extensions.ObjectPool": "9.0.0",
           "Polly.Core": "8.5.2",
-          "Spectre.Console": "0.50.0",
-          "System.Threading.Tasks.Dataflow": "8.0.0"
+          "Spectre.Console": "0.50.0"
         },
         "runtime": {
           "lib/net9.0/JasperFx.dll": {
-            "assemblyVersion": "1.9.0.0",
-            "fileVersion": "1.9.0.0"
+            "assemblyVersion": "1.10.0.0",
+            "fileVersion": "1.10.0.0"
           }
         }
       },
-      "JasperFx.Events/1.10.2": {
+      "JasperFx.Events/1.12.0": {
         "dependencies": {
-          "JasperFx": "1.9.0"
+          "JasperFx": "1.10.0"
         },
         "runtime": {
           "lib/net9.0/JasperFx.Events.dll": {
-            "assemblyVersion": "1.10.2.0",
-            "fileVersion": "1.10.2.0"
+            "assemblyVersion": "1.12.0.0",
+            "fileVersion": "1.12.0.0"
           }
         }
       },
-      "JasperFx.RuntimeCompiler/4.0.0": {
+      "JasperFx.RuntimeCompiler/4.2.0": {
         "dependencies": {
-          "JasperFx": "1.9.0",
+          "JasperFx": "1.10.0",
           "Microsoft.CodeAnalysis": "4.14.0",
           "Microsoft.CodeAnalysis.CSharp": "4.14.0",
           "Microsoft.CodeAnalysis.Scripting": "4.14.0",
@@ -131,41 +130,41 @@
         },
         "runtime": {
           "lib/net9.0/JasperFx.RuntimeCompiler.dll": {
-            "assemblyVersion": "4.0.0.0",
-            "fileVersion": "4.0.0.0"
+            "assemblyVersion": "4.2.0.0",
+            "fileVersion": "4.2.0.0"
           }
         }
       },
-      "Marten/8.13.1": {
+      "Marten/8.15.2": {
         "dependencies": {
           "FSharp.Core": "9.0.100",
-          "JasperFx": "1.9.0",
-          "JasperFx.Events": "1.10.2",
-          "JasperFx.RuntimeCompiler": "4.0.0",
+          "JasperFx": "1.10.0",
+          "JasperFx.Events": "1.12.0",
+          "JasperFx.RuntimeCompiler": "4.2.0",
           "Microsoft.Extensions.Hosting.Abstractions": "9.0.0",
           "Newtonsoft.Json": "13.0.3",
           "Npgsql.Json.NET": "9.0.2",
           "Polly.Core": "8.5.2",
-          "Weasel.Postgresql": "8.2.0"
+          "Weasel.Postgresql": "8.3.0"
         },
         "runtime": {
           "lib/net9.0/Marten.dll": {
-            "assemblyVersion": "8.13.1.0",
-            "fileVersion": "8.13.1.0"
+            "assemblyVersion": "8.15.2.0",
+            "fileVersion": "8.15.2.0"
           }
         }
       },
-      "MediatR/13.0.0": {
+      "MediatR/13.1.0": {
         "dependencies": {
           "MediatR.Contracts": "2.0.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
-          "Microsoft.Extensions.Logging": "9.0.0",
-          "Microsoft.IdentityModel.JsonWebTokens": "8.0.1"
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
+          "Microsoft.IdentityModel.JsonWebTokens": "8.14.0"
         },
         "runtime": {
           "lib/net9.0/MediatR.dll": {
             "assemblyVersion": "13.0.0.0",
-            "fileVersion": "13.0.0.0"
+            "fileVersion": "13.1.0.0"
           }
         }
       },
@@ -1055,44 +1054,45 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Abstractions/8.0.1": {
+      "Microsoft.IdentityModel.Abstractions/8.14.0": {
         "runtime": {
           "lib/net9.0/Microsoft.IdentityModel.Abstractions.dll": {
-            "assemblyVersion": "8.0.1.0",
-            "fileVersion": "8.0.1.50722"
+            "assemblyVersion": "8.14.0.0",
+            "fileVersion": "8.14.0.60815"
           }
         }
       },
-      "Microsoft.IdentityModel.JsonWebTokens/8.0.1": {
+      "Microsoft.IdentityModel.JsonWebTokens/8.14.0": {
         "dependencies": {
-          "Microsoft.IdentityModel.Tokens": "8.0.1"
+          "Microsoft.IdentityModel.Tokens": "8.14.0"
         },
         "runtime": {
           "lib/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
-            "assemblyVersion": "8.0.1.0",
-            "fileVersion": "8.0.1.50722"
+            "assemblyVersion": "8.14.0.0",
+            "fileVersion": "8.14.0.60815"
           }
         }
       },
-      "Microsoft.IdentityModel.Logging/8.0.1": {
+      "Microsoft.IdentityModel.Logging/8.14.0": {
         "dependencies": {
-          "Microsoft.IdentityModel.Abstractions": "8.0.1"
+          "Microsoft.IdentityModel.Abstractions": "8.14.0"
         },
         "runtime": {
           "lib/net9.0/Microsoft.IdentityModel.Logging.dll": {
-            "assemblyVersion": "8.0.1.0",
-            "fileVersion": "8.0.1.50722"
+            "assemblyVersion": "8.14.0.0",
+            "fileVersion": "8.14.0.60815"
           }
         }
       },
-      "Microsoft.IdentityModel.Tokens/8.0.1": {
+      "Microsoft.IdentityModel.Tokens/8.14.0": {
         "dependencies": {
-          "Microsoft.IdentityModel.Logging": "8.0.1"
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
+          "Microsoft.IdentityModel.Logging": "8.14.0"
         },
         "runtime": {
           "lib/net9.0/Microsoft.IdentityModel.Tokens.dll": {
-            "assemblyVersion": "8.0.1.0",
-            "fileVersion": "8.0.1.50722"
+            "assemblyVersion": "8.14.0.0",
+            "fileVersion": "8.14.0.60815"
           }
         }
       },
@@ -1272,35 +1272,34 @@
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
       "System.Text.Encoding.CodePages/7.0.0": {},
       "System.Threading.Channels/7.0.0": {},
-      "System.Threading.Tasks.Dataflow/8.0.0": {},
       "System.Threading.Tasks.Extensions/4.5.4": {},
-      "Weasel.Core/8.2.0": {
+      "Weasel.Core/8.3.0": {
         "dependencies": {
-          "JasperFx": "1.9.0"
+          "JasperFx": "1.10.0"
         },
         "runtime": {
           "lib/net9.0/Weasel.Core.dll": {
-            "assemblyVersion": "8.2.0.0",
-            "fileVersion": "8.2.0.0"
+            "assemblyVersion": "8.3.0.0",
+            "fileVersion": "8.3.0.0"
           }
         }
       },
-      "Weasel.Postgresql/8.2.0": {
+      "Weasel.Postgresql/8.3.0": {
         "dependencies": {
           "Npgsql": "9.0.2",
           "Npgsql.NetTopologySuite": "9.0.2",
-          "Weasel.Core": "8.2.0"
+          "Weasel.Core": "8.3.0"
         },
         "runtime": {
           "lib/net9.0/Weasel.Postgresql.dll": {
-            "assemblyVersion": "8.2.0.0",
-            "fileVersion": "8.2.0.0"
+            "assemblyVersion": "8.3.0.0",
+            "fileVersion": "8.3.0.0"
           }
         }
       },
       "GAIA.Domain/1.0.0": {
         "dependencies": {
-          "FluentValidation": "12.0.0"
+          "FluentValidation": "12.1.0"
         },
         "runtime": {
           "GAIA.Domain.dll": {
@@ -1324,12 +1323,12 @@
       "path": "fastexpressioncompiler/5.1.1",
       "hashPath": "fastexpressioncompiler.5.1.1.nupkg.sha512"
     },
-    "FluentValidation/12.0.0": {
+    "FluentValidation/12.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-8NVLxtMUXynRHJIX3Hn1ACovaqZIJASufXIIFkD0EUbcd5PmMsL1xUD5h548gCezJ5BzlITaR9CAMrGe29aWpA==",
-      "path": "fluentvalidation/12.0.0",
-      "hashPath": "fluentvalidation.12.0.0.nupkg.sha512"
+      "sha512": "sha512-FqWEn8BdbbFEHGanj9K8SVo+LyBeFWy2rolaE+e1TNUbifr8M7Iss+I1AqTSc8kjKtvjl/WN4XIHiRpslh42bA==",
+      "path": "fluentvalidation/12.1.0",
+      "hashPath": "fluentvalidation.12.1.0.nupkg.sha512"
     },
     "FSharp.Core/9.0.100": {
       "type": "package",
@@ -1352,40 +1351,40 @@
       "path": "imtools/4.0.0",
       "hashPath": "imtools.4.0.0.nupkg.sha512"
     },
-    "JasperFx/1.9.0": {
+    "JasperFx/1.10.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QbizxIguQ9EV5VmjcN6S2AMRfXxB59k65aXwWJkj/eTTgQjGuvFs2Ht3ZgGdkoNVXWGN7PZmS2yw5M9R+PYfag==",
-      "path": "jasperfx/1.9.0",
-      "hashPath": "jasperfx.1.9.0.nupkg.sha512"
+      "sha512": "sha512-dtAM1Fc4zntBDIs6VZZ53zbtVl8QSHsqyI2kh1CFuNIqT0xHiaWLX+KW43XCJgH4AXfD/RyX/4c5EHQWy83uiA==",
+      "path": "jasperfx/1.10.0",
+      "hashPath": "jasperfx.1.10.0.nupkg.sha512"
     },
-    "JasperFx.Events/1.10.2": {
+    "JasperFx.Events/1.12.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-VqauFbWWDCKDodGlr4nWg1UPxDb4deobCKelsVttE4+Ph0i3U76DFVUiq6GaYryNUn/m41jS286bhdLfj2MoRw==",
-      "path": "jasperfx.events/1.10.2",
-      "hashPath": "jasperfx.events.1.10.2.nupkg.sha512"
+      "sha512": "sha512-cXXhE67hWlfPhHHeoXXABh82wJHPtap3XuT+hOGD7ls5cJfdBUbN/kdEZR5+S5RPvyP1vgt6/xcgS2Zo7/LCxg==",
+      "path": "jasperfx.events/1.12.0",
+      "hashPath": "jasperfx.events.1.12.0.nupkg.sha512"
     },
-    "JasperFx.RuntimeCompiler/4.0.0": {
+    "JasperFx.RuntimeCompiler/4.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YGIy3WteRE1RPk5yQ5xdBZNe1ld18T/DPaEiABIGXGN7p/VCJyfQKwne74YpQiAmKHdWuoy0iny0mp3uOUe9qQ==",
-      "path": "jasperfx.runtimecompiler/4.0.0",
-      "hashPath": "jasperfx.runtimecompiler.4.0.0.nupkg.sha512"
+      "sha512": "sha512-+MgwLKPhAzROG9aXUkXRt3UAXC7bd+VRE49uOPMHik68dcbC8NKPGzDhO40QxkCXQiy+HJrWfPbflpUvoPmTYA==",
+      "path": "jasperfx.runtimecompiler/4.2.0",
+      "hashPath": "jasperfx.runtimecompiler.4.2.0.nupkg.sha512"
     },
-    "Marten/8.13.1": {
+    "Marten/8.15.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-AZ6m4PRbaiEw03IiQf5giG8Df8KZ4Tjsn7YhoMS/h74M00b3C6RvO2tCvDmacWtgFUXhgSvkhkorinCvkdsPIw==",
-      "path": "marten/8.13.1",
-      "hashPath": "marten.8.13.1.nupkg.sha512"
+      "sha512": "sha512-kC4GjvTHhdWw9baPrJCLqInu9coAStLoRnX/1e9O8oOrcPzZZB6tspXfFWm+oYom4hoXut+BKX2bkBxwdwBSPw==",
+      "path": "marten/8.15.2",
+      "hashPath": "marten.8.15.2.nupkg.sha512"
     },
-    "MediatR/13.0.0": {
+    "MediatR/13.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gR5vSoIINsXs86we38qdIfG62f6ngxT2sSaePsakJGHJIgLUDA7b41lujGXGWxX0hWyk8suajr2VKcAYSVMtdw==",
-      "path": "mediatr/13.0.0",
-      "hashPath": "mediatr.13.0.0.nupkg.sha512"
+      "sha512": "sha512-YkKqc0a5ZyZ7ccVyf+cuO2M6UYLduldVTN5oI0nvk3SnthyLD0nSy6vhpPQtf3ovcNOsPo+qjMqaUThe4wGeCA==",
+      "path": "mediatr/13.1.0",
+      "hashPath": "mediatr.13.1.0.nupkg.sha512"
     },
     "MediatR.Contracts/2.0.1": {
       "type": "package",
@@ -1688,33 +1687,33 @@
       "path": "microsoft.extensions.primitives/9.0.9",
       "hashPath": "microsoft.extensions.primitives.9.0.9.nupkg.sha512"
     },
-    "Microsoft.IdentityModel.Abstractions/8.0.1": {
+    "Microsoft.IdentityModel.Abstractions/8.14.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OtlIWcyX01olfdevPKZdIPfBEvbcioDyBiE/Z2lHsopsMD7twcKtlN9kMevHmI5IIPhFpfwCIiR6qHQz1WHUIw==",
-      "path": "microsoft.identitymodel.abstractions/8.0.1",
-      "hashPath": "microsoft.identitymodel.abstractions.8.0.1.nupkg.sha512"
+      "sha512": "sha512-iwbCpSjD3ehfTwBhtSNEtKPK0ICun6ov7Ibx6ISNA9bfwIyzI2Siwyi9eJFCJBwxowK9xcA1mj+jBWiigeqgcQ==",
+      "path": "microsoft.identitymodel.abstractions/8.14.0",
+      "hashPath": "microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512"
     },
-    "Microsoft.IdentityModel.JsonWebTokens/8.0.1": {
+    "Microsoft.IdentityModel.JsonWebTokens/8.14.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-s6++gF9x0rQApQzOBbSyp4jUaAlwm+DroKfL8gdOHxs83k8SJfUXhuc46rDB3rNXBQ1MVRxqKUrqFhO/M0E97g==",
-      "path": "microsoft.identitymodel.jsonwebtokens/8.0.1",
-      "hashPath": "microsoft.identitymodel.jsonwebtokens.8.0.1.nupkg.sha512"
+      "sha512": "sha512-4jOpiA4THdtpLyMdAb24dtj7+6GmvhOhxf5XHLYWmPKF8ApEnApal1UnJsKO4HxUWRXDA6C4WQVfYyqsRhpNpQ==",
+      "path": "microsoft.identitymodel.jsonwebtokens/8.14.0",
+      "hashPath": "microsoft.identitymodel.jsonwebtokens.8.14.0.nupkg.sha512"
     },
-    "Microsoft.IdentityModel.Logging/8.0.1": {
+    "Microsoft.IdentityModel.Logging/8.14.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UCPF2exZqBXe7v/6sGNiM6zCQOUXXQ9+v5VTb9gPB8ZSUPnX53BxlN78v2jsbIvK9Dq4GovQxo23x8JgWvm/Qg==",
-      "path": "microsoft.identitymodel.logging/8.0.1",
-      "hashPath": "microsoft.identitymodel.logging.8.0.1.nupkg.sha512"
+      "sha512": "sha512-eqqnemdW38CKZEHS6diA50BV94QICozDZEvSrsvN3SJXUFwVB9gy+/oz76gldP7nZliA16IglXjXTCTdmU/Ejg==",
+      "path": "microsoft.identitymodel.logging/8.14.0",
+      "hashPath": "microsoft.identitymodel.logging.8.14.0.nupkg.sha512"
     },
-    "Microsoft.IdentityModel.Tokens/8.0.1": {
+    "Microsoft.IdentityModel.Tokens/8.14.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kDimB6Dkd3nkW2oZPDkMkVHfQt3IDqO5gL0oa8WVy3OP4uE8Ij+8TXnqg9TOd9ufjsY3IDiGz7pCUbnfL18tjg==",
-      "path": "microsoft.identitymodel.tokens/8.0.1",
-      "hashPath": "microsoft.identitymodel.tokens.8.0.1.nupkg.sha512"
+      "sha512": "sha512-lKIZiBiGd36k02TCdMHp1KlNWisyIvQxcYJvIkz7P4gSQ9zi8dgh6S5Grj8NNG7HWYIPfQymGyoZ6JB5d1Lo1g==",
+      "path": "microsoft.identitymodel.tokens/8.14.0",
+      "hashPath": "microsoft.identitymodel.tokens.8.14.0.nupkg.sha512"
     },
     "NetTopologySuite/2.5.0": {
       "type": "package",
@@ -1884,13 +1883,6 @@
       "path": "system.threading.channels/7.0.0",
       "hashPath": "system.threading.channels.7.0.0.nupkg.sha512"
     },
-    "System.Threading.Tasks.Dataflow/8.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-7V0I8tPa9V7UxMx/+7DIwkhls5ouaEMQx6l/GwGm1Y8kJQ61On9B/PxCXFLbgu5/C47g0BP2CUYs+nMv1+Oaqw==",
-      "path": "system.threading.tasks.dataflow/8.0.0",
-      "hashPath": "system.threading.tasks.dataflow.8.0.0.nupkg.sha512"
-    },
     "System.Threading.Tasks.Extensions/4.5.4": {
       "type": "package",
       "serviceable": true,
@@ -1898,19 +1890,19 @@
       "path": "system.threading.tasks.extensions/4.5.4",
       "hashPath": "system.threading.tasks.extensions.4.5.4.nupkg.sha512"
     },
-    "Weasel.Core/8.2.0": {
+    "Weasel.Core/8.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RmEZgRQhR/dxgLvhn8z/m9autdmlX40dhq3KDW1Df7nclR3N7gDuRqKYA+XdcMJdhlCs78nefktk1dLlMXgVbA==",
-      "path": "weasel.core/8.2.0",
-      "hashPath": "weasel.core.8.2.0.nupkg.sha512"
+      "sha512": "sha512-E9iZLBfsCzs1/0lw/Jfo+ZZ3e7BSb2CsnVFBvkTM7NFyEv+B63t8Yr29LBzOZhV6TmJ59gWAKLpK0fSZEiPAsA==",
+      "path": "weasel.core/8.3.0",
+      "hashPath": "weasel.core.8.3.0.nupkg.sha512"
     },
-    "Weasel.Postgresql/8.2.0": {
+    "Weasel.Postgresql/8.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hHLf5LkmGJIbWSr6ewAyBXgYUkasgyi7cZOwYt7HVB7saB/cRpA/hTKx4Bn9Gn+L6ZJATdSOdhjt3gplrH/q2A==",
-      "path": "weasel.postgresql/8.2.0",
-      "hashPath": "weasel.postgresql.8.2.0.nupkg.sha512"
+      "sha512": "sha512-Zfal9uZz+Na9DHyWo6k5R3CZlZC4Jq0NIjxvZ2C5pT1nVPp/jutb3nkCsFo6zlSTYxGkS3sbveXICYKGIcxAKQ==",
+      "path": "weasel.postgresql/8.3.0",
+      "hashPath": "weasel.postgresql.8.3.0.nupkg.sha512"
     },
     "GAIA.Domain/1.0.0": {
       "type": "project",

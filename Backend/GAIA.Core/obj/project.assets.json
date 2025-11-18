@@ -15,7 +15,7 @@
           }
         }
       },
-      "FluentValidation/12.0.0": {
+      "FluentValidation/12.1.0": {
         "type": "package",
         "compile": {
           "lib/net8.0/FluentValidation.dll": {
@@ -105,7 +105,7 @@
           }
         }
       },
-      "JasperFx/1.9.0": {
+      "JasperFx/1.10.0": {
         "type": "package",
         "dependencies": {
           "FastExpressionCompiler": "5.1.1",
@@ -115,8 +115,7 @@
           "Microsoft.Extensions.Hosting": "9.0.0",
           "Microsoft.Extensions.ObjectPool": "9.0.0",
           "Polly.Core": "8.5.2",
-          "Spectre.Console": "0.50.0",
-          "System.Threading.Tasks.Dataflow": "8.0.0"
+          "Spectre.Console": "0.50.0"
         },
         "compile": {
           "lib/net9.0/JasperFx.dll": {
@@ -129,10 +128,10 @@
           }
         }
       },
-      "JasperFx.Events/1.10.2": {
+      "JasperFx.Events/1.12.0": {
         "type": "package",
         "dependencies": {
-          "JasperFx": "1.9.0"
+          "JasperFx": "1.10.0"
         },
         "compile": {
           "lib/net9.0/JasperFx.Events.dll": {
@@ -145,10 +144,10 @@
           }
         }
       },
-      "JasperFx.RuntimeCompiler/4.0.0": {
+      "JasperFx.RuntimeCompiler/4.2.0": {
         "type": "package",
         "dependencies": {
-          "JasperFx": "1.0.0",
+          "JasperFx": "1.10.0",
           "Microsoft.CodeAnalysis": "4.14.0",
           "Microsoft.CodeAnalysis.CSharp": "4.14.0",
           "Microsoft.CodeAnalysis.Scripting": "4.14.0",
@@ -165,18 +164,18 @@
           }
         }
       },
-      "Marten/8.13.1": {
+      "Marten/8.15.2": {
         "type": "package",
         "dependencies": {
           "FSharp.Core": "9.0.100",
-          "JasperFx": "1.9.0",
-          "JasperFx.Events": "1.10.2",
-          "JasperFx.RuntimeCompiler": "4.0.0",
+          "JasperFx": "1.10.0",
+          "JasperFx.Events": "1.12.0",
+          "JasperFx.RuntimeCompiler": "4.2.0",
           "Microsoft.Extensions.Hosting.Abstractions": "9.0.0",
           "Newtonsoft.Json": "13.0.3",
           "Npgsql.Json.NET": "9.0.2",
           "Polly.Core": "8.5.2",
-          "Weasel.Postgresql": "8.2.0"
+          "Weasel.Postgresql": "8.3.0"
         },
         "compile": {
           "lib/net9.0/Marten.dll": {
@@ -189,13 +188,13 @@
           }
         }
       },
-      "MediatR/13.0.0": {
+      "MediatR/13.1.0": {
         "type": "package",
         "dependencies": {
           "MediatR.Contracts": "[2.0.1, 3.0.0)",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
-          "Microsoft.Extensions.Logging": "8.0.0",
-          "Microsoft.IdentityModel.JsonWebTokens": "8.0.1"
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "Microsoft.IdentityModel.JsonWebTokens": "8.14.0"
         },
         "compile": {
           "lib/net9.0/MediatR.dll": {
@@ -1393,7 +1392,7 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "Microsoft.IdentityModel.Abstractions/8.0.1": {
+      "Microsoft.IdentityModel.Abstractions/8.14.0": {
         "type": "package",
         "compile": {
           "lib/net9.0/Microsoft.IdentityModel.Abstractions.dll": {
@@ -1406,10 +1405,10 @@
           }
         }
       },
-      "Microsoft.IdentityModel.JsonWebTokens/8.0.1": {
+      "Microsoft.IdentityModel.JsonWebTokens/8.14.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Tokens": "8.0.1"
+          "Microsoft.IdentityModel.Tokens": "8.14.0"
         },
         "compile": {
           "lib/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
@@ -1422,10 +1421,10 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Logging/8.0.1": {
+      "Microsoft.IdentityModel.Logging/8.14.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Abstractions": "8.0.1"
+          "Microsoft.IdentityModel.Abstractions": "8.14.0"
         },
         "compile": {
           "lib/net9.0/Microsoft.IdentityModel.Logging.dll": {
@@ -1438,10 +1437,11 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Tokens/8.0.1": {
+      "Microsoft.IdentityModel.Tokens/8.14.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Logging": "8.0.1"
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "Microsoft.IdentityModel.Logging": "8.14.0"
         },
         "compile": {
           "lib/net9.0/Microsoft.IdentityModel.Tokens.dll": {
@@ -1844,22 +1844,6 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "System.Threading.Tasks.Dataflow/8.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/System.Threading.Tasks.Dataflow.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/System.Threading.Tasks.Dataflow.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net6.0/_._": {}
-        }
-      },
       "System.Threading.Tasks.Extensions/4.5.4": {
         "type": "package",
         "compile": {
@@ -1869,10 +1853,10 @@
           "lib/netcoreapp2.1/_._": {}
         }
       },
-      "Weasel.Core/8.2.0": {
+      "Weasel.Core/8.3.0": {
         "type": "package",
         "dependencies": {
-          "JasperFx": "1.8.0"
+          "JasperFx": "1.10.0"
         },
         "compile": {
           "lib/net9.0/Weasel.Core.dll": {
@@ -1885,12 +1869,12 @@
           }
         }
       },
-      "Weasel.Postgresql/8.2.0": {
+      "Weasel.Postgresql/8.3.0": {
         "type": "package",
         "dependencies": {
           "Npgsql": "9.0.2",
           "Npgsql.NetTopologySuite": "9.0.2",
-          "Weasel.Core": "8.2.0"
+          "Weasel.Core": "8.3.0"
         },
         "compile": {
           "lib/net9.0/Weasel.Postgresql.dll": {
@@ -1907,7 +1891,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "FluentValidation": "12.0.0"
+          "FluentValidation": "12.1.0"
         },
         "compile": {
           "bin/placeholder/GAIA.Domain.dll": {}
@@ -1946,16 +1930,16 @@
         "readme.md"
       ]
     },
-    "FluentValidation/12.0.0": {
-      "sha512": "8NVLxtMUXynRHJIX3Hn1ACovaqZIJASufXIIFkD0EUbcd5PmMsL1xUD5h548gCezJ5BzlITaR9CAMrGe29aWpA==",
+    "FluentValidation/12.1.0": {
+      "sha512": "FqWEn8BdbbFEHGanj9K8SVo+LyBeFWy2rolaE+e1TNUbifr8M7Iss+I1AqTSc8kjKtvjl/WN4XIHiRpslh42bA==",
       "type": "package",
-      "path": "fluentvalidation/12.0.0",
+      "path": "fluentvalidation/12.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
         "fluent-validation-icon.png",
-        "fluentvalidation.12.0.0.nupkg.sha512",
+        "fluentvalidation.12.1.0.nupkg.sha512",
         "fluentvalidation.nuspec",
         "lib/net8.0/FluentValidation.dll",
         "lib/net8.0/FluentValidation.xml"
@@ -2037,83 +2021,93 @@
         "imtools.nuspec"
       ]
     },
-    "JasperFx/1.9.0": {
-      "sha512": "QbizxIguQ9EV5VmjcN6S2AMRfXxB59k65aXwWJkj/eTTgQjGuvFs2Ht3ZgGdkoNVXWGN7PZmS2yw5M9R+PYfag==",
+    "JasperFx/1.10.0": {
+      "sha512": "dtAM1Fc4zntBDIs6VZZ53zbtVl8QSHsqyI2kh1CFuNIqT0xHiaWLX+KW43XCJgH4AXfD/RyX/4c5EHQWy83uiA==",
       "type": "package",
-      "path": "jasperfx/1.9.0",
+      "path": "jasperfx/1.10.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "jasperfx.1.9.0.nupkg.sha512",
+        "jasperfx.1.10.0.nupkg.sha512",
         "jasperfx.nuspec",
+        "lib/net10.0/JasperFx.dll",
+        "lib/net10.0/JasperFx.xml",
         "lib/net8.0/JasperFx.dll",
         "lib/net8.0/JasperFx.xml",
         "lib/net9.0/JasperFx.dll",
         "lib/net9.0/JasperFx.xml"
       ]
     },
-    "JasperFx.Events/1.10.2": {
-      "sha512": "VqauFbWWDCKDodGlr4nWg1UPxDb4deobCKelsVttE4+Ph0i3U76DFVUiq6GaYryNUn/m41jS286bhdLfj2MoRw==",
+    "JasperFx.Events/1.12.0": {
+      "sha512": "cXXhE67hWlfPhHHeoXXABh82wJHPtap3XuT+hOGD7ls5cJfdBUbN/kdEZR5+S5RPvyP1vgt6/xcgS2Zo7/LCxg==",
       "type": "package",
-      "path": "jasperfx.events/1.10.2",
+      "path": "jasperfx.events/1.12.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "jasperfx.events.1.10.2.nupkg.sha512",
+        "jasperfx.events.1.12.0.nupkg.sha512",
         "jasperfx.events.nuspec",
+        "lib/net10.0/JasperFx.Events.dll",
+        "lib/net10.0/JasperFx.Events.xml",
         "lib/net8.0/JasperFx.Events.dll",
         "lib/net8.0/JasperFx.Events.xml",
         "lib/net9.0/JasperFx.Events.dll",
         "lib/net9.0/JasperFx.Events.xml"
       ]
     },
-    "JasperFx.RuntimeCompiler/4.0.0": {
-      "sha512": "YGIy3WteRE1RPk5yQ5xdBZNe1ld18T/DPaEiABIGXGN7p/VCJyfQKwne74YpQiAmKHdWuoy0iny0mp3uOUe9qQ==",
+    "JasperFx.RuntimeCompiler/4.2.0": {
+      "sha512": "+MgwLKPhAzROG9aXUkXRt3UAXC7bd+VRE49uOPMHik68dcbC8NKPGzDhO40QxkCXQiy+HJrWfPbflpUvoPmTYA==",
       "type": "package",
-      "path": "jasperfx.runtimecompiler/4.0.0",
+      "path": "jasperfx.runtimecompiler/4.2.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "jasperfx.runtimecompiler.4.0.0.nupkg.sha512",
+        "jasperfx.runtimecompiler.4.2.0.nupkg.sha512",
         "jasperfx.runtimecompiler.nuspec",
+        "lib/net10.0/JasperFx.RuntimeCompiler.dll",
+        "lib/net10.0/JasperFx.RuntimeCompiler.xml",
         "lib/net8.0/JasperFx.RuntimeCompiler.dll",
         "lib/net8.0/JasperFx.RuntimeCompiler.xml",
         "lib/net9.0/JasperFx.RuntimeCompiler.dll",
         "lib/net9.0/JasperFx.RuntimeCompiler.xml"
       ]
     },
-    "Marten/8.13.1": {
-      "sha512": "AZ6m4PRbaiEw03IiQf5giG8Df8KZ4Tjsn7YhoMS/h74M00b3C6RvO2tCvDmacWtgFUXhgSvkhkorinCvkdsPIw==",
+    "Marten/8.15.2": {
+      "sha512": "kC4GjvTHhdWw9baPrJCLqInu9coAStLoRnX/1e9O8oOrcPzZZB6tspXfFWm+oYom4hoXut+BKX2bkBxwdwBSPw==",
       "type": "package",
-      "path": "marten/8.13.1",
+      "path": "marten/8.15.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "lib/net10.0/Marten.dll",
+        "lib/net10.0/Marten.xml",
         "lib/net8.0/Marten.dll",
         "lib/net8.0/Marten.xml",
         "lib/net9.0/Marten.dll",
         "lib/net9.0/Marten.xml",
-        "marten.8.13.1.nupkg.sha512",
+        "marten.8.15.2.nupkg.sha512",
         "marten.nuspec"
       ]
     },
-    "MediatR/13.0.0": {
-      "sha512": "gR5vSoIINsXs86we38qdIfG62f6ngxT2sSaePsakJGHJIgLUDA7b41lujGXGWxX0hWyk8suajr2VKcAYSVMtdw==",
+    "MediatR/13.1.0": {
+      "sha512": "YkKqc0a5ZyZ7ccVyf+cuO2M6UYLduldVTN5oI0nvk3SnthyLD0nSy6vhpPQtf3ovcNOsPo+qjMqaUThe4wGeCA==",
       "type": "package",
-      "path": "mediatr/13.0.0",
+      "path": "mediatr/13.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.md",
         "README.md",
         "gradient_128x128.png",
+        "lib/net462/MediatR.dll",
+        "lib/net462/MediatR.xml",
         "lib/net8.0/MediatR.dll",
         "lib/net8.0/MediatR.xml",
         "lib/net9.0/MediatR.dll",
         "lib/net9.0/MediatR.xml",
         "lib/netstandard2.0/MediatR.dll",
         "lib/netstandard2.0/MediatR.xml",
-        "mediatr.13.0.0.nupkg.sha512",
+        "mediatr.13.1.0.nupkg.sha512",
         "mediatr.nuspec"
       ]
     },
@@ -4325,13 +4319,14 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.IdentityModel.Abstractions/8.0.1": {
-      "sha512": "OtlIWcyX01olfdevPKZdIPfBEvbcioDyBiE/Z2lHsopsMD7twcKtlN9kMevHmI5IIPhFpfwCIiR6qHQz1WHUIw==",
+    "Microsoft.IdentityModel.Abstractions/8.14.0": {
+      "sha512": "iwbCpSjD3ehfTwBhtSNEtKPK0ICun6ov7Ibx6ISNA9bfwIyzI2Siwyi9eJFCJBwxowK9xcA1mj+jBWiigeqgcQ==",
       "type": "package",
-      "path": "microsoft.identitymodel.abstractions/8.0.1",
+      "path": "microsoft.identitymodel.abstractions/8.14.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "README.md",
         "lib/net462/Microsoft.IdentityModel.Abstractions.dll",
         "lib/net462/Microsoft.IdentityModel.Abstractions.xml",
         "lib/net472/Microsoft.IdentityModel.Abstractions.dll",
@@ -4344,17 +4339,18 @@
         "lib/net9.0/Microsoft.IdentityModel.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.xml",
-        "microsoft.identitymodel.abstractions.8.0.1.nupkg.sha512",
+        "microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512",
         "microsoft.identitymodel.abstractions.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.JsonWebTokens/8.0.1": {
-      "sha512": "s6++gF9x0rQApQzOBbSyp4jUaAlwm+DroKfL8gdOHxs83k8SJfUXhuc46rDB3rNXBQ1MVRxqKUrqFhO/M0E97g==",
+    "Microsoft.IdentityModel.JsonWebTokens/8.14.0": {
+      "sha512": "4jOpiA4THdtpLyMdAb24dtj7+6GmvhOhxf5XHLYWmPKF8ApEnApal1UnJsKO4HxUWRXDA6C4WQVfYyqsRhpNpQ==",
       "type": "package",
-      "path": "microsoft.identitymodel.jsonwebtokens/8.0.1",
+      "path": "microsoft.identitymodel.jsonwebtokens/8.14.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "README.md",
         "lib/net462/Microsoft.IdentityModel.JsonWebTokens.dll",
         "lib/net462/Microsoft.IdentityModel.JsonWebTokens.xml",
         "lib/net472/Microsoft.IdentityModel.JsonWebTokens.dll",
@@ -4367,17 +4363,18 @@
         "lib/net9.0/Microsoft.IdentityModel.JsonWebTokens.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.xml",
-        "microsoft.identitymodel.jsonwebtokens.8.0.1.nupkg.sha512",
+        "microsoft.identitymodel.jsonwebtokens.8.14.0.nupkg.sha512",
         "microsoft.identitymodel.jsonwebtokens.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.Logging/8.0.1": {
-      "sha512": "UCPF2exZqBXe7v/6sGNiM6zCQOUXXQ9+v5VTb9gPB8ZSUPnX53BxlN78v2jsbIvK9Dq4GovQxo23x8JgWvm/Qg==",
+    "Microsoft.IdentityModel.Logging/8.14.0": {
+      "sha512": "eqqnemdW38CKZEHS6diA50BV94QICozDZEvSrsvN3SJXUFwVB9gy+/oz76gldP7nZliA16IglXjXTCTdmU/Ejg==",
       "type": "package",
-      "path": "microsoft.identitymodel.logging/8.0.1",
+      "path": "microsoft.identitymodel.logging/8.14.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "README.md",
         "lib/net462/Microsoft.IdentityModel.Logging.dll",
         "lib/net462/Microsoft.IdentityModel.Logging.xml",
         "lib/net472/Microsoft.IdentityModel.Logging.dll",
@@ -4390,17 +4387,18 @@
         "lib/net9.0/Microsoft.IdentityModel.Logging.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Logging.xml",
-        "microsoft.identitymodel.logging.8.0.1.nupkg.sha512",
+        "microsoft.identitymodel.logging.8.14.0.nupkg.sha512",
         "microsoft.identitymodel.logging.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.Tokens/8.0.1": {
-      "sha512": "kDimB6Dkd3nkW2oZPDkMkVHfQt3IDqO5gL0oa8WVy3OP4uE8Ij+8TXnqg9TOd9ufjsY3IDiGz7pCUbnfL18tjg==",
+    "Microsoft.IdentityModel.Tokens/8.14.0": {
+      "sha512": "lKIZiBiGd36k02TCdMHp1KlNWisyIvQxcYJvIkz7P4gSQ9zi8dgh6S5Grj8NNG7HWYIPfQymGyoZ6JB5d1Lo1g==",
       "type": "package",
-      "path": "microsoft.identitymodel.tokens/8.0.1",
+      "path": "microsoft.identitymodel.tokens/8.14.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "README.md",
         "lib/net462/Microsoft.IdentityModel.Tokens.dll",
         "lib/net462/Microsoft.IdentityModel.Tokens.xml",
         "lib/net472/Microsoft.IdentityModel.Tokens.dll",
@@ -4413,7 +4411,7 @@
         "lib/net9.0/Microsoft.IdentityModel.Tokens.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.xml",
-        "microsoft.identitymodel.tokens.8.0.1.nupkg.sha512",
+        "microsoft.identitymodel.tokens.8.14.0.nupkg.sha512",
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
@@ -5040,37 +5038,6 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.Threading.Tasks.Dataflow/8.0.0": {
-      "sha512": "7V0I8tPa9V7UxMx/+7DIwkhls5ouaEMQx6l/GwGm1Y8kJQ61On9B/PxCXFLbgu5/C47g0BP2CUYs+nMv1+Oaqw==",
-      "type": "package",
-      "path": "system.threading.tasks.dataflow/8.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/net461/System.Threading.Tasks.Dataflow.targets",
-        "buildTransitive/net462/_._",
-        "buildTransitive/net6.0/_._",
-        "buildTransitive/netcoreapp2.0/System.Threading.Tasks.Dataflow.targets",
-        "lib/net462/System.Threading.Tasks.Dataflow.dll",
-        "lib/net462/System.Threading.Tasks.Dataflow.xml",
-        "lib/net6.0/System.Threading.Tasks.Dataflow.dll",
-        "lib/net6.0/System.Threading.Tasks.Dataflow.xml",
-        "lib/net7.0/System.Threading.Tasks.Dataflow.dll",
-        "lib/net7.0/System.Threading.Tasks.Dataflow.xml",
-        "lib/net8.0/System.Threading.Tasks.Dataflow.dll",
-        "lib/net8.0/System.Threading.Tasks.Dataflow.xml",
-        "lib/netstandard2.0/System.Threading.Tasks.Dataflow.dll",
-        "lib/netstandard2.0/System.Threading.Tasks.Dataflow.xml",
-        "lib/netstandard2.1/System.Threading.Tasks.Dataflow.dll",
-        "lib/netstandard2.1/System.Threading.Tasks.Dataflow.xml",
-        "system.threading.tasks.dataflow.8.0.0.nupkg.sha512",
-        "system.threading.tasks.dataflow.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
     "System.Threading.Tasks.Extensions/4.5.4": {
       "sha512": "zteT+G8xuGu6mS+mzDzYXbzS7rd3K6Fjb9RiZlYlJPam2/hU7JCBZBVEcywNuR+oZ1ncTvc/cq0faRr3P01OVg==",
       "type": "package",
@@ -5108,10 +5075,10 @@
         "version.txt"
       ]
     },
-    "Weasel.Core/8.2.0": {
-      "sha512": "RmEZgRQhR/dxgLvhn8z/m9autdmlX40dhq3KDW1Df7nclR3N7gDuRqKYA+XdcMJdhlCs78nefktk1dLlMXgVbA==",
+    "Weasel.Core/8.3.0": {
+      "sha512": "E9iZLBfsCzs1/0lw/Jfo+ZZ3e7BSb2CsnVFBvkTM7NFyEv+B63t8Yr29LBzOZhV6TmJ59gWAKLpK0fSZEiPAsA==",
       "type": "package",
-      "path": "weasel.core/8.2.0",
+      "path": "weasel.core/8.3.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5119,14 +5086,14 @@
         "lib/net8.0/Weasel.Core.xml",
         "lib/net9.0/Weasel.Core.dll",
         "lib/net9.0/Weasel.Core.xml",
-        "weasel.core.8.2.0.nupkg.sha512",
+        "weasel.core.8.3.0.nupkg.sha512",
         "weasel.core.nuspec"
       ]
     },
-    "Weasel.Postgresql/8.2.0": {
-      "sha512": "hHLf5LkmGJIbWSr6ewAyBXgYUkasgyi7cZOwYt7HVB7saB/cRpA/hTKx4Bn9Gn+L6ZJATdSOdhjt3gplrH/q2A==",
+    "Weasel.Postgresql/8.3.0": {
+      "sha512": "Zfal9uZz+Na9DHyWo6k5R3CZlZC4Jq0NIjxvZ2C5pT1nVPp/jutb3nkCsFo6zlSTYxGkS3sbveXICYKGIcxAKQ==",
       "type": "package",
-      "path": "weasel.postgresql/8.2.0",
+      "path": "weasel.postgresql/8.3.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5134,7 +5101,7 @@
         "lib/net8.0/Weasel.Postgresql.xml",
         "lib/net9.0/Weasel.Postgresql.dll",
         "lib/net9.0/Weasel.Postgresql.xml",
-        "weasel.postgresql.8.2.0.nupkg.sha512",
+        "weasel.postgresql.8.3.0.nupkg.sha512",
         "weasel.postgresql.nuspec"
       ]
     },
@@ -5147,8 +5114,8 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "GAIA.Domain >= 1.0.0",
-      "Marten >= 8.13.1",
-      "MediatR >= 13.0.0",
+      "Marten >= 8.15.2",
+      "MediatR >= 13.1.0",
       "Microsoft.Extensions.Configuration >= 9.0.9"
     ]
   },
@@ -5209,11 +5176,11 @@
         "dependencies": {
           "Marten": {
             "target": "Package",
-            "version": "[8.13.1, )"
+            "version": "[8.15.2, )"
           },
           "MediatR": {
             "target": "Package",
-            "version": "[13.0.0, )"
+            "version": "[13.1.0, )"
           },
           "Microsoft.Extensions.Configuration": {
             "target": "Package",

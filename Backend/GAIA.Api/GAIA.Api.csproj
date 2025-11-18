@@ -12,21 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="FluentValidation" Version="12.1.0"/>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
-    <PackageReference Include="MediatR" Version="13.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
-	  <PackageReference Include="Marten" Version="8.13.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.20">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.20">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="MediatR" Version="13.1.0"/>
+    <PackageReference Include="Marten" Version="8.15.2"/>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
   </ItemGroup>
@@ -37,6 +27,7 @@
     </ProjectReference>
     <ProjectReference Include="..\GAIA.Core\GAIA.Core.csproj" />
     <ProjectReference Include="..\GAIA.Infra\GAIA.Infra.csproj" />
+    <ProjectReference Include="..\GAIA.Infra.EFCore\GAIA.Infra.EFCore.csproj"/>
   </ItemGroup>
 
 </Project>

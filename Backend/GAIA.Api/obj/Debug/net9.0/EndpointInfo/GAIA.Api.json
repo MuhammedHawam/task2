@@ -99,7 +99,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -132,26 +149,21 @@
         "tags": [
           "Assessments"
         ],
+        "summary": "Retrieves the available assessment configuration options grouped by framework.",
+        "description": "Provides the list of frameworks along with their supported assessment depths and scoring profiles.\r\n            \r\nSample request:\r\n```GET /assessments/configuration/options```\r\n            \r\nSample response:\r\n{\r\n  \"frameworks\": [\r\n    {\r\n      \"id\": \"ad2c63f9-b856-4e36-91f9-5da7b42e1f33\",\r\n      \"name\": \"Cybersecurity Maturity\",\r\n      \"assessmentDepths\": [\r\n        { \"id\": \"982b6a76-a312-46c5-9a9d-34175e5b56dd\", \"name\": \"Initial\", \"depth\": 1 }\r\n      ],\r\n      \"assessmentScorings\": [\r\n        { \"id\": \"d758ff3c-fb19-4a88-bb29-9a48b204361e\", \"name\": \"Bronze\" }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n            \r\nPossible status codes:\r\n* 200 - Configuration options retrieved successfully.\r\n* 500 - An unexpected error occurred while retrieving the options.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Configuration options retrieved successfully.",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AssessmentConfigurationOptionsResponse"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AssessmentConfigurationOptionsResponse"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AssessmentConfigurationOptionsResponse"
                 }
               }
             }
+          },
+          "500": {
+            "description": "Unexpected error while retrieving configuration options."
           }
         }
       }
@@ -220,11 +232,9 @@
           "name": {
             "type": "string"
           },
-          "assessmentScorings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AssessmentScoringOptionsDto"
-            }
+          "depth": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -243,9 +253,9 @@
           "name": {
             "type": "string"
           },
-          "description": {
-            "type": "string",
-            "nullable": true
+          "depth": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -312,7 +322,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "assessmentDepthId": {
+          "frameworkId": {
             "type": "string",
             "format": "uuid"
           },
@@ -375,6 +385,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AssessmentDepthOptionsDto"
+            }
+          },
+          "assessmentScorings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssessmentScoringOptionsDto"
             }
           }
         },

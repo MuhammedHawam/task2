@@ -12,6 +12,7 @@ namespace GAIA.Core.Services.Assessment
     {
       _session = session;
     }
+
     public async Task<Guid> CreateAsync(AssessmentCreated @event, CancellationToken cancellationToken)
     {
       if (@event is null)

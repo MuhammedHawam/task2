@@ -1,12 +1,10 @@
 using GAIA.Api.Contracts.Assessment;
 using GAIA.Api.Controllers;
-using GAIA.Core.Assessment.Interfaces;
-using GAIA.Core.Assessment.Models;
 using GAIA.Core.Assessment.Queries;
-using GAIA.Core.Services.Assessment;
 using GAIA.Domain.Assessment.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
-using GAIA.Domain.Framework.Entities;
+using GAIA.Domain.Framework;
+using GAIA.Tests.Mocks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -62,45 +60,58 @@ public class AssessmentTests
 
     var frameworks = new List<Framework>
     {
-      new Framework { Id = frameworkZetaId, Title = "Zeta Framework" },
-      new Framework { Id = frameworkAlphaId, Title = "Alpha Framework" },
+      new Framework
+      {
+        Id = frameworkZetaId,
+        Title = "Zeta Framework",
+        Description = "Description for Zeta",
+        CreatedAt = default,
+        CreatedBy = "Test",
+        Root = new FrameworkNode { Id = Guid.NewGuid(), Content = null },
+        Depths =
+        [
+          new FrameworkDepth { Id = depthAlphaBId, Name = "B Depth", Depth = 2 },
+          new FrameworkDepth { Id = depthAlphaAId, Name = "A Depth", Depth = 1 },
+        ],
+        Scorings =
+        [
+          new Scoring { Id = Guid.NewGuid(), Name = "Silver" },
+          new Scoring { Id = Guid.NewGuid(), Name = "Bronze" },
+        ],
+      },
+      new Framework
+      {
+        Id = frameworkAlphaId,
+        Title = "Alpha Framework",
+        Description = "Description for Alpha",
+        CreatedAt = default,
+        CreatedBy = "Test",
+        Root = new FrameworkNode { Id = Guid.NewGuid(), Content = null },
+        Depths = [new FrameworkDepth { Id = depthZetaId, Name = "Research", Depth = 1 }],
+        Scorings = [new Scoring { Id = Guid.NewGuid(), Name = "Gold" }],
+      },
     };
 
-    var depths = new List<AssessmentDepth>
-    {
-      new AssessmentDepth { Id = depthAlphaBId, FrameworkId = frameworkAlphaId, Name = "B Depth", Depth = 2 },
-      new AssessmentDepth { Id = depthAlphaAId, FrameworkId = frameworkAlphaId, Name = "A Depth", Depth = 1 },
-      new AssessmentDepth { Id = depthZetaId, FrameworkId = frameworkZetaId, Name = "Research", Depth = 1 },
-    };
+    var repo = new MockRepository<Framework>(frameworks);
+    var service = new FrameworkService(repo);
 
-    var scorings = new List<AssessmentScoring>
-    {
-      new AssessmentScoring { Id = Guid.NewGuid(), FrameworkId = frameworkAlphaId, Name = "Silver" },
-      new AssessmentScoring { Id = Guid.NewGuid(), FrameworkId = frameworkAlphaId, Name = "Bronze" },
-      new AssessmentScoring { Id = Guid.NewGuid(), FrameworkId = frameworkZetaId, Name = "Gold" },
-    };
-
-    var service = new AssessmentConfigurationService(frameworks, depths, scorings);
-
-    var result = await service.GetOptionsAsync(CancellationToken.None);
+    var result = await service.ListFrameworksWithOptions();
 
     Assert.Collection(
-      result.Frameworks,
+      result,
       framework =>
       {
         Assert.Equal(frameworkAlphaId, framework.Id);
         Assert.Equal("Alpha Framework", framework.Name);
 
         Assert.Collection(
-          framework.AssessmentDepths,
-          depth =>
+          framework.AssessmentDepths, depth =>
           {
-            Assert.Equal("A Depth", depth.Name);
+            Assert.Equal((string?)"A Depth", (string?)depth.Name);
             Assert.Equal(1, depth.Depth);
-          },
-          depth =>
+          }, depth =>
           {
-            Assert.Equal("B Depth", depth.Name);
+            Assert.Equal((string?)"B Depth", (string?)depth.Name);
             Assert.Equal(2, depth.Depth);
           });
 
@@ -115,10 +126,12 @@ public class AssessmentTests
         Assert.Equal("Zeta Framework", framework.Name);
 
         Assert.Single(framework.AssessmentDepths);
-        var depth = framework.AssessmentDepths[0];
+        var depth = framework.AssessmentDepths.First();
         Assert.Equal("Research", depth.Name);
         Assert.Equal(1, depth.Depth);
 
+        Assert.Single(framework.AssessmentScorings);
+        Assert.Equal("Gold", framework.AssessmentScorings.First().Name);
       });
   }
 
@@ -139,7 +152,7 @@ public class AssessmentTests
       CreatedBy = Guid.NewGuid(),
       FrameworkId = Guid.NewGuid(),
       AssessmentDepthId = depthId,
-      AssessmentScoringId = scoringId
+      AssessmentScoringId = scoringId,
     };
 
     var depth = new AssessmentDepth
@@ -147,7 +160,7 @@ public class AssessmentTests
       Id = depthId,
       FrameworkId = assessment.FrameworkId,
       Name = "Advanced",
-      Depth = 2
+      Depth = 2,
     };
 
     var scoring = new AssessmentScoring
@@ -155,14 +168,14 @@ public class AssessmentTests
       Id = scoringId,
       FrameworkId = assessment.FrameworkId,
       Name = "Weighted",
-      Description = "Weighted scoring model"
+      Description = "Weighted scoring model",
     };
 
     var details = new AssessmentDetails(assessment, depth, scoring);
     var controller = CreateController((request, _) => request switch
     {
       GetAssessmentsQuery => new List<AssessmentDetails> { details },
-      _ => throw new InvalidOperationException("Unexpected request")
+      _ => throw new InvalidOperationException("Unexpected request"),
     });
 
     // Act
@@ -198,7 +211,7 @@ public class AssessmentTests
       CreatedBy = Guid.NewGuid(),
       FrameworkId = Guid.NewGuid(),
       AssessmentDepthId = depthId,
-      AssessmentScoringId = scoringId
+      AssessmentScoringId = scoringId,
     };
 
     var depth = new AssessmentDepth
@@ -206,7 +219,7 @@ public class AssessmentTests
       Id = depthId,
       FrameworkId = assessment.FrameworkId,
       Name = "Baseline",
-      Depth = 1
+      Depth = 1,
     };
 
     var scoring = new AssessmentScoring
@@ -214,7 +227,7 @@ public class AssessmentTests
       Id = scoringId,
       FrameworkId = assessment.FrameworkId,
       Name = "Simple",
-      Description = "Simple scoring"
+      Description = "Simple scoring",
     };
 
     var details = new AssessmentDetails(assessment, depth, scoring);
@@ -222,8 +235,8 @@ public class AssessmentTests
     var controller = CreateController((request, _) => request switch
     {
       GetAssessmentByIdQuery q when q.AssessmentId == assessmentId => details,
-      _ => throw new InvalidOperationException("Unexpected request")
-      });
+      _ => throw new InvalidOperationException("Unexpected request"),
+    });
 
     // Act
     var result = await controller.GetById(assessmentId, CancellationToken.None);
@@ -247,7 +260,7 @@ public class AssessmentTests
     var controller = CreateController((request, _) => request switch
     {
       GetAssessmentByIdQuery => null,
-      _ => throw new InvalidOperationException("Unexpected request")
+      _ => throw new InvalidOperationException("Unexpected request"),
     });
 
     // Act
@@ -260,37 +273,32 @@ public class AssessmentTests
   private static AssessmentsController CreateController(Func<object, CancellationToken, object?> responseFactory)
   {
     var sender = new TestSender(responseFactory);
-    var configurationService = new StubAssessmentConfigurationService();
-    return new AssessmentsController(sender, configurationService);
+    var repo = new MockRepository<Framework>([]);
+    var service = new FrameworkService(repo);
+    return new AssessmentsController(sender, service);
   }
 
-  private sealed class TestSender : ISender
+  private sealed class TestSender(Func<object, CancellationToken, object?> responseFactory) : ISender
   {
-    private readonly Func<object, CancellationToken, object?> _responseFactory;
-
-    public TestSender(Func<object, CancellationToken, object?> responseFactory)
-    {
-      _responseFactory = responseFactory;
-    }
-
     public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken)
     {
-      var response = _responseFactory(request, cancellationToken);
+      var response = responseFactory(request, cancellationToken);
       return Task.FromResult(response is null ? default! : (TResponse)response);
     }
 
     public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest
     {
-      _responseFactory(request!, cancellationToken);
+      responseFactory(request, cancellationToken);
       return Task.CompletedTask;
     }
 
     public Task<object?> Send(object request, CancellationToken cancellationToken)
     {
-      return Task.FromResult(_responseFactory(request, cancellationToken));
+      return Task.FromResult(responseFactory(request, cancellationToken));
     }
 
-    public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken)
+    public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request,
+      CancellationToken cancellationToken)
     {
       throw new NotSupportedException();
     }
@@ -298,14 +306,6 @@ public class AssessmentTests
     public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken)
     {
       throw new NotSupportedException();
-    }
-  }
-
-  private sealed class StubAssessmentConfigurationService : IAssessmentConfigurationService
-  {
-    public Task<AssessmentConfigurationOptions> GetOptionsAsync(CancellationToken cancellationToken)
-    {
-      return Task.FromResult(new AssessmentConfigurationOptions(Array.Empty<FrameworkConfigurationOption>()));
     }
   }
 }
