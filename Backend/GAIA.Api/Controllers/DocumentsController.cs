@@ -91,6 +91,7 @@ public class DocumentsController : ControllerBase
       document.Name,
       document.Status,
       document.Category,
+      document.Content,
       document.CreatedAt,
       document.UpdatedAt
     ));
