@@ -3,6 +3,7 @@ using GAIA.Domain.Entities;
 using GAIA.Infra.EFCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace GAIA.Api.Controllers;
 
@@ -60,6 +61,7 @@ public class DocumentsController : ControllerBase
       document.Name,
       document.Status,
       document.Category,
+      document.Content,
       document.CreatedAt,
       document.UpdatedAt
     ));
@@ -77,6 +79,7 @@ public class DocumentsController : ControllerBase
       Name = request.Name,
       Status = request.Status,
       Category = request.Category,
+      Content = request.Content,
       CreatedAt = DateTime.UtcNow
     };
 
@@ -122,6 +125,11 @@ public class DocumentsController : ControllerBase
       document.Category = request.Category;
     }
 
+    if (request.Content != null)
+    {
+      document.Content = request.Content;
+    }
+
     document.UpdatedAt = DateTime.UtcNow;
 
     await _context.SaveChangesAsync(cancellationToken);
@@ -131,6 +139,7 @@ public class DocumentsController : ControllerBase
       document.Name,
       document.Status,
       document.Category,
+      document.Content,
       document.CreatedAt,
       document.UpdatedAt
     ));
@@ -177,5 +186,58 @@ public class DocumentsController : ControllerBase
     );
 
     return Ok(response);
+  }
+
+  /// <summary>
+  /// Upload a document file
+  /// </summary>
+  [HttpPost("upload")]
+  [Consumes("multipart/form-data")]
+  public async Task<ActionResult<DocumentResponse>> UploadDocument(
+    [FromForm] IFormFile file,
+    [FromForm] string? name = null,
+    [FromForm] string? status = null,
+    [FromForm] string? category = null,
+    CancellationToken cancellationToken = default)
+  {
+    if (file == null || file.Length == 0)
+    {
+      return BadRequest("No file uploaded.");
+    }
+
+    // Read file content as text
+    string content;
+    using (var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8))
+    {
+      content = await reader.ReadToEndAsync(cancellationToken);
+    }
+
+    // Use file name if name not provided
+    var documentName = name ?? file.FileName;
+    var documentStatus = status ?? "Pending";
+    var documentCategory = category ?? "Uncategorized";
+
+    var document = new Document
+    {
+      Id = Guid.NewGuid(),
+      Name = documentName,
+      Status = documentStatus,
+      Category = documentCategory,
+      Content = content,
+      CreatedAt = DateTime.UtcNow
+    };
+
+    _context.Documents.Add(document);
+    await _context.SaveChangesAsync(cancellationToken);
+
+    return CreatedAtAction(nameof(GetById), new { id = document.Id }, new DocumentResponse(
+      document.Id,
+      document.Name,
+      document.Status,
+      document.Category,
+      document.Content,
+      document.CreatedAt,
+      document.UpdatedAt
+    ));
   }
 }

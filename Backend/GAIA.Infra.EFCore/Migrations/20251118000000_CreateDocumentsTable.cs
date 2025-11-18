@@ -20,6 +20,7 @@ namespace GAIA.Infra.EFCore.Migrations
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Status = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Category = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },

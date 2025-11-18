@@ -5,6 +5,7 @@ public record DocumentResponse(
   string Name,
   string Status,
   string Category,
+  string? Content,
   DateTime CreatedAt,
   DateTime? UpdatedAt
 );

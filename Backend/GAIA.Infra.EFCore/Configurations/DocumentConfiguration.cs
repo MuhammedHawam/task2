@@ -24,6 +24,10 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
         .IsRequired()
         .HasMaxLength(100);
 
+    entity.Property(e => e.Content)
+        .IsRequired(false)
+        .HasColumnType("text");
+
     entity.Property(e => e.CreatedAt)
         .IsRequired();
 
