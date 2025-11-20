@@ -19,7 +19,7 @@ namespace GAIA.Infra.Repositories
       await _session.SaveChangesAsync();
     }
 
-    public async Task<Assessment> GetByIdAsync(Guid id)
+    public async Task<Assessment?> GetByIdAsync(Guid id)
     {
       return await _session.LoadAsync<Assessment>(id);
     }

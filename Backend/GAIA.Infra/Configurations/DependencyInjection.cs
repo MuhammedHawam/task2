@@ -1,10 +1,12 @@
 using GAIA.Core.Assessment.Interfaces;
+using GAIA.Core.InsightContent.Interfaces;
 using GAIA.Core.Services.Assessment;
 using GAIA.Domain.Assessment.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.InsightContent.DomainEvents;
 using GAIA.Domain.InsightContent.Entities;
 using GAIA.Infra.Projections;
+using GAIA.Infra.Repositories;
 using GAIA.Infra.SeedDataService;
 using JasperFx.Events.Projections;
 using Marten;
@@ -28,6 +30,7 @@ namespace GAIA.Infra.Configurations
                   .UniqueIndex(depth => depth.FrameworkId, depth => depth.Depth);
         options.Schema.For<AssessmentScoring>();
         options.Events.AddEventType(typeof(AssessmentCreated));
+        options.Events.AddEventType(typeof(UserUpdatedInsightEvent));
         options.Events.AddEventType(typeof(InsightContentCreated));
 
         // Configure projections for the Assessment aggregate using a SingleStream projection
@@ -38,6 +41,8 @@ namespace GAIA.Infra.Configurations
       .ApplyAllDatabaseChangesOnStartup();
 
       services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
+      services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+      services.AddScoped<IInsightContentRepository, InsightContentRepository>();
       services.AddHostedService<AssessmentConfigurationSeedService>();
       services.AddMediatR(cfg =>
       cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
