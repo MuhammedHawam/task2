@@ -14,38 +14,44 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GAIA.Infra.Configurations
 {
-  public static class DependencyInjection
-  {
-    public static void AddInfrastructure(this IServiceCollection services, string connectionString)
+    public static class DependencyInjection
     {
-      services.AddMarten(options =>
+      public static void AddInfrastructure(this IServiceCollection services, string connectionString)
       {
-        // Set the connection string for PostgreSQL
-        options.Connection(connectionString);
-        options.DatabaseSchemaName = "marten";
-        // Register entities for Marten
-        options.Schema.For<Assessment>();
-        options.Schema.For<InsightContent>();
-        options.Schema.For<AssessmentDepth>()
-                  .UniqueIndex(depth => depth.FrameworkId, depth => depth.Depth);
-        options.Schema.For<AssessmentScoring>();
-        options.Events.AddEventType(typeof(AssessmentCreated));
-        options.Events.AddEventType(typeof(UserUpdatedInsightEvent));
-        options.Events.AddEventType(typeof(InsightContentCreated));
+        services.AddMarten(options =>
+        {
+          // Set the connection string for PostgreSQL
+          options.Connection(connectionString);
+          options.DatabaseSchemaName = "marten";
+          // Register entities for Marten
+          options.Schema.For<Assessment>();
+          options.Schema.For<AssessmentFirstStep>();
+          options.Schema.For<InsightContent>();
+          options.Schema.For<AssessmentDepth>()
+                    .UniqueIndex(depth => depth.FrameworkId, depth => depth.Depth);
+          options.Schema.For<AssessmentScoring>();
+          options.Events.AddEventType(typeof(AssessmentCreated));
+          options.Events.AddEventType(typeof(AssessmentFirstStepCreated));
+          options.Events.AddEventType(typeof(AssessmentFirstStepUpdated));
+          options.Events.AddEventType(typeof(UserUpdatedInsightEvent));
+          options.Events.AddEventType(typeof(InsightContentCreated));
 
-        // Configure projections for the Assessment aggregate using a SingleStream projection
-        // Inline lifecycle updates document state within the same transaction
-        options.Projections.Add<AssessmentProjection>(ProjectionLifecycle.Inline);
+          // Configure projections for the Assessment aggregate using a SingleStream projection
+          // Inline lifecycle updates document state within the same transaction
+          options.Projections.Add<AssessmentProjection>(ProjectionLifecycle.Inline);
+          options.Projections.Add<AssessmentFirstStepProjection>(ProjectionLifecycle.Inline);
 
-      }).UseLightweightSessions()
-      .ApplyAllDatabaseChangesOnStartup();
+        }).UseLightweightSessions()
+        .ApplyAllDatabaseChangesOnStartup();
 
-      services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
-      services.AddScoped<IAssessmentRepository, AssessmentRepository>();
-      services.AddScoped<IInsightContentRepository, InsightContentRepository>();
-      services.AddHostedService<AssessmentConfigurationSeedService>();
-      services.AddMediatR(cfg =>
-      cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
+        services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
+        services.AddScoped<IAssessmentFirstStepEventWriter, AssessmentFirstStepEventWriter>();
+        services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+        services.AddScoped<IAssessmentFirstStepRepository, AssessmentFirstStepRepository>();
+        services.AddScoped<IInsightContentRepository, InsightContentRepository>();
+        services.AddHostedService<AssessmentConfigurationSeedService>();
+        services.AddMediatR(cfg =>
+          cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
+      }
     }
-  }
 }

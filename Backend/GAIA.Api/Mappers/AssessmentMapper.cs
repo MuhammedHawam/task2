@@ -32,5 +32,16 @@ namespace GAIA.Api.Mappers
       scoring.Name,
       scoring.Description
     );
+
+    public static AssessmentFirstStepResponse ToResponse(this AssessmentFirstStep firstStep) => new(
+      firstStep.Id,
+      firstStep.Name,
+      firstStep.StartDate,
+      firstStep.EndDate,
+      firstStep.Organization,
+      firstStep.Language,
+      firstStep.CreatedAt,
+      firstStep.UpdatedAt
+    );
   }
 }

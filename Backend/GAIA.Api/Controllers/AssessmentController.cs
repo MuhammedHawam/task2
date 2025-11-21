@@ -27,6 +27,12 @@ public class AssessmentsController : ControllerBase
   }
 
   [HttpGet]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessments",
+    Summary = "Get assessments",
+    Description = "Returns the available assessments."
+  )]
   public async Task<ActionResult<IReadOnlyList<AssessmentResponse>>> GetAll(CancellationToken cancellationToken)
   {
     var assessments = await _sender.Send(new GetAssessmentsQuery(), cancellationToken);
@@ -36,6 +42,12 @@ public class AssessmentsController : ControllerBase
   }
 
   [HttpPost]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "createAssessment",
+    Summary = "Create new assessments",
+    Description = "Returns the created assessment ID."
+  )]
   public async Task<ActionResult<AssessmentResponse>> Create([FromBody] CreateAssessmentRequest request,
     CancellationToken cancellationToken)
   {
@@ -52,6 +64,12 @@ public class AssessmentsController : ControllerBase
   }
 
   [HttpGet("{id:guid}")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentById",
+    Summary = "Get assessment by ID",
+    Description = "Returns the assessment details for the specified ID."
+  )]
   public async Task<ActionResult<object>> GetById(Guid id, CancellationToken cancellationToken)
   {
     var assessment = await _sender.Send(new GetAssessmentByIdQuery(id), cancellationToken);
@@ -131,6 +149,7 @@ public class AssessmentsController : ControllerBase
   [HttpGet("configuration/options")]
   [Produces(MediaTypeNames.Application.Json)]
   [SwaggerOperation(
+    OperationId = "getAssessmentConfigurationOptions",
     Summary = "Get assessment configuration options",
     Description =
       "Returns the available frameworks with their assessment depths and scoring profiles so that clients can populate configuration UI."
