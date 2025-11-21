@@ -13,6 +13,16 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("AllowFrontend", policy =>
+  {
+    policy
+      .WithOrigins("http://localhost:52983")
+      .AllowAnyMethod()
+      .AllowAnyHeader();
+  });
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -70,6 +80,8 @@ if (app.Environment.IsDevelopment())
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseExceptionHandler();
+app.UseRouting();
+app.UseCors("AllowFrontend");
 app.UseAuthorization();
 
 app.MapControllers();
