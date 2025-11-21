@@ -17,5 +17,10 @@ namespace GAIA.Infra.Repositories
     {
       return _querySession.LoadAsync<AssessmentFirstStep>(id, cancellationToken);
     }
+
+    public async Task<IReadOnlyList<AssessmentFirstStep>> ListAsync(CancellationToken cancellationToken)
+    {
+      return await _querySession.Query<AssessmentFirstStep>().ToListAsync(cancellationToken);
+    }
   }
 }

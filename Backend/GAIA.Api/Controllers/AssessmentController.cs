@@ -5,6 +5,7 @@ using GAIA.Api.Mappers;
 using GAIA.Core.Assessment.Commands.Assessment;
 using GAIA.Core.Assessment.Commands.FirstStep;
 using GAIA.Core.Assessment.Queries;
+using GAIA.Core.Assessment.Queries.FirstStep;
 using GAIA.Core.Interfaces;
 using GAIA.Core.InsightContent.Commands;
 using MediatR;
@@ -141,6 +142,44 @@ public class AssessmentsController : ControllerBase
     }
 
     return Ok(assessment.ToResponse());
+  }
+
+  [HttpGet("/api/Assessment/FirstSteps")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentFirstSteps",
+    Summary = "Get assessment first steps",
+    Description = "Returns the first-step metadata for all assessments."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Assessment first steps retrieved.",
+    typeof(IReadOnlyList<AssessmentFirstStepResponse>))]
+  public async Task<ActionResult<IReadOnlyList<AssessmentFirstStepResponse>>> GetAssessmentFirstSteps(
+    CancellationToken cancellationToken)
+  {
+    var firstSteps = await _sender.Send(new GetAssessmentFirstStepsQuery(), cancellationToken);
+    var response = firstSteps.Select(step => step.ToResponse()).ToList();
+    return Ok(response);
+  }
+
+  [HttpGet("/api/Assessment/FirstSteps/{assessmentId:guid}")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentFirstStepById",
+    Summary = "Get assessment first step by ID",
+    Description = "Returns the first-step details for the specified assessment."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Assessment first step retrieved.", typeof(AssessmentFirstStepResponse))]
+  [SwaggerResponse(StatusCodes.Status404NotFound, "Assessment first step not found.")]
+  public async Task<ActionResult<AssessmentFirstStepResponse>> GetAssessmentFirstStepById(Guid assessmentId,
+    CancellationToken cancellationToken)
+  {
+    var firstStep = await _sender.Send(new GetAssessmentFirstStepByIdQuery(assessmentId), cancellationToken);
+    if (firstStep is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(firstStep.ToResponse());
   }
 
   /// <summary>
