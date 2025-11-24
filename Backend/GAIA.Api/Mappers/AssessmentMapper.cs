@@ -1,5 +1,6 @@
 using GAIA.Api.Contracts.Assessment;
 using GAIA.Domain.Assessment.Entities;
+using System.Linq;
 
 namespace GAIA.Api.Mappers
 {
@@ -42,5 +43,16 @@ namespace GAIA.Api.Mappers
       assessment.CreatedAt,
       assessment.UpdatedAt
     );
+
+    public static AssessmentDropdownDataResponse ToResponse(this Core.Assessment.Queries.AssessmentDropdownData data) =>
+      new(
+        data.Organizations
+          .Select(org => new OrganizationResponse(org.Id, org.Name, org.LogoUrl, org.WebsiteUrl, org.Description))
+          .ToList(),
+        data.Languages.ToList(),
+        data.Statuses.Select(option => new DropdownOptionResponse(option.Code, option.Label)).ToList(),
+        data.IconTypes.Select(option => new DropdownOptionResponse(option.Code, option.Label)).ToList(),
+        data.RoleTypes.Select(option => new DropdownOptionResponse(option.Code, option.Label)).ToList()
+      );
   }
 }

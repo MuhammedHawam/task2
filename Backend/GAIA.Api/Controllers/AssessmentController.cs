@@ -41,6 +41,23 @@ public class AssessmentsController : ControllerBase
     return Ok(response);
   }
 
+  [HttpGet("creation/dropdowns")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentCreationDropdownData",
+    Summary = "Get assessment creation dropdown data",
+    Description =
+      "Returns organizations, languages, and static option sets required to populate assessment creation dropdowns."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Dropdown data retrieved successfully.",
+    typeof(AssessmentDropdownDataResponse))]
+  public async Task<ActionResult<AssessmentDropdownDataResponse>> GetAssessmentCreationDropdownData(
+    CancellationToken cancellationToken)
+  {
+    var dropdownData = await _sender.Send(new GetAssessmentDropdownDataQuery(), cancellationToken);
+    return Ok(dropdownData.ToResponse());
+  }
+
   [HttpPost("CreateAssessmentDetails")]
   [Produces(MediaTypeNames.Application.Json)]
   [SwaggerOperation(
