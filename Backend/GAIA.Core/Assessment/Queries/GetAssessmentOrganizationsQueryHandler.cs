@@ -5,18 +5,18 @@ using MediatR;
 
 namespace GAIA.Core.Assessment.Queries;
 
-public class GetAssessmentDropdownDataQueryHandler
-  : IRequestHandler<GetAssessmentDropdownDataQuery, AssessmentDropdownData>
+public class GetAssessmentOrganizationsQueryHandler
+  : IRequestHandler<GetAssessmentOrganizationsQuery, IReadOnlyList<AssessmentOrganization>>
 {
   private readonly IAssessmentRepository _assessmentRepository;
 
-  public GetAssessmentDropdownDataQueryHandler(IAssessmentRepository assessmentRepository)
+  public GetAssessmentOrganizationsQueryHandler(IAssessmentRepository assessmentRepository)
   {
     _assessmentRepository = assessmentRepository;
   }
 
-  public async Task<AssessmentDropdownData> Handle(
-    GetAssessmentDropdownDataQuery request,
+  public async Task<IReadOnlyList<AssessmentOrganization>> Handle(
+    GetAssessmentOrganizationsQuery request,
     CancellationToken cancellationToken)
   {
     var assessments = await _assessmentRepository.ListAsync(cancellationToken);
@@ -35,25 +35,7 @@ public class GetAssessmentDropdownDataQueryHandler
       .OrderBy(org => org.Name, StringComparer.OrdinalIgnoreCase)
       .ToList();
 
-    var languages = assessments
-      .Select(assessment => assessment.Language?.Trim())
-      .Where(language => !string.IsNullOrWhiteSpace(language))
-      .Distinct(StringComparer.OrdinalIgnoreCase)
-      .OrderBy(language => language, StringComparer.OrdinalIgnoreCase)
-      .ToList();
-
-    if (languages.Count == 0)
-    {
-      languages.Add("English");
-    }
-
-    return new AssessmentDropdownData(
-      organizations,
-      languages,
-      AssessmentDropdownDefaults.Statuses,
-      AssessmentDropdownDefaults.IconTypes,
-      AssessmentDropdownDefaults.RoleTypes
-    );
+    return organizations;
   }
 
   private static Guid CreateDeterministicGuid(string input)

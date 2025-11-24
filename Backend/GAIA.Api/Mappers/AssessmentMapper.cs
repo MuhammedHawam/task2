@@ -44,15 +44,21 @@ namespace GAIA.Api.Mappers
       assessment.UpdatedAt
     );
 
-    public static AssessmentDropdownDataResponse ToResponse(this Core.Assessment.Queries.AssessmentDropdownData data) =>
+    public static OrganizationListResponse ToResponse(this IReadOnlyList<Core.Assessment.Queries.AssessmentOrganization> data) =>
       new(
-        data.Organizations
+        data
           .Select(org => new OrganizationResponse(org.Id, org.Name, org.LogoUrl, org.WebsiteUrl, org.Description))
-          .ToList(),
-        data.Languages.ToList(),
-        data.Statuses.Select(option => new DropdownOptionResponse(option.Code, option.Label)).ToList(),
-        data.IconTypes.Select(option => new DropdownOptionResponse(option.Code, option.Label)).ToList(),
-        data.RoleTypes.Select(option => new DropdownOptionResponse(option.Code, option.Label)).ToList()
+          .ToList()
+      );
+
+    public static LanguageListResponse ToResponse(this IReadOnlyList<string> languages) =>
+      new(languages);
+
+    public static UserAccessListResponse ToResponse(this IReadOnlyList<Core.Assessment.Queries.AssessmentUserAccess> users) =>
+      new(
+        users
+          .Select(user => new UserResponse(user.Id, user.Username, user.Email, user.Avatar, user.Role))
+          .ToList()
       );
   }
 }

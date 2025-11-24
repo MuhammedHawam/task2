@@ -41,21 +41,50 @@ public class AssessmentsController : ControllerBase
     return Ok(response);
   }
 
-  [HttpGet("creation/dropdowns")]
+  [HttpGet("creation/organizations")]
   [Produces(MediaTypeNames.Application.Json)]
   [SwaggerOperation(
-    OperationId = "getAssessmentCreationDropdownData",
-    Summary = "Get assessment creation dropdown data",
-    Description =
-      "Returns organizations, languages, and static option sets required to populate assessment creation dropdowns."
+    OperationId = "getAssessmentOrganizations",
+    Summary = "Get organizations for assessment creation",
+    Description = "Returns the list of known organizations referenced by existing assessments."
   )]
-  [SwaggerResponse(StatusCodes.Status200OK, "Dropdown data retrieved successfully.",
-    typeof(AssessmentDropdownDataResponse))]
-  public async Task<ActionResult<AssessmentDropdownDataResponse>> GetAssessmentCreationDropdownData(
+  [SwaggerResponse(StatusCodes.Status200OK, "Organizations retrieved successfully.", typeof(OrganizationListResponse))]
+  public async Task<ActionResult<OrganizationListResponse>> GetAssessmentOrganizations(
     CancellationToken cancellationToken)
   {
-    var dropdownData = await _sender.Send(new GetAssessmentDropdownDataQuery(), cancellationToken);
-    return Ok(dropdownData.ToResponse());
+    var organizations = await _sender.Send(new GetAssessmentOrganizationsQuery(), cancellationToken);
+    return Ok(organizations.ToResponse());
+  }
+
+  [HttpGet("creation/languages")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentLanguages",
+    Summary = "Get languages for assessment creation",
+    Description = "Returns the languages already used by stored assessments."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Languages retrieved successfully.", typeof(LanguageListResponse))]
+  public async Task<ActionResult<LanguageListResponse>> GetAssessmentLanguages(
+    CancellationToken cancellationToken)
+  {
+    var languages = await _sender.Send(new GetAssessmentLanguagesQuery(), cancellationToken);
+    return Ok(languages.ToResponse());
+  }
+
+  [HttpGet("creation/users")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentAccessUsers",
+    Summary = "Get users for managing assessment access",
+    Description =
+      "Returns the list of users that can be granted access to an assessment. Currently returns an empty list until the user source is integrated."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Users retrieved successfully.", typeof(UserAccessListResponse))]
+  public async Task<ActionResult<UserAccessListResponse>> GetAssessmentAccessUsers(
+    CancellationToken cancellationToken)
+  {
+    var users = await _sender.Send(new GetAssessmentAccessUsersQuery(), cancellationToken);
+    return Ok(users.ToResponse());
   }
 
   [HttpPost("CreateAssessmentDetails")]
