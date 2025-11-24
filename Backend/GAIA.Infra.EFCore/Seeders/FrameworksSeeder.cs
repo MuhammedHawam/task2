@@ -82,7 +82,7 @@ public static class FrameworksSeeder
   {
     return new Framework
     {
-      Id = Guid.NewGuid(),
+      Id = Guid.Parse("73c9c20b-fbe4-4ae3-afd7-7621aad8bc4e"),
       Title = data.Title,
       Description = data.Description,
       CreatedAt = data.CreatedAt,
@@ -97,7 +97,7 @@ public static class FrameworksSeeder
   {
     return new FrameworkNode
     {
-      Id = Guid.NewGuid(),
+      Id = Guid.Parse("d837d7e0-257b-400d-8f17-b62e6d12487c"),
       Content = data.Content,
       Children = data.Children.Select(MapToFrameworkNode).ToList(),
     };

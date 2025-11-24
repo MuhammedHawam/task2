@@ -2,32 +2,47 @@ using GAIA.Core.Assessment.Interfaces;
 using GAIA.Domain.Assessment.DomainEvents;
 using Marten;
 
-namespace GAIA.Core.Services.Assessment
+namespace GAIA.Core.Services.Assessment;
+
+public class AssessmentEventWriter : IAssessmentEventWriter
 {
-  public class AssessmentEventWriter : IAssessmentEventWriter
+  private readonly IDocumentSession _session;
+
+  public AssessmentEventWriter(IDocumentSession session)
   {
-    private readonly IDocumentSession _session;
+    _session = session;
+  }
 
-    public AssessmentEventWriter(IDocumentSession session)
+  public async Task<Guid> CreateAsync(AssessmentCreated @event, CancellationToken cancellationToken)
+  {
+    if (@event is null)
     {
-      _session = session;
+      throw new ArgumentNullException(nameof(@event));
     }
 
-    public async Task<Guid> CreateAsync(AssessmentCreated @event, CancellationToken cancellationToken)
+    if (@event.Id == Guid.Empty)
     {
-      if (@event is null)
-      {
-        throw new ArgumentNullException(nameof(@event));
-      }
-
-      if (@event.Id == Guid.Empty)
-      {
-        throw new ArgumentException("AssessmentCreated.Id must be a non-empty GUID.", nameof(@event));
-      }
-
-      _session.Events.StartStream<Domain.Assessment.Entities.Assessment>(@event.Id, @event);
-      await _session.SaveChangesAsync(cancellationToken);
-      return @event.Id;
+      throw new ArgumentException("AssessmentCreated.Id must be a non-empty GUID.", nameof(@event));
     }
+
+    _session.Events.StartStream<Domain.Assessment.Entities.Assessment>(@event.Id, @event);
+    await _session.SaveChangesAsync(cancellationToken);
+    return @event.Id;
+  }
+
+  public async Task AppendAsync(Guid assessmentId, AssessmentUpdated @event, CancellationToken cancellationToken)
+  {
+    if (@event is null)
+    {
+      throw new ArgumentNullException(nameof(@event));
+    }
+
+    if (assessmentId == Guid.Empty)
+    {
+      throw new ArgumentException("assessmentId must be a non-empty GUID.", nameof(assessmentId));
+    }
+
+    _session.Events.Append(assessmentId, @event);
+    await _session.SaveChangesAsync(cancellationToken);
   }
 }

@@ -1,15 +1,11 @@
 using MediatR;
 
-namespace GAIA.Core.Assessment.Commands.Assessment
-{
-  public record CreateAssessmentCommand(
-     string Title,
-     string Description,
-     Guid CreatedBy,
-     Guid FrameworkId,
-     Guid AssessmentDepthId,
-     Guid AssessmentScoringId
- ) : IRequest<CreateAssessmentResult>;
+namespace GAIA.Core.Assessment.Commands.Assessment;
 
-  public record CreateAssessmentResult(Guid AssessmentId);
-}
+public record CreateAssessmentCommand(
+  string Name,
+  DateTime StartDate,
+  DateTime EndDate,
+  string Organization,
+  string Language
+) : IRequest<Domain.Assessment.Entities.Assessment>;

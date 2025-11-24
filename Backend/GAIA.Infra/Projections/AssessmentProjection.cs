@@ -2,20 +2,29 @@ using GAIA.Domain.Assessment.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
 using Marten.Events.Aggregation;
 
-namespace GAIA.Infra.Projections
+namespace GAIA.Infra.Projections;
+
+public class AssessmentProjection : SingleStreamProjection<Assessment, Guid>
 {
-  public class AssessmentProjection : SingleStreamProjection<Assessment, Guid>
+  public void Apply(AssessmentCreated @event, Assessment state)
   {
-    public void Apply(AssessmentCreated e, Assessment assessment)
-    {
-      assessment.Id = e.Id;
-      assessment.Title = e.Title;
-      assessment.Description = e.Description;
-      assessment.CreatedAt = e.CreatedAt;
-      assessment.CreatedBy = e.CreatedBy;
-      assessment.FrameworkId = e.FrameworkId;
-      assessment.AssessmentDepthId = e.AssessmentDepthId;
-      assessment.AssessmentScoringId = e.AssessmentScoringId;
-    }
+    state.Id = @event.Id;
+    state.Name = @event.Name;
+    state.StartDate = @event.StartDate;
+    state.EndDate = @event.EndDate;
+    state.Organization = @event.Organization;
+    state.Language = @event.Language;
+    state.CreatedAt = @event.CreatedAt;
+    state.UpdatedAt = null;
+  }
+
+  public void Apply(AssessmentUpdated @event, Assessment state)
+  {
+    state.Name = @event.Name;
+    state.StartDate = @event.StartDate;
+    state.EndDate = @event.EndDate;
+    state.Organization = @event.Organization;
+    state.Language = @event.Language;
+    state.UpdatedAt = @event.UpdatedAt;
   }
 }

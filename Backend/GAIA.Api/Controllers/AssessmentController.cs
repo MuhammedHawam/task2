@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using GAIA.Api.Contracts;
 using GAIA.Api.Contracts.Assessment;
 using GAIA.Api.Mappers;
@@ -8,6 +7,7 @@ using GAIA.Core.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
 using FrameworkOptionsDto = GAIA.Api.Contracts.FrameworkOptionsDto;
 
 namespace GAIA.Api.Controllers;
@@ -25,20 +25,32 @@ public class AssessmentsController : ControllerBase
     _frameworkService = frameworkService;
   }
 
-  [HttpGet]
-  public async Task<ActionResult<IReadOnlyList<AssessmentResponse>>> GetAll(CancellationToken cancellationToken)
+  [HttpGet("GetAllAssessmentDetails")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentsDetails",
+    Summary = "Get assessments details",
+    Description = "Returns the available assessments."
+  )]
+  public async Task<ActionResult<IReadOnlyList<AssessmentDetailsResponse>>> GetAll(CancellationToken cancellationToken)
   {
-    var assessments = await _sender.Send(new GetAssessmentsQuery(), cancellationToken);
+    var assessments = await _sender.Send(new GetAssessmentsDetailsQuery(), cancellationToken);
     var response = assessments.Select(assessment => assessment.ToResponse()).ToList();
 
     return Ok(response);
   }
 
-  [HttpPost]
-  public async Task<ActionResult<AssessmentResponse>> Create([FromBody] CreateAssessmentRequest request,
+  [HttpPost("CreateAssessmentDetails")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "createAssessmentDetails",
+    Summary = "Create new assessment details",
+    Description = "Returns the created assessment ID."
+  )]
+  public async Task<ActionResult<AssessmentDetailsResponse>> Create([FromBody] CreateAssessmentDetailsRequest request,
     CancellationToken cancellationToken)
   {
-    var result = await _sender.Send(new CreateAssessmentCommand(
+    var result = await _sender.Send(new CreateAssessmentDetailsCommand(
       request.Title,
       request.Description,
       request.CreatedBy,
@@ -50,10 +62,16 @@ public class AssessmentsController : ControllerBase
     return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, new { id = result.AssessmentId });
   }
 
-  [HttpGet("{id:guid}")]
+  [HttpGet("GetAssessmentDetails/{id:guid}")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentDetailsById",
+    Summary = "Get assessment details by ID",
+    Description = "Returns the assessment details for the specified ID."
+  )]
   public async Task<ActionResult<object>> GetById(Guid id, CancellationToken cancellationToken)
   {
-    var assessment = await _sender.Send(new GetAssessmentByIdQuery(id), cancellationToken);
+    var assessment = await _sender.Send(new GetAssessmentDetailsByIdQuery(id), cancellationToken);
 
     if (assessment is null)
     {
@@ -96,6 +114,7 @@ public class AssessmentsController : ControllerBase
   [HttpGet("configuration/options")]
   [Produces(MediaTypeNames.Application.Json)]
   [SwaggerOperation(
+        OperationId = "getAssessmentConfigurationOptions",
     Summary = "Get assessment configuration options",
     Description =
       "Returns the available frameworks with their assessment depths and scoring profiles so that clients can populate configuration UI."
@@ -130,4 +149,103 @@ public class AssessmentsController : ControllerBase
 
     return Ok(response);
   }
+
+  [HttpPost("CreateAssessment")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "createAssessment",
+    Summary = "Create the first step of an assessment",
+    Description =
+      "Creates the basic assessment details (name, dates, organization, language) and returns the persisted data."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "AssessmentDetails first step created.", typeof(AssessmentResponse))]
+  public async Task<ActionResult<AssessmentResponse>> CreateAssessment(
+    [FromBody] CreateAssessmentRequest request,
+    CancellationToken cancellationToken)
+  {
+    var result = await _sender.Send(new CreateAssessmentCommand(
+      request.Name,
+      request.StartDate,
+      request.EndDate,
+      request.Organization,
+      request.Language
+    ), cancellationToken);
+
+    return Ok(result.ToResponse());
+  }
+
+  [HttpPut("UpdateAssessment")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "updateAssessment",
+    Summary = "Update the first step of an assessment",
+    Description = "Updates the previously saved first-step details for the specified assessment."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "AssessmentDetails first step updated.", typeof(AssessmentResponse))]
+  [SwaggerResponse(StatusCodes.Status404NotFound, "AssessmentDetails first step not found.")]
+  public async Task<ActionResult<AssessmentResponse>> UpdateAssessment(
+    [FromQuery] Guid assessmentId,
+    [FromBody] UpdateAssessmentRequest request,
+    CancellationToken cancellationToken)
+  {
+    if (assessmentId == Guid.Empty)
+    {
+      return BadRequest("assessmentId query parameter is required.");
+    }
+
+    var result = await _sender.Send(new UpdateAssessmentCommand(
+      assessmentId,
+      request.Name,
+      request.StartDate,
+      request.EndDate,
+      request.Organization,
+      request.Language
+    ), cancellationToken);
+
+    if (result is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(result.ToResponse());
+  }
+
+  [HttpGet("GetAssessments")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessments",
+    Summary = "Get assessments",
+    Description = "Returns the first-step metadata for all assessments."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Assessment data retrieved.",
+    typeof(IReadOnlyList<AssessmentResponse>))]
+  public async Task<ActionResult<IReadOnlyList<AssessmentResponse>>> GetAssessments(
+    CancellationToken cancellationToken)
+  {
+    var assessments = await _sender.Send(new GetAssessmentsQuery(), cancellationToken);
+    var response = assessments.Select(step => step.ToResponse()).ToList();
+    return Ok(response);
+  }
+
+  [HttpGet("{assessmentId:guid}")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentById",
+    Summary = "Get assessment by ID",
+    Description = "Returns the first-step details for the specified assessment."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Assessment retrieved.", typeof(AssessmentResponse))]
+  [SwaggerResponse(StatusCodes.Status404NotFound, "Assessment not found.")]
+  public async Task<ActionResult<AssessmentResponse>> GetAssessmentById(Guid assessmentId,
+    CancellationToken cancellationToken)
+  {
+    var assessment = await _sender.Send(new GetAssessmentByIdQuery(assessmentId), cancellationToken);
+    if (assessment is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(assessment.ToResponse());
+  }
+
 }

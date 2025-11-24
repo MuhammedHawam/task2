@@ -119,14 +119,14 @@ namespace GAIA.Infra.EFCore.Migrations
 
                             b1.HasKey("FrameworkId");
 
-                            b1.ToTable("Frameworks", "ef-core");
+                            b1.ToTable("FrameworkRoots", "ef-core");
 
                             b1.WithOwner()
                                 .HasForeignKey("FrameworkId");
 
                             b1.OwnsMany("GAIA.Domain.Framework.FrameworkNode.Children#FrameworkNode", "Children", b2 =>
                                 {
-                                    b2.Property<Guid>("FrameworkNodeFrameworkId")
+                                    b2.Property<Guid>("RootId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<Guid>("Id")
@@ -137,12 +137,12 @@ namespace GAIA.Infra.EFCore.Migrations
                                         .HasMaxLength(5000)
                                         .HasColumnType("character varying(5000)");
 
-                                    b2.HasKey("FrameworkNodeFrameworkId", "Id");
+                                    b2.HasKey("RootId", "Id");
 
-                                    b2.ToTable("FrameworkNode", "ef-core");
+                                    b2.ToTable("FrameworkRootChildren", "ef-core");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("FrameworkNodeFrameworkId");
+                                        .HasForeignKey("RootId");
                                 });
 
                             b1.Navigation("Children");

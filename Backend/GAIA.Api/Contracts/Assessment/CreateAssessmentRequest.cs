@@ -1,29 +1,16 @@
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace GAIA.Api.Contracts.Assessment
-{
-  /// <summary>
-  /// Request body used to create a new assessment.
-  /// </summary>
-  /// <remarks>
-  /// Consumed by POST /assessments.
-  /// </remarks>
-  /// <param name="Title">Title of the assessment.</param>
-  /// <param name="Description">Detailed description of the assessment.</param>
-  /// <param name="CreatedBy">Identifier of the user creating the assessment (UUID).</param>
-  /// <param name="FrameworkId">Identifier of the framework this assessment uses (UUID).</param>
-  public record CreateAssessmentRequest(
-    [property: SwaggerSchema(Description = "Title of the assessment")]
-    string Title,
-    [property: SwaggerSchema(Description = "Detailed description of the assessment")]
-    string Description,
-    [property: SwaggerSchema(Description = "Identifier of the user creating the assessment", Format = "uuid")]
-    Guid CreatedBy,
-    [property: SwaggerSchema(Description = "Identifier of the framework this assessment uses", Format = "uuid")]
-    Guid FrameworkId,
-    [property: SwaggerSchema(Description = "Identifier of the chosen assessment depth", Format = "uuid")]
-    Guid AssessmentDepthId,
-    [property: SwaggerSchema(Description = "Identifier of the chosen assessment scoring model", Format = "uuid")]
-    Guid AssessmentScoringId
- );
-}
+namespace GAIA.Api.Contracts.Assessment;
+
+public record CreateAssessmentRequest(
+  [property: SwaggerSchema(Description = "Name of the assessment")]
+  string Name,
+  [property: SwaggerSchema(Description = "AssessmentDetails start date", Format = "date-time")]
+  DateTime StartDate,
+  [property: SwaggerSchema(Description = "AssessmentDetails end date", Format = "date-time")]
+  DateTime EndDate,
+  [property: SwaggerSchema(Description = "Organization requesting the assessment")]
+  string Organization,
+  [property: SwaggerSchema(Description = "Primary language selected for the assessment")]
+  string Language
+);

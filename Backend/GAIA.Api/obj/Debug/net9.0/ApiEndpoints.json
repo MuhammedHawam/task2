@@ -17,6 +17,111 @@
   },
   {
     "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "CreateFirstStep",
+    "RelativePath": "api/Assessment/CreateAssessmentFirstStep",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "GAIA.Api.Contracts.Assessment.CreateAssessmentFirstStepRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentFirstStepResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "GetAssessmentFirstSteps",
+    "RelativePath": "api/Assessment/FirstSteps",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[GAIA.Api.Contracts.Assessment.AssessmentFirstStepResponse, GAIA.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "GetAssessmentFirstStepById",
+    "RelativePath": "api/Assessment/FirstSteps/{assessmentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assessmentId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentFirstStepResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "UpdateFirstStep",
+    "RelativePath": "api/Assessment/UpdateAssessmentFirstStep",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assessmentId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "request",
+        "Type": "GAIA.Api.Contracts.Assessment.UpdateAssessmentFirstStepRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentFirstStepResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
     "Method": "GetAll",
     "RelativePath": "assessments",
     "HttpMethod": "GET",
@@ -27,9 +132,7 @@
       {
         "Type": "System.Collections.Generic.IReadOnlyList\u00601[[GAIA.Api.Contracts.Assessment.AssessmentResponse, GAIA.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
+          "application/json"
         ],
         "StatusCode": 200
       }
@@ -53,9 +156,7 @@
       {
         "Type": "GAIA.Api.Contracts.Assessment.AssessmentResponse",
         "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
+          "application/json"
         ],
         "StatusCode": 200
       }
@@ -87,7 +188,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "GAIA.Api.Contracts.Assessment.AssessmentConfigurationOptionsResponse",
+        "Type": "GAIA.Api.Contracts.FrameworkConfigurationOptionsResponse",
         "MediaTypes": [
           "application/json"
         ],
@@ -99,26 +200,5 @@
         "StatusCode": 500
       }
     ]
-  },
-  {
-    "ContainingType": "GAIA.Api.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[GAIA.Api.WeatherForecast, GAIA.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ],
-    "EndpointName": "GetWeatherForecast"
   }
 ]

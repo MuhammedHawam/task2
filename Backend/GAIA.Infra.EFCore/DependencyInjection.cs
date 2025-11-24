@@ -23,9 +23,9 @@ public static class DependencyInjection
 
     services.AddDbContext<GaiaDbContext>(options
       => options
-        .UseNpgsql(connectString)
-        .UseSeeding((ctx, _) => FrameworksSeeder.Seed(ctx))
-        .UseAsyncSeeding(async (ctx, _, cToken) => await FrameworksSeeder.SeedAsync(ctx, cToken)));
+        .UseNpgsql(connectString));
+    // .UseSeeding((ctx, _) => FrameworksSeeder.Seed(ctx))
+    // .UseAsyncSeeding(async (ctx, _, cToken) => await FrameworksSeeder.SeedAsync(ctx, cToken)));
 
     services.AddScoped<IRepository<Framework>, FrameworkRepository>();
   }

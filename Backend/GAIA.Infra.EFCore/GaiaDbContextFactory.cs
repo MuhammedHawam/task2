@@ -11,7 +11,7 @@ public class GaiaDbContextFactory : IDesignTimeDbContextFactory<GaiaDbContext>
 
     // Use a placeholder connection string for migrations CLI tooling.
     // This will be replaced at runtime with the actual connection string.
-    optionsBuilder.UseNpgsql("Host=localhost;Database=gaia;Username=gaia;Password=not_secure");
+    optionsBuilder.UseNpgsql("Host=localhost;Database=gaia;Username=gaia;Password=postgres");
 
     return new GaiaDbContext(optionsBuilder.Options, "ef-core");
   }

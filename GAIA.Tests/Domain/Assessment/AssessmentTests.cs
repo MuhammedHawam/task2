@@ -22,10 +22,10 @@ public class AssessmentTests
     var assessmentDepthId = Guid.NewGuid();
     var assessmentScoringId = Guid.NewGuid();
 
-    var @event = new AssessmentCreated
+    var @event = new AssessmentDetailsCreated
     {
       Id = id,
-      Title = "Risk Assessment",
+      Title = "Risk AssessmentDetails",
       Description = "Assess risk across systems",
       CreatedAt = DateTime.UtcNow,
       CreatedBy = createdBy,
@@ -34,7 +34,7 @@ public class AssessmentTests
       AssessmentScoringId = assessmentScoringId,
     };
 
-    var assessment = new GAIA.Domain.Assessment.Entities.Assessment();
+    var assessment = new GAIA.Domain.Assessment.Entities.AssessmentDetails();
 
     assessment.Apply(@event);
 
@@ -143,7 +143,7 @@ public class AssessmentTests
     var depthId = Guid.NewGuid();
     var scoringId = Guid.NewGuid();
 
-    var assessment = new GAIA.Domain.Assessment.Entities.Assessment
+    var assessment = new GAIA.Domain.Assessment.Entities.AssessmentDetails
     {
       Id = assessmentId,
       Title = "Security Review",
@@ -171,10 +171,10 @@ public class AssessmentTests
       Description = "Weighted scoring model",
     };
 
-    var details = new AssessmentDetails(assessment, depth, scoring);
+    var details = new Core.Assessment.Queries.AssessmentDetails(assessment, depth, scoring);
     var controller = CreateController((request, _) => request switch
     {
-      GetAssessmentsQuery => new List<AssessmentDetails> { details },
+      GetAssessmentsDetailsQuery => new List<Core.Assessment.Queries.AssessmentDetails> { details },
       _ => throw new InvalidOperationException("Unexpected request"),
     });
 
@@ -183,7 +183,7 @@ public class AssessmentTests
 
     // Assert
     var okResult = Assert.IsType<OkObjectResult>(result.Result);
-    var response = Assert.IsType<List<AssessmentResponse>>(okResult.Value);
+    var response = Assert.IsType<List<AssessmentDetailsResponse>>(okResult.Value);
     var item = Assert.Single(response);
 
     Assert.Equal(assessmentId, item.Id);
@@ -202,7 +202,7 @@ public class AssessmentTests
     var depthId = Guid.NewGuid();
     var scoringId = Guid.NewGuid();
 
-    var assessment = new GAIA.Domain.Assessment.Entities.Assessment
+    var assessment = new GAIA.Domain.Assessment.Entities.AssessmentDetails
     {
       Id = assessmentId,
       Title = "Privacy Review",
@@ -230,11 +230,11 @@ public class AssessmentTests
       Description = "Simple scoring",
     };
 
-    var details = new AssessmentDetails(assessment, depth, scoring);
+    var details = new Core.Assessment.Queries.AssessmentDetails(assessment, depth, scoring);
 
     var controller = CreateController((request, _) => request switch
     {
-      GetAssessmentByIdQuery q when q.AssessmentId == assessmentId => details,
+      GetAssessmentDetailsByIdQuery q when q.AssessmentId == assessmentId => details,
       _ => throw new InvalidOperationException("Unexpected request"),
     });
 
@@ -243,7 +243,7 @@ public class AssessmentTests
 
     // Assert
     var okResult = Assert.IsType<OkObjectResult>(result.Result);
-    var response = Assert.IsType<AssessmentResponse>(okResult.Value);
+    var response = Assert.IsType<AssessmentDetailsResponse>(okResult.Value);
 
     Assert.Equal(assessmentId, response.Id);
     Assert.Equal("Privacy Review", response.Title);
@@ -259,7 +259,7 @@ public class AssessmentTests
     // Arrange
     var controller = CreateController((request, _) => request switch
     {
-      GetAssessmentByIdQuery => null,
+      GetAssessmentDetailsByIdQuery => null,
       _ => throw new InvalidOperationException("Unexpected request"),
     });
 

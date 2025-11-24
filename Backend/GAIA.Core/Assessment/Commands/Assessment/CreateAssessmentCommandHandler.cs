@@ -4,31 +4,46 @@ using MediatR;
 
 namespace GAIA.Core.Assessment.Commands.Assessment;
 
-public class CreateAssessmentCommandHandler : IRequestHandler<CreateAssessmentCommand, CreateAssessmentResult>
+public class CreateAssessmentCommandHandler
+  : IRequestHandler<CreateAssessmentCommand, Domain.Assessment.Entities.Assessment>
 {
-  private readonly IAssessmentEventWriter _writer;
+  private readonly IAssessmentEventWriter _eventWriter;
 
-  public CreateAssessmentCommandHandler(IAssessmentEventWriter writer)
+  public CreateAssessmentCommandHandler(IAssessmentEventWriter eventWriter)
   {
-    _writer = writer;
+    _eventWriter = eventWriter;
   }
 
-  public async Task<CreateAssessmentResult> Handle(CreateAssessmentCommand request, CancellationToken cancellationToken)
+  public async Task<Domain.Assessment.Entities.Assessment> Handle(
+    CreateAssessmentCommand request,
+    CancellationToken cancellationToken)
   {
     var assessmentId = Guid.NewGuid();
+    var timestamp = DateTime.UtcNow;
+
     var createdEvent = new AssessmentCreated
     {
       Id = assessmentId,
-      Title = request.Title,
-      Description = request.Description,
-      CreatedAt = DateTime.UtcNow,
-      CreatedBy = request.CreatedBy,
-      FrameworkId = request.FrameworkId,
-      AssessmentDepthId = request.AssessmentDepthId,
-      AssessmentScoringId = request.AssessmentScoringId
+      Name = request.Name,
+      StartDate = request.StartDate,
+      EndDate = request.EndDate,
+      Organization = request.Organization,
+      Language = request.Language,
+      CreatedAt = timestamp
     };
 
-    var id = await _writer.CreateAsync(createdEvent, cancellationToken);
-    return new CreateAssessmentResult(id);
+    await _eventWriter.CreateAsync(createdEvent, cancellationToken);
+
+    return new Domain.Assessment.Entities.Assessment
+    {
+      Id = assessmentId,
+      Name = request.Name,
+      StartDate = request.StartDate,
+      EndDate = request.EndDate,
+      Organization = request.Organization,
+      Language = request.Language,
+      CreatedAt = timestamp
+    };
   }
 }
+

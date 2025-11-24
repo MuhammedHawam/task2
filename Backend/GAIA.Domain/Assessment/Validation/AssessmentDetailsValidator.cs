@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace GAIA.Domain.Assessment.Validation
 {
-  public class AssessmentValidator : AbstractValidator<Entities.Assessment>
+  public class AssessmentDetailsValidator : AbstractValidator<Entities.AssessmentDetails>
   {
-    public AssessmentValidator()
+    public AssessmentDetailsValidator()
     {
       RuleFor(x => x.Title)
         .NotEmpty()

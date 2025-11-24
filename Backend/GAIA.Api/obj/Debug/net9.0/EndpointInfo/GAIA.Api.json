@@ -42,27 +42,14 @@
         "tags": [
           "Assessments"
         ],
+        "summary": "Get assessments",
+        "description": "Returns the available assessments.",
+        "operationId": "getAssessments",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AssessmentResponse"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AssessmentResponse"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -78,6 +65,9 @@
         "tags": [
           "Assessments"
         ],
+        "summary": "Create new assessments",
+        "description": "Returns the created assessment ID.",
+        "operationId": "createAssessment",
         "requestBody": {
           "content": {
             "application/json": {
@@ -101,17 +91,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AssessmentResponse"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AssessmentResponse"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AssessmentResponse"
                 }
@@ -126,6 +106,9 @@
         "tags": [
           "Assessments"
         ],
+        "summary": "Get assessment by ID",
+        "description": "Returns the assessment details for the specified ID.",
+        "operationId": "getAssessmentById",
         "parameters": [
           {
             "name": "id",
@@ -151,13 +134,14 @@
         ],
         "summary": "Retrieves the available assessment configuration options grouped by framework.",
         "description": "Provides the list of frameworks along with their supported assessment depths and scoring profiles.\r\n            \r\nSample request:\r\n```GET /assessments/configuration/options```\r\n            \r\nSample response:\r\n{\r\n  \"frameworks\": [\r\n    {\r\n      \"id\": \"ad2c63f9-b856-4e36-91f9-5da7b42e1f33\",\r\n      \"name\": \"Cybersecurity Maturity\",\r\n      \"assessmentDepths\": [\r\n        { \"id\": \"982b6a76-a312-46c5-9a9d-34175e5b56dd\", \"name\": \"Initial\", \"depth\": 1 }\r\n      ],\r\n      \"assessmentScorings\": [\r\n        { \"id\": \"d758ff3c-fb19-4a88-bb29-9a48b204361e\", \"name\": \"Bronze\" }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n            \r\nPossible status codes:\r\n* 200 - Configuration options retrieved successfully.\r\n* 500 - An unexpected error occurred while retrieving the options.",
+        "operationId": "getAssessmentConfigurationOptions",
         "responses": {
           "200": {
             "description": "Configuration options retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AssessmentConfigurationOptionsResponse"
+                  "$ref": "#/components/schemas/FrameworkConfigurationOptionsResponse"
                 }
               }
             }
@@ -168,37 +152,118 @@
         }
       }
     },
-    "/WeatherForecast": {
-      "get": {
+    "/api/Assessment/CreateAssessmentFirstStep": {
+      "post": {
         "tags": [
-          "WeatherForecast"
+          "Assessments"
         ],
-        "operationId": "GetWeatherForecast",
+        "summary": "Create the first step of an assessment",
+        "description": "Creates the basic assessment details (name, dates, organization, language) and returns the persisted data.",
+        "operationId": "createAssessmentFirstStep",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssessmentFirstStepRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssessmentFirstStepRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssessmentFirstStepRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Assessment first step created.",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/AssessmentFirstStepResponse"
                 }
-              },
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Assessment/UpdateAssessmentFirstStep": {
+      "put": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Update the first step of an assessment",
+        "description": "Updates the previously saved first-step details for the specified assessment.",
+        "operationId": "updateAssessmentFirstStep",
+        "parameters": [
+          {
+            "name": "assessmentId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssessmentFirstStepRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssessmentFirstStepRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssessmentFirstStepRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assessment first step updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentFirstStepResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Assessment first step not found."
+          }
+        }
+      }
+    },
+    "/api/Assessment/FirstSteps": {
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Get assessment first steps",
+        "description": "Returns the first-step metadata for all assessments.",
+        "operationId": "getAssessmentFirstSteps",
+        "responses": {
+          "200": {
+            "description": "Assessment first steps retrieved.",
+            "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
+                    "$ref": "#/components/schemas/AssessmentFirstStepResponse"
                   }
                 }
               }
@@ -206,39 +271,46 @@
           }
         }
       }
+    },
+    "/api/Assessment/FirstSteps/{assessmentId}": {
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Get assessment first step by ID",
+        "description": "Returns the first-step details for the specified assessment.",
+        "operationId": "getAssessmentFirstStepById",
+        "parameters": [
+          {
+            "name": "assessmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Assessment first step retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentFirstStepResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Assessment first step not found."
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "AssessmentConfigurationOptionsResponse": {
-        "type": "object",
-        "properties": {
-          "frameworks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FrameworkOptionsDto"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "AssessmentDepthOptionsDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "depth": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "AssessmentDepthResponse": {
         "type": "object",
         "properties": {
@@ -256,6 +328,42 @@
           "depth": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssessmentFirstStepResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "organization": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -302,19 +410,6 @@
         },
         "additionalProperties": false
       },
-      "AssessmentScoringOptionsDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "AssessmentScoringResponse": {
         "type": "object",
         "properties": {
@@ -332,6 +427,34 @@
           "description": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateAssessmentFirstStepRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the assessment"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Assessment start date",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Assessment end date",
+            "format": "date-time"
+          },
+          "organization": {
+            "type": "string",
+            "description": "Organization requesting the assessment"
+          },
+          "language": {
+            "type": "string",
+            "description": "Primary language selected for the assessment"
           }
         },
         "additionalProperties": false
@@ -371,6 +494,35 @@
         "additionalProperties": false,
         "description": "Request body used to create a new assessment."
       },
+      "FrameworkConfigurationOptionsResponse": {
+        "type": "object",
+        "properties": {
+          "frameworks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FrameworkOptionsDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FrameworkDepthOptionsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "depth": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "FrameworkOptionsDto": {
         "type": "object",
         "properties": {
@@ -384,37 +536,55 @@
           "assessmentDepths": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AssessmentDepthOptionsDto"
+              "$ref": "#/components/schemas/FrameworkDepthOptionsDto"
             }
           },
           "assessmentScorings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AssessmentScoringOptionsDto"
+              "$ref": "#/components/schemas/FrameworkScoringOptionsDto"
             }
           }
         },
         "additionalProperties": false
       },
-      "WeatherForecast": {
+      "FrameworkScoringOptionsDto": {
         "type": "object",
         "properties": {
-          "date": {
+          "id": {
             "type": "string",
-            "format": "date"
+            "format": "uuid"
           },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "summary": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAssessmentFirstStepRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
             "type": "string",
-            "nullable": true
+            "description": "Name of the assessment"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Assessment start date",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Assessment end date",
+            "format": "date-time"
+          },
+          "organization": {
+            "type": "string",
+            "description": "Organization requesting the assessment"
+          },
+          "language": {
+            "type": "string",
+            "description": "Primary language selected for the assessment"
           }
         },
         "additionalProperties": false
