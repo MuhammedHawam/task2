@@ -5,6 +5,7 @@ public record AssessmentResponse(
   string Name,
   DateTime StartDate,
   DateTime EndDate,
+  Guid OrganizationId,
   string Organization,
   string Language,
   DateTime CreatedAt,

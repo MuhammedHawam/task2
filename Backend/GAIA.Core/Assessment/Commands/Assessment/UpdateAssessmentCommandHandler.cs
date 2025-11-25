@@ -36,6 +36,7 @@ public class UpdateAssessmentCommandHandler
       Name = request.Name,
       StartDate = request.StartDate,
       EndDate = request.EndDate,
+      OrganizationId = request.OrganizationId,
       Organization = request.Organization,
       Language = request.Language,
       UpdatedAt = timestamp
@@ -46,6 +47,7 @@ public class UpdateAssessmentCommandHandler
     assessment.Name = request.Name;
     assessment.StartDate = request.StartDate;
     assessment.EndDate = request.EndDate;
+    assessment.OrganizationId = request.OrganizationId;
     assessment.Organization = request.Organization;
     assessment.Language = request.Language;
     assessment.UpdatedAt = timestamp;

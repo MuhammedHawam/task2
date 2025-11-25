@@ -6,6 +6,7 @@ public class AssessmentCreated
   public string Name { get; set; } = string.Empty;
   public DateTime StartDate { get; set; }
   public DateTime EndDate { get; set; }
+  public Guid OrganizationId { get; set; }
   public string Organization { get; set; } = string.Empty;
   public string Language { get; set; } = string.Empty;
   public DateTime CreatedAt { get; set; }
