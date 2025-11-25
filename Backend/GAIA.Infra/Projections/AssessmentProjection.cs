@@ -12,6 +12,7 @@ public class AssessmentProjection : SingleStreamProjection<Assessment, Guid>
     state.Name = @event.Name;
     state.StartDate = @event.StartDate;
     state.EndDate = @event.EndDate;
+    state.OrganizationId = @event.OrganizationId;
     state.Organization = @event.Organization;
     state.Language = @event.Language;
     state.CreatedAt = @event.CreatedAt;
@@ -23,6 +24,7 @@ public class AssessmentProjection : SingleStreamProjection<Assessment, Guid>
     state.Name = @event.Name;
     state.StartDate = @event.StartDate;
     state.EndDate = @event.EndDate;
+    state.OrganizationId = @event.OrganizationId;
     state.Organization = @event.Organization;
     state.Language = @event.Language;
     state.UpdatedAt = @event.UpdatedAt;

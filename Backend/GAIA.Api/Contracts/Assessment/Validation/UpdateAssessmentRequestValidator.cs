@@ -10,6 +10,9 @@ public class UpdateAssessmentRequestValidator : AbstractValidator<UpdateAssessme
       .NotEmpty().WithMessage("Name is required.")
       .MaximumLength(200).WithMessage("Name must be at most 200 characters.");
 
+    RuleFor(x => x.OrganizationId)
+      .NotEmpty().WithMessage("OrganizationId is required.");
+
     RuleFor(x => x.Organization)
       .NotEmpty().WithMessage("Organization is required.")
       .MaximumLength(200).WithMessage("Organization must be at most 200 characters.");

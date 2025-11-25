@@ -8,6 +8,7 @@ public class Assessment
   public string Name { get; set; } = string.Empty;
   public DateTime StartDate { get; set; }
   public DateTime EndDate { get; set; }
+  public Guid OrganizationId { get; set; }
   public string Organization { get; set; } = string.Empty;
   public string Language { get; set; } = string.Empty;
   public DateTime CreatedAt { get; set; }
@@ -19,6 +20,7 @@ public class Assessment
     Name = @event.Name;
     StartDate = @event.StartDate;
     EndDate = @event.EndDate;
+    OrganizationId = @event.OrganizationId;
     Organization = @event.Organization;
     Language = @event.Language;
     CreatedAt = @event.CreatedAt;
@@ -30,6 +32,7 @@ public class Assessment
     Name = @event.Name;
     StartDate = @event.StartDate;
     EndDate = @event.EndDate;
+    OrganizationId = @event.OrganizationId;
     Organization = @event.Organization;
     Language = @event.Language;
     UpdatedAt = @event.UpdatedAt;

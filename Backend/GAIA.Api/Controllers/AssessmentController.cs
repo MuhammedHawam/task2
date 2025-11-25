@@ -248,6 +248,7 @@ public class AssessmentsController : ControllerBase
       request.Name,
       request.StartDate,
       request.EndDate,
+      request.OrganizationId,
       request.Organization,
       request.Language
     ), cancellationToken);
@@ -279,6 +280,7 @@ public class AssessmentsController : ControllerBase
       request.Name,
       request.StartDate,
       request.EndDate,
+      request.OrganizationId,
       request.Organization,
       request.Language
     ), cancellationToken);

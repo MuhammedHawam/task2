@@ -27,6 +27,7 @@ public class CreateAssessmentCommandHandler
       Name = request.Name,
       StartDate = request.StartDate,
       EndDate = request.EndDate,
+      OrganizationId = request.OrganizationId,
       Organization = request.Organization,
       Language = request.Language,
       CreatedAt = timestamp
@@ -40,6 +41,7 @@ public class CreateAssessmentCommandHandler
       Name = request.Name,
       StartDate = request.StartDate,
       EndDate = request.EndDate,
+      OrganizationId = request.OrganizationId,
       Organization = request.Organization,
       Language = request.Language,
       CreatedAt = timestamp

@@ -38,6 +38,7 @@ namespace GAIA.Api.Mappers
       assessment.Name,
       assessment.StartDate,
       assessment.EndDate,
+      assessment.OrganizationId,
       assessment.Organization,
       assessment.Language,
       assessment.CreatedAt,
