@@ -24,7 +24,7 @@ namespace GAIA.Core.Assessment.Queries
 
 
       var assessment = await query
-        .Where(a => a.Id == request.AssessmentId)
+        .Where(a => a.AssessmentId == request.AssessmentId)
         .SingleOrDefaultAsync(cancellationToken);
 
       if (assessment is null)

@@ -19,6 +19,7 @@ public class AssessmentTests
   public void Apply_Sets_All_Fields_From_Event()
   {
     var id = Guid.NewGuid();
+    var assessmentId = Guid.NewGuid();
     var createdBy = Guid.NewGuid();
     var frameworkId = Guid.NewGuid();
     var assessmentDepthId = Guid.NewGuid();
@@ -27,6 +28,7 @@ public class AssessmentTests
     var @event = new AssessmentDetailsCreated
     {
       Id = id,
+      AssessmentId = assessmentId,
       Title = "Risk AssessmentDetails",
       Description = "Assess risk across systems",
       CreatedAt = DateTime.UtcNow,
@@ -41,6 +43,7 @@ public class AssessmentTests
     assessment.Apply(@event);
 
     Assert.Equal(id, assessment.Id);
+    Assert.Equal(@event.AssessmentId, assessment.AssessmentId);
     Assert.Equal(@event.Title, assessment.Title);
     Assert.Equal(@event.Description, assessment.Description);
     Assert.Equal(@event.CreatedAt, assessment.CreatedAt);
@@ -141,13 +144,15 @@ public class AssessmentTests
   public async Task GetAll_ReturnsAssessmentsWithDepthAndScoring()
   {
     // Arrange
-    var assessmentId = Guid.NewGuid();
+    var assessmentDetailsId = Guid.NewGuid();
+    var parentAssessmentId = Guid.NewGuid();
     var depthId = Guid.NewGuid();
     var scoringId = Guid.NewGuid();
 
     var assessment = new GAIA.Domain.Assessment.Entities.AssessmentDetails
     {
-      Id = assessmentId,
+      Id = assessmentDetailsId,
+      AssessmentId = parentAssessmentId,
       Title = "Security Review",
       Description = "Annual security assessment",
       CreatedAt = DateTime.UtcNow,
@@ -188,7 +193,8 @@ public class AssessmentTests
     var response = Assert.IsType<List<AssessmentDetailsResponse>>(okResult.Value);
     var item = Assert.Single(response);
 
-    Assert.Equal(assessmentId, item.Id);
+    Assert.Equal(assessmentDetailsId, item.Id);
+    Assert.Equal(parentAssessmentId, item.AssessmentId);
     Assert.Equal("Security Review", item.Title);
     Assert.NotNull(item.Depth);
     Assert.Equal(depthId, item.Depth!.Id);
@@ -200,13 +206,15 @@ public class AssessmentTests
   public async Task GetById_ReturnsAssessmentWithDepthAndScoring()
   {
     // Arrange
-    var assessmentId = Guid.NewGuid();
+    var assessmentDetailsId = Guid.NewGuid();
+    var parentAssessmentId = Guid.NewGuid();
     var depthId = Guid.NewGuid();
     var scoringId = Guid.NewGuid();
 
     var assessment = new GAIA.Domain.Assessment.Entities.AssessmentDetails
     {
-      Id = assessmentId,
+      Id = assessmentDetailsId,
+      AssessmentId = parentAssessmentId,
       Title = "Privacy Review",
       Description = "Privacy compliance assessment",
       CreatedAt = DateTime.UtcNow,
@@ -236,18 +244,19 @@ public class AssessmentTests
 
     var controller = CreateController((request, _) => request switch
     {
-      GetAssessmentDetailsByIdQuery q when q.AssessmentId == assessmentId => details,
+      GetAssessmentDetailsByIdQuery q when q.AssessmentId == parentAssessmentId => details,
       _ => throw new InvalidOperationException("Unexpected request"),
     });
 
     // Act
-    var result = await controller.GetById(assessmentId, CancellationToken.None);
+    var result = await controller.GetById(parentAssessmentId, CancellationToken.None);
 
     // Assert
     var okResult = Assert.IsType<OkObjectResult>(result.Result);
     var response = Assert.IsType<AssessmentDetailsResponse>(okResult.Value);
 
-    Assert.Equal(assessmentId, response.Id);
+    Assert.Equal(assessmentDetailsId, response.Id);
+    Assert.Equal(parentAssessmentId, response.AssessmentId);
     Assert.Equal("Privacy Review", response.Title);
     Assert.NotNull(response.Depth);
     Assert.Equal(depthId, response.Depth!.Id);

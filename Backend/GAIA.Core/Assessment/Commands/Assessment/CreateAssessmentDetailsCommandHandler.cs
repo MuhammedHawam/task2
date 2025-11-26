@@ -15,10 +15,16 @@ public class CreateAssessmentDetailsCommandHandler : IRequestHandler<CreateAsses
 
   public async Task<CreateAssessmentDetailsResult> Handle(CreateAssessmentDetailsCommand request, CancellationToken cancellationToken)
   {
-    var assessmentId = Guid.NewGuid();
+    if (request.AssessmentId == Guid.Empty)
+    {
+      throw new ArgumentException("AssessmentId must be provided.", nameof(request.AssessmentId));
+    }
+
+    var assessmentDetailsId = Guid.NewGuid();
     var createdEvent = new AssessmentDetailsCreated
     {
-      Id = assessmentId,
+      Id = assessmentDetailsId,
+      AssessmentId = request.AssessmentId,
       Title = request.Title,
       Description = request.Description,
       CreatedAt = DateTime.UtcNow,
@@ -28,7 +34,7 @@ public class CreateAssessmentDetailsCommandHandler : IRequestHandler<CreateAsses
       AssessmentScoringId = request.AssessmentScoringId
     };
 
-    var id = await _writer.CreateAsync(createdEvent, cancellationToken);
-    return new CreateAssessmentDetailsResult(id);
+    var createdAssessmentDetailsId = await _writer.CreateAsync(createdEvent, cancellationToken);
+    return new CreateAssessmentDetailsResult(request.AssessmentId, createdAssessmentDetailsId);
   }
 }

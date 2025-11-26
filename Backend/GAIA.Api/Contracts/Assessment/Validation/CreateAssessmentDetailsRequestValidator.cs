@@ -14,6 +14,9 @@ namespace GAIA.Api.Contracts.Assessment.Validation
         .NotEmpty().WithMessage("Description is required.")
         .MaximumLength(5000).WithMessage("Description must be at most 5000 characters.");
 
+      RuleFor(x => x.AssessmentId)
+        .NotEmpty().WithMessage("AssessmentId is required.");
+
       RuleFor(x => x.CreatedBy)
         .NotEmpty().WithMessage("CreatedBy is required.");
 

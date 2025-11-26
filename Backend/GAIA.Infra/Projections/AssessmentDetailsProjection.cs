@@ -9,6 +9,7 @@ namespace GAIA.Infra.Projections
     public void Apply(AssessmentDetailsCreated e, AssessmentDetails assessment)
     {
       assessment.Id = e.Id;
+      assessment.AssessmentId = e.AssessmentId;
       assessment.Title = e.Title;
       assessment.Description = e.Description;
       assessment.CreatedAt = e.CreatedAt;

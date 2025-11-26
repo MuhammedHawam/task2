@@ -2,6 +2,7 @@ namespace GAIA.Api.Contracts.Assessment;
 
 public record AssessmentDetailsResponse(
   Guid Id,
+  Guid AssessmentId,
   string Title,
   string Description,
   DateTime CreatedAt,
