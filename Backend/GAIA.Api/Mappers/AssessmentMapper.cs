@@ -61,5 +61,12 @@ namespace GAIA.Api.Mappers
           .Select(user => new UserResponse(user.Id, user.Username, user.Email, user.Avatar, user.Role))
           .ToList()
       );
+
+    public static AssessmentUsersResponse ToResponse(this AssessmentUserAssignment assignment) => new(
+      assignment.AssessmentId,
+      assignment.Users
+        .Select(user => new UserResponse(user.UserId, user.Username, user.Email, user.Avatar, user.Role))
+        .ToList()
+    );
   }
 }
