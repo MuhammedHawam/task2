@@ -221,6 +221,7 @@ public class AssessmentsController : ControllerBase
     CancellationToken cancellationToken)
   {
     var result = await _sender.Send(new CreateAssessmentDetailsCommand(
+      request.AssessmentId,
       request.Title,
       request.Description,
       request.CreatedBy,
@@ -229,19 +230,23 @@ public class AssessmentsController : ControllerBase
       request.AssessmentScoringId
     ), cancellationToken);
 
-    return CreatedAtAction(nameof(GetById), new { id = result.AssessmentId }, new { id = result.AssessmentId });
+    return CreatedAtAction(nameof(GetById), new { assessmentId = result.AssessmentId }, new
+    {
+      assessmentId = result.AssessmentId,
+      assessmentDetailsId = result.AssessmentDetailsId
+    });
   }
 
-  [HttpGet("GetAssessmentDetails/{id:guid}")]
+  [HttpGet("GetAssessmentDetails/{assessmentId:guid}")]
   [Produces(MediaTypeNames.Application.Json)]
   [SwaggerOperation(
     OperationId = "getAssessmentDetailsById",
     Summary = "Get assessment details by ID",
     Description = "Returns the assessment details for the specified ID."
   )]
-  public async Task<ActionResult<object>> GetById(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<object>> GetById(Guid assessmentId, CancellationToken cancellationToken)
   {
-    var assessment = await _sender.Send(new GetAssessmentDetailsByIdQuery(id), cancellationToken);
+    var assessment = await _sender.Send(new GetAssessmentDetailsByIdQuery(assessmentId), cancellationToken);
 
     if (assessment is null)
     {

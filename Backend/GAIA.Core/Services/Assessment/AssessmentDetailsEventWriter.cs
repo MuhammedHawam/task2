@@ -25,6 +25,11 @@ namespace GAIA.Core.Services.Assessment
         throw new ArgumentException("AssessmentDetailsCreated.Id must be a non-empty GUID.", nameof(@event));
       }
 
+      if (@event.AssessmentId == Guid.Empty)
+      {
+        throw new ArgumentException("AssessmentDetailsCreated.AssessmentId must be a non-empty GUID.", nameof(@event));
+      }
+
       _session.Events.StartStream<Domain.Assessment.Entities.AssessmentDetails>(@event.Id, @event);
       await _session.SaveChangesAsync(cancellationToken);
       return @event.Id;

@@ -7,17 +7,18 @@ namespace GAIA.Api.Mappers
   public static class AssessmentMapper
   {
     public static AssessmentDetailsResponse ToResponse(this Core.Assessment.Queries.AssessmentDetails details) => new(
-    details.Assessment.Id,
-    details.Assessment.Title,
-    details.Assessment.Description,
-    details.Assessment.CreatedAt,
-    details.Assessment.CreatedBy,
-    details.Assessment.FrameworkId,
-    details.Assessment.AssessmentDepthId,
-    details.Assessment.AssessmentScoringId,
-    details.Depth?.ToResponse(),
-    details.Scoring?.ToResponse()
-  );
+      details.Assessment.Id,
+      details.Assessment.AssessmentId,
+      details.Assessment.Title,
+      details.Assessment.Description,
+      details.Assessment.CreatedAt,
+      details.Assessment.CreatedBy,
+      details.Assessment.FrameworkId,
+      details.Assessment.AssessmentDepthId,
+      details.Assessment.AssessmentScoringId,
+      details.Depth?.ToResponse(),
+      details.Scoring?.ToResponse()
+    );
 
     private static AssessmentDepthResponse ToResponse(this AssessmentDepth depth) => new(
       depth.Id,

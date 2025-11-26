@@ -18,6 +18,10 @@ namespace GAIA.Domain.Assessment.Validation
         .Must(id => id != Guid.Empty)
         .WithMessage("CreatedBy is required.");
 
+      RuleFor(x => x.AssessmentId)
+        .Must(id => id != Guid.Empty)
+        .WithMessage("AssessmentId is required.");
+
       RuleFor(x => x.AssessmentDepthId)
         .Must(id => id != Guid.Empty)
         .WithMessage("AssessmentDepthId must be provided.");

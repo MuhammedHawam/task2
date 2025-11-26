@@ -5,6 +5,7 @@ namespace GAIA.Domain.Assessment.Entities;
 public class AssessmentDetails
 {
   public Guid Id { get; set; } // Primary Key
+  public Guid AssessmentId { get; set; } // Foreign Key to Assessment
   public string Title { get; set; } = string.Empty;
   public string Description { get; set; } = string.Empty;
   public DateTime CreatedAt { get; set; }
@@ -18,6 +19,7 @@ public class AssessmentDetails
   public void Apply(AssessmentDetailsCreated e)
   {
     Id = e.Id;
+    AssessmentId = e.AssessmentId;
     Title = e.Title;
     Description = e.Description;
     CreatedAt = e.CreatedAt;
