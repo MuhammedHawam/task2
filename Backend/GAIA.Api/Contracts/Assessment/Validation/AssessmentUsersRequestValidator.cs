@@ -34,3 +34,18 @@ public class AssessmentUserRequestValidator : AbstractValidator<AssessmentUserRe
       .NotEmpty();
   }
 }
+
+public class AssessmentUsersDeleteRequestValidator : AbstractValidator<AssessmentUsersDeleteRequest>
+{
+  public AssessmentUsersDeleteRequestValidator()
+  {
+    RuleFor(request => request.UserIds)
+      .NotNull()
+      .WithMessage("UserIds collection cannot be null.")
+      .Must(userIds => userIds.Count > 0)
+      .WithMessage("At least one userId must be provided.");
+
+    RuleForEach(request => request.UserIds)
+      .NotEmpty();
+  }
+}

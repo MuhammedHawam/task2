@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GAIA.Api.Contracts.Assessment;
 using GAIA.Api.Controllers;
 using GAIA.Core.Assessment.Commands.Assessment;
@@ -417,6 +418,57 @@ public class AssessmentTests
     var response = Assert.IsType<AssessmentUsersResponse>(okResult.Value);
     Assert.Single(response.Users);
     Assert.Equal(userId, response.Users[0].Id);
+  }
+
+  [Fact]
+  public async Task RemoveAssessmentUsers_ReturnsOk()
+  {
+    var assessmentId = Guid.NewGuid();
+    var assignment = new AssessmentUserAssignment(assessmentId);
+
+    var controller = CreateController((request, _) => request switch
+    {
+      RemoveAssessmentUsersCommand command when command.AssessmentId == assessmentId => assignment,
+      _ => throw new InvalidOperationException("Unexpected request"),
+    });
+
+    var result = await controller.RemoveAssessmentUsers(
+      assessmentId,
+      new AssessmentUsersDeleteRequest(new List<Guid> { Guid.NewGuid() }),
+      CancellationToken.None);
+
+    var okResult = Assert.IsType<OkObjectResult>(result.Result);
+    Assert.IsType<AssessmentUsersResponse>(okResult.Value);
+  }
+
+  [Fact]
+  public async Task RemoveAssessmentUsers_ReturnsNotFoundWhenAssessmentMissing()
+  {
+    var controller = CreateController((request, _) => request switch
+    {
+      RemoveAssessmentUsersCommand => null,
+      _ => throw new InvalidOperationException("Unexpected request"),
+    });
+
+    var result = await controller.RemoveAssessmentUsers(
+      Guid.NewGuid(),
+      new AssessmentUsersDeleteRequest(new List<Guid> { Guid.NewGuid() }),
+      CancellationToken.None);
+
+    Assert.IsType<NotFoundResult>(result.Result);
+  }
+
+  [Fact]
+  public async Task RemoveAssessmentUsers_ReturnsBadRequestWhenIdsMissing()
+  {
+    var controller = CreateController((_, _) => null);
+
+    var result = await controller.RemoveAssessmentUsers(
+      Guid.NewGuid(),
+      new AssessmentUsersDeleteRequest(new List<Guid>()),
+      CancellationToken.None);
+
+    Assert.IsType<BadRequestObjectResult>(result.Result);
   }
 
   private static AssessmentsController CreateController(Func<object, CancellationToken, object?> responseFactory)

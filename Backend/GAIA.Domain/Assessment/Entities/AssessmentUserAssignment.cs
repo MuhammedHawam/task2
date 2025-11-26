@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GAIA.Domain.Assessment.DomainEvents;
 
 namespace GAIA.Domain.Assessment.Entities;
 
@@ -51,6 +52,71 @@ public class AssessmentUserAssignment
       ?? new List<AssessmentAssignedUser>();
 
     UpdatedAt = DateTime.UtcNow;
+  }
+
+  public void RemoveUsers(IEnumerable<Guid> userIds)
+  {
+    if (userIds is null)
+    {
+      return;
+    }
+
+    var ids = new HashSet<Guid>(userIds);
+    Users = Users
+      .Where(user => !ids.Contains(user.UserId))
+      .ToList();
+    UpdatedAt = DateTime.UtcNow;
+  }
+
+  public void Apply(AssessmentUsersAssigned @event)
+  {
+    if (Id == Guid.Empty)
+    {
+      Id = @event.AssessmentId;
+    }
+
+    var users = @event.Users?
+      .Select(user => new AssessmentAssignedUser
+      {
+        UserId = user.UserId,
+        Username = user.Username,
+        Email = user.Email,
+        Avatar = user.Avatar,
+        Role = user.Role
+      });
+
+    AddUsers(users ?? Array.Empty<AssessmentAssignedUser>());
+  }
+
+  public void Apply(AssessmentUsersUpdated @event)
+  {
+    if (Id == Guid.Empty)
+    {
+      Id = @event.AssessmentId;
+    }
+
+    var users = @event.Users?
+      .Select(user => new AssessmentAssignedUser
+      {
+        UserId = user.UserId,
+        Username = user.Username,
+        Email = user.Email,
+        Avatar = user.Avatar,
+        Role = user.Role
+      })
+      .ToList();
+
+    ReplaceUsers(users ?? new List<AssessmentAssignedUser>());
+  }
+
+  public void Apply(AssessmentUsersRemoved @event)
+  {
+    if (Id == Guid.Empty)
+    {
+      Id = @event.AssessmentId;
+    }
+
+    RemoveUsers(@event.UserIds);
   }
 }
 

@@ -179,6 +179,37 @@ public class AssessmentsController : ControllerBase
     return Ok(result.ToResponse());
   }
 
+  [HttpDelete("{assessmentId:guid}/users")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "removeAssessmentUsers",
+    Summary = "Remove users from an assessment",
+    Description = "Removes the specified users from the assessment and returns the updated assignment."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Assessment users removed.", typeof(AssessmentUsersResponse))]
+  [SwaggerResponse(StatusCodes.Status404NotFound, "Assessment not found or no assignments exist.")]
+  public async Task<ActionResult<AssessmentUsersResponse>> RemoveAssessmentUsers(
+    Guid assessmentId,
+    [FromBody] AssessmentUsersDeleteRequest request,
+    CancellationToken cancellationToken)
+  {
+    if (request.UserIds is null || request.UserIds.Count == 0)
+    {
+      return BadRequest("At least one userId must be provided.");
+    }
+
+    var command = new RemoveAssessmentUsersCommand(assessmentId, request.UserIds);
+
+    var result = await _sender.Send(command, cancellationToken);
+
+    if (result is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(result.ToResponse());
+  }
+
   [HttpPost("CreateAssessmentDetails")]
   [Produces(MediaTypeNames.Application.Json)]
   [SwaggerOperation(

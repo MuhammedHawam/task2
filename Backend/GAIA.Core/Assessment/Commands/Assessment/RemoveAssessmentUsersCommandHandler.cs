@@ -7,14 +7,14 @@ using MediatR;
 
 namespace GAIA.Core.Assessment.Commands.Assessment;
 
-public class UpdateAssessmentUsersCommandHandler
-  : IRequestHandler<UpdateAssessmentUsersCommand, AssessmentUserAssignment?>
+public class RemoveAssessmentUsersCommandHandler
+  : IRequestHandler<RemoveAssessmentUsersCommand, AssessmentUserAssignment?>
 {
   private readonly IAssessmentRepository _assessmentRepository;
   private readonly IAssessmentUserAssignmentRepository _assignmentRepository;
   private readonly IAssessmentUserAssignmentEventWriter _eventWriter;
 
-  public UpdateAssessmentUsersCommandHandler(
+  public RemoveAssessmentUsersCommandHandler(
     IAssessmentRepository assessmentRepository,
     IAssessmentUserAssignmentRepository assignmentRepository,
     IAssessmentUserAssignmentEventWriter eventWriter)
@@ -25,7 +25,7 @@ public class UpdateAssessmentUsersCommandHandler
   }
 
   public async Task<AssessmentUserAssignment?> Handle(
-    UpdateAssessmentUsersCommand request,
+    RemoveAssessmentUsersCommand request,
     CancellationToken cancellationToken)
   {
     var assessment = await _assessmentRepository.GetByIdAsync(request.AssessmentId, cancellationToken);
@@ -34,27 +34,26 @@ public class UpdateAssessmentUsersCommandHandler
       return null;
     }
 
-    var incomingUsers = request.Users ?? Array.Empty<AssessmentUserInput>();
+    var assignment = await _assignmentRepository.GetAsync(request.AssessmentId, cancellationToken);
+    if (assignment is null)
+    {
+      return null;
+    }
 
-    var snapshotUsers = incomingUsers
-      .Select(user => new AssessmentUserSnapshot
-      {
-        UserId = user.UserId,
-        Username = user.Username,
-        Email = user.Email,
-        Avatar = user.Avatar,
-        Role = user.Role
-      })
-      .ToList();
+    var userIds = request.UserIds ?? Array.Empty<Guid>();
+    if (!userIds.Any())
+    {
+      return assignment;
+    }
 
-    var updatedEvent = new AssessmentUsersUpdated
+    var removedEvent = new AssessmentUsersRemoved
     {
       AssessmentId = request.AssessmentId,
-      Users = snapshotUsers,
-      UpdatedAt = DateTime.UtcNow
+      UserIds = userIds.ToList(),
+      RemovedAt = DateTime.UtcNow
     };
 
-    await _eventWriter.UpdateAsync(updatedEvent, cancellationToken);
+    await _eventWriter.RemoveAsync(removedEvent, cancellationToken);
 
     return await _assignmentRepository.GetAsync(request.AssessmentId, cancellationToken) ??
            new AssessmentUserAssignment(request.AssessmentId);
