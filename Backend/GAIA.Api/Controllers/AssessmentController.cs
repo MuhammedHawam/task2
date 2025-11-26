@@ -87,6 +87,129 @@ public class AssessmentsController : ControllerBase
     return Ok(users.ToResponse());
   }
 
+  [HttpPost("{assessmentId:guid}/users")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "assignUsersToAssessment",
+    Summary = "Assign users to an assessment",
+    Description = "Adds the provided users to the specified assessment."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Users assigned successfully.", typeof(AssessmentUsersResponse))]
+  [SwaggerResponse(StatusCodes.Status404NotFound, "Assessment not found.")]
+  public async Task<ActionResult<AssessmentUsersResponse>> AssignUsersToAssessment(
+    Guid assessmentId,
+    [FromBody] AssessmentUsersRequest request,
+    CancellationToken cancellationToken)
+  {
+    if (request.Users is null || request.Users.Count == 0)
+    {
+      return BadRequest("At least one user must be provided.");
+    }
+
+    var command = new AssignUsersToAssessmentCommand(
+      assessmentId,
+      request.Users
+        .Select(user => new AssessmentUserInput(user.Id, user.Username, user.Email, user.Avatar, user.Role))
+        .ToList()
+    );
+
+    var result = await _sender.Send(command, cancellationToken);
+
+    if (result is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(result.ToResponse());
+  }
+
+  [HttpGet("{assessmentId:guid}/users")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "getAssessmentUsers",
+    Summary = "Get users assigned to an assessment",
+    Description = "Retrieves the users that currently have access to the specified assessment."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Assessment users retrieved.", typeof(AssessmentUsersResponse))]
+  [SwaggerResponse(StatusCodes.Status404NotFound, "Assessment not found.")]
+  public async Task<ActionResult<AssessmentUsersResponse>> GetAssessmentUsers(
+    Guid assessmentId,
+    CancellationToken cancellationToken)
+  {
+    var result = await _sender.Send(new GetAssessmentUsersQuery(assessmentId), cancellationToken);
+
+    if (result is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(result.ToResponse());
+  }
+
+  [HttpPut("{assessmentId:guid}/users")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "updateAssessmentUsers",
+    Summary = "Update users assigned to an assessment",
+    Description = "Replaces the assessment's user list with the provided collection."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Assessment users updated.", typeof(AssessmentUsersResponse))]
+  [SwaggerResponse(StatusCodes.Status404NotFound, "Assessment not found.")]
+  public async Task<ActionResult<AssessmentUsersResponse>> UpdateAssessmentUsers(
+    Guid assessmentId,
+    [FromBody] AssessmentUsersRequest request,
+    CancellationToken cancellationToken)
+  {
+    var users = request.Users ?? Array.Empty<AssessmentUserRequest>();
+
+    var command = new UpdateAssessmentUsersCommand(
+      assessmentId,
+      users
+        .Select(user => new AssessmentUserInput(user.Id, user.Username, user.Email, user.Avatar, user.Role))
+        .ToList()
+    );
+
+    var result = await _sender.Send(command, cancellationToken);
+
+    if (result is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(result.ToResponse());
+  }
+
+  [HttpDelete("{assessmentId:guid}/users")]
+  [Produces(MediaTypeNames.Application.Json)]
+  [SwaggerOperation(
+    OperationId = "removeAssessmentUsers",
+    Summary = "Remove users from an assessment",
+    Description = "Removes the specified users from the assessment and returns the updated assignment."
+  )]
+  [SwaggerResponse(StatusCodes.Status200OK, "Assessment users removed.", typeof(AssessmentUsersResponse))]
+  [SwaggerResponse(StatusCodes.Status404NotFound, "Assessment not found or no assignments exist.")]
+  public async Task<ActionResult<AssessmentUsersResponse>> RemoveAssessmentUsers(
+    Guid assessmentId,
+    [FromBody] AssessmentUsersDeleteRequest request,
+    CancellationToken cancellationToken)
+  {
+    if (request.UserIds is null || request.UserIds.Count == 0)
+    {
+      return BadRequest("At least one userId must be provided.");
+    }
+
+    var command = new RemoveAssessmentUsersCommand(assessmentId, request.UserIds);
+
+    var result = await _sender.Send(command, cancellationToken);
+
+    if (result is null)
+    {
+      return NotFound();
+    }
+
+    return Ok(result.ToResponse());
+  }
+
   [HttpPost("CreateAssessmentDetails")]
   [Produces(MediaTypeNames.Application.Json)]
   [SwaggerOperation(
