@@ -1,29 +1,26 @@
 using GAIA.Core.Assessment.Interfaces;
-using GAIA.Core.InsightContent.Interfaces;
 using GAIA.Domain.InsightContent.DomainEvents;
 using MediatR;
+using Marten;
 
 namespace GAIA.Core.InsightContent.Commands;
 
 public record UpdateInsightContentCommand(Guid AssessmentId, Guid InsightId, string Content)
   : IRequest<UpdateInsightContentResult?>;
 
-public record UpdateInsightContentResult(Guid AssessmentId, Guid InsightId, string Content, bool CreatedNew);
+public record UpdateInsightContentResult(Guid AssessmentId, Guid InsightId, string Content);
 
 public class UpdateInsightContentCommandHandler
   : IRequestHandler<UpdateInsightContentCommand, UpdateInsightContentResult?>
 {
-  private readonly IAssessmentRepository _assessmentRepository;
-  private readonly IInsightContentRepository _insightContentRepository;
+  private readonly IQuerySession _querySession;
   private readonly IAssessmentEventWriter _eventWriter;
 
   public UpdateInsightContentCommandHandler(
-    IAssessmentRepository assessmentRepository,
-    IInsightContentRepository insightContentRepository,
+    IQuerySession querySession,
     IAssessmentEventWriter eventWriter)
   {
-    _assessmentRepository = assessmentRepository;
-    _insightContentRepository = insightContentRepository;
+    _querySession = querySession;
     _eventWriter = eventWriter;
   }
 
@@ -31,8 +28,8 @@ public class UpdateInsightContentCommandHandler
     UpdateInsightContentCommand request,
     CancellationToken cancellationToken)
   {
-    var assessment = await _assessmentRepository.GetByIdAsync(request.AssessmentId);
-    if (assessment is null)
+    var streamState = await _querySession.Events.FetchStreamStateAsync(request.AssessmentId, cancellationToken);
+    if (streamState is null)
     {
       return null;
     }
@@ -42,36 +39,13 @@ public class UpdateInsightContentCommandHandler
     {
       throw new InvalidOperationException("Insight content cannot be empty.");
     }
-    var insight = await _insightContentRepository.GetByIdAsync(request.InsightId);
-
-    var createdNew = insight is null;
     var timestamp = DateTime.UtcNow;
-
-    if (createdNew)
-    {
-      insight = new Domain.InsightContent.Entities.InsightContent
-      {
-        Id = request.InsightId,
-        AssessmentId = request.AssessmentId,
-        CreatedAt = timestamp,
-        CreatedBy = Guid.Empty,
-        Content = sanitizedContent
-      };
-
-      await _insightContentRepository.AddAsync(insight);
-    }
-    else
-    {
-      insight.Content = sanitizedContent;
-      await _insightContentRepository.UpdateAsync(insight);
-    }
 
     var userUpdatedEvent = new UserUpdatedInsightEvent
     {
-      AssessmentId = request.AssessmentId,
       InsightId = request.InsightId,
       Content = sanitizedContent,
-      OccurredAt = timestamp
+      Timestamp = timestamp
     };
 
     await _eventWriter.AppendAsync(request.AssessmentId, userUpdatedEvent, cancellationToken);
@@ -79,8 +53,7 @@ public class UpdateInsightContentCommandHandler
     return new UpdateInsightContentResult(
       request.AssessmentId,
       request.InsightId,
-      sanitizedContent,
-      createdNew);
+      sanitizedContent);
   }
 }
 
