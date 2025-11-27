@@ -1,4 +1,4 @@
-namespace GAIA.Core;
+namespace GAIA.Domain;
 
 public interface IBaseAggregate
 {

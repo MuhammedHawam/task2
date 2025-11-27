@@ -1,4 +1,4 @@
-using GAIA.Core;
+using GAIA.Domain;
 using GAIA.Core.Interfaces;
 using GAIA.Core.Queries;
 using System.Linq.Expressions;

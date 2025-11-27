@@ -1,4 +1,4 @@
-using GAIA.Core;
+using GAIA.Domain;
 using GAIA.Core.Queries;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
