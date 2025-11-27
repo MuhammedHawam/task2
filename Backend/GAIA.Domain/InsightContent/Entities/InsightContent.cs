@@ -8,7 +8,7 @@ namespace GAIA.Domain.InsightContent.Entities
     public string Content { get; set; }
     public DateTime CreatedAt { get; set; }
     public Guid CreatedBy { get; set; }
-    public Guid AssessmentId { get; set; } // Foreign Key to AssessmentDetails
+    public Guid AssessmentId { get; set; } // Foreign Key to Assessment
 
     // Apply method for domain events
     public void Apply(InsightContentCreated e)

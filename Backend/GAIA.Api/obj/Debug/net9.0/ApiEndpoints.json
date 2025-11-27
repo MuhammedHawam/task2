@@ -17,50 +17,8 @@
   },
   {
     "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
-    "Method": "CreateFirstStep",
-    "RelativePath": "api/Assessment/CreateAssessmentFirstStep",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "GAIA.Api.Contracts.Assessment.CreateAssessmentFirstStepRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "GAIA.Api.Contracts.Assessment.AssessmentFirstStepResponse",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
-    "Method": "GetAssessmentFirstSteps",
-    "RelativePath": "api/Assessment/FirstSteps",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[GAIA.Api.Contracts.Assessment.AssessmentFirstStepResponse, GAIA.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
-    "Method": "GetAssessmentFirstStepById",
-    "RelativePath": "api/Assessment/FirstSteps/{assessmentId}",
+    "Method": "GetAssessmentById",
+    "RelativePath": "assessments/{assessmentId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -73,7 +31,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "GAIA.Api.Contracts.Assessment.AssessmentFirstStepResponse",
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentResponse",
         "MediaTypes": [
           "application/json"
         ],
@@ -88,8 +46,71 @@
   },
   {
     "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
-    "Method": "UpdateFirstStep",
-    "RelativePath": "api/Assessment/UpdateAssessmentFirstStep",
+    "Method": "AssignUsersToAssessment",
+    "RelativePath": "assessments/{assessmentId}/users",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assessmentId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentUsersRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentUsersResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "GetAssessmentUsers",
+    "RelativePath": "assessments/{assessmentId}/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assessmentId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentUsersResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "UpdateAssessmentUsers",
+    "RelativePath": "assessments/{assessmentId}/users",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -97,17 +118,17 @@
       {
         "Name": "assessmentId",
         "Type": "System.Guid",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "request",
-        "Type": "GAIA.Api.Contracts.Assessment.UpdateAssessmentFirstStepRequest",
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentUsersRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "GAIA.Api.Contracts.Assessment.AssessmentFirstStepResponse",
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentUsersResponse",
         "MediaTypes": [
           "application/json"
         ],
@@ -122,26 +143,65 @@
   },
   {
     "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
-    "Method": "GetAll",
-    "RelativePath": "assessments",
+    "Method": "RemoveAssessmentUsers",
+    "RelativePath": "assessments/{assessmentId}/users",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assessmentId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentUsersDeleteRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentUsersResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "GetConfigurationOptions",
+    "RelativePath": "assessments/configuration/options",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[GAIA.Api.Contracts.Assessment.AssessmentResponse, GAIA.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "GAIA.Api.Contracts.FrameworkConfigurationOptionsResponse",
         "MediaTypes": [
           "application/json"
         ],
         "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
       }
     ]
   },
   {
     "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
-    "Method": "Create",
-    "RelativePath": "assessments",
+    "Method": "CreateAssessment",
+    "RelativePath": "assessments/CreateAssessment",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -164,8 +224,50 @@
   },
   {
     "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "Create",
+    "RelativePath": "assessments/CreateAssessmentDetails",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentDetailsResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "GetAll",
+    "RelativePath": "assessments/GetAllAssessmentDetails",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[GAIA.Api.Contracts.Assessment.AssessmentDetailsResponse, GAIA.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
     "Method": "GetById",
-    "RelativePath": "assessments/{id}",
+    "RelativePath": "assessments/GetAssessmentDetails/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -180,15 +282,80 @@
   },
   {
     "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
-    "Method": "GetConfigurationOptions",
-    "RelativePath": "assessments/configuration/options",
+    "Method": "GetAssessments",
+    "RelativePath": "assessments/GetAssessments",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "GAIA.Api.Contracts.FrameworkConfigurationOptionsResponse",
+        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[GAIA.Api.Contracts.Assessment.AssessmentResponse, GAIA.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "GetAssessmentLanguages",
+    "RelativePath": "assessments/languages",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.LanguageListResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "GetAssessmentOrganizations",
+    "RelativePath": "assessments/organizations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.OrganizationListResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "UpdateAssessment",
+    "RelativePath": "assessments/UpdateAssessment",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assessmentId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "request",
+        "Type": "GAIA.Api.Contracts.Assessment.UpdateAssessmentRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.AssessmentResponse",
         "MediaTypes": [
           "application/json"
         ],
@@ -197,7 +364,25 @@
       {
         "Type": "System.Void",
         "MediaTypes": [],
-        "StatusCode": 500
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "GAIA.Api.Controllers.AssessmentsController",
+    "Method": "GetAssessmentAccessUsers",
+    "RelativePath": "assessments/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "GAIA.Api.Contracts.Assessment.UserAccessListResponse",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
       }
     ]
   }

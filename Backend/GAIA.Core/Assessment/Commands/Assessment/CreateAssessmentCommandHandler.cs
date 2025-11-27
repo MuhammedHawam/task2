@@ -4,46 +4,31 @@ using MediatR;
 
 namespace GAIA.Core.Assessment.Commands.Assessment;
 
-public class CreateAssessmentCommandHandler
-  : IRequestHandler<CreateAssessmentCommand, Domain.Assessment.Entities.Assessment>
+public class CreateAssessmentCommandHandler : IRequestHandler<CreateAssessmentCommand, CreateAssessmentResult>
 {
-  private readonly IAssessmentEventWriter _eventWriter;
+  private readonly IAssessmentEventWriter _writer;
 
-  public CreateAssessmentCommandHandler(IAssessmentEventWriter eventWriter)
+  public CreateAssessmentCommandHandler(IAssessmentEventWriter writer)
   {
-    _eventWriter = eventWriter;
+    _writer = writer;
   }
 
-  public async Task<Domain.Assessment.Entities.Assessment> Handle(
-    CreateAssessmentCommand request,
-    CancellationToken cancellationToken)
+  public async Task<CreateAssessmentResult> Handle(CreateAssessmentCommand request, CancellationToken cancellationToken)
   {
     var assessmentId = Guid.NewGuid();
-    var timestamp = DateTime.UtcNow;
-
     var createdEvent = new AssessmentCreated
     {
       Id = assessmentId,
-      Name = request.Name,
-      StartDate = request.StartDate,
-      EndDate = request.EndDate,
-      Organization = request.Organization,
-      Language = request.Language,
-      CreatedAt = timestamp
+      Title = request.Title,
+      Description = request.Description,
+      CreatedAt = DateTime.UtcNow,
+      CreatedBy = request.CreatedBy,
+      FrameworkId = request.FrameworkId,
+      AssessmentDepthId = request.AssessmentDepthId,
+      AssessmentScoringId = request.AssessmentScoringId
     };
 
-    await _eventWriter.CreateAsync(createdEvent, cancellationToken);
-
-    return new Domain.Assessment.Entities.Assessment
-    {
-      Id = assessmentId,
-      Name = request.Name,
-      StartDate = request.StartDate,
-      EndDate = request.EndDate,
-      Organization = request.Organization,
-      Language = request.Language,
-      CreatedAt = timestamp
-    };
+    var id = await _writer.CreateAsync(createdEvent, cancellationToken);
+    return new CreateAssessmentResult(id);
   }
 }
-

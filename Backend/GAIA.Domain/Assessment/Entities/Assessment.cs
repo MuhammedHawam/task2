@@ -4,34 +4,26 @@ namespace GAIA.Domain.Assessment.Entities;
 
 public class Assessment
 {
-  public Guid Id { get; set; }
-  public string Name { get; set; } = string.Empty;
-  public DateTime StartDate { get; set; }
-  public DateTime EndDate { get; set; }
-  public string Organization { get; set; } = string.Empty;
-  public string Language { get; set; } = string.Empty;
+  public Guid Id { get; set; } // Primary Key
+  public string Title { get; set; } = string.Empty;
+  public string Description { get; set; } = string.Empty;
   public DateTime CreatedAt { get; set; }
-  public DateTime? UpdatedAt { get; set; }
+  public Guid CreatedBy { get; set; }
+  public Guid FrameworkId { get; set; } // Foreign Key to Framework
+  public Guid AssessmentDepthId { get; set; }
+  public Guid AssessmentScoringId { get; set; }
 
-  public void Apply(AssessmentCreated @event)
-  {
-    Id = @event.Id;
-    Name = @event.Name;
-    StartDate = @event.StartDate;
-    EndDate = @event.EndDate;
-    Organization = @event.Organization;
-    Language = @event.Language;
-    CreatedAt = @event.CreatedAt;
-    UpdatedAt = null;
-  }
 
-  public void Apply(AssessmentUpdated @event)
+  // Apply method for domain events
+  public void Apply(AssessmentCreated e)
   {
-    Name = @event.Name;
-    StartDate = @event.StartDate;
-    EndDate = @event.EndDate;
-    Organization = @event.Organization;
-    Language = @event.Language;
-    UpdatedAt = @event.UpdatedAt;
+    Id = e.Id;
+    Title = e.Title;
+    Description = e.Description;
+    CreatedAt = e.CreatedAt;
+    CreatedBy = e.CreatedBy;
+    FrameworkId = e.FrameworkId;
+    AssessmentDepthId = e.AssessmentDepthId;
+    AssessmentScoringId = e.AssessmentScoringId;
   }
 }

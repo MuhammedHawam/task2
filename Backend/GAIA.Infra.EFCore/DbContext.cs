@@ -1,4 +1,4 @@
-using GAIA.Domain.Entities;
+using GAIA.Domain.Document.Entities;
 using GAIA.Domain.Framework;
 using Microsoft.EntityFrameworkCore;
 

@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Marten" Version="8.15.2"/>
-    <PackageReference Include="MediatR" Version="13.1.0"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9"/>
+    <PackageReference Include="Marten" Version="8.15.2" />
+    <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- TODO: Is this dependency okay? -->
-    <ProjectReference Include="..\GAIA.Domain\GAIA.Domain.csproj"/>
+    <ProjectReference Include="..\GAIA.Domain\GAIA.Domain.csproj" />
   </ItemGroup>
 
 </Project>

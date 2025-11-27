@@ -1,5 +1,5 @@
 using GAIA.Api.Contracts.Document;
-using GAIA.Domain.Entities;
+using GAIA.Domain.Document.Entities;
 using GAIA.Infra.EFCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +9,11 @@ namespace GAIA.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DocumentsController : ControllerBase
+public class DocumentController : ControllerBase
 {
   private readonly GaiaDbContext _context;
 
-  public DocumentsController(GaiaDbContext context)
+  public DocumentController(GaiaDbContext context)
   {
     _context = context;
   }

@@ -13,10 +13,11 @@
             </remarks>
             <param name="Title">Title of the assessment.</param>
             <param name="Description">Detailed description of the assessment.</param>
+            <param name="AssessmentId">Identifier of the assessment that owns these details (UUID).</param>
             <param name="CreatedBy">Identifier of the user creating the assessment (UUID).</param>
             <param name="FrameworkId">Identifier of the framework this assessment uses (UUID).</param>
         </member>
-        <member name="M:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.#ctor(System.String,System.String,System.Guid,System.Guid,System.Guid,System.Guid)">
+        <member name="M:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.#ctor(System.String,System.String,System.Guid,System.Guid,System.Guid,System.Guid,System.Guid)">
             <summary>
             Request body used to create a new assessment details.
             </summary>
@@ -25,6 +26,7 @@
             </remarks>
             <param name="Title">Title of the assessment.</param>
             <param name="Description">Detailed description of the assessment.</param>
+            <param name="AssessmentId">Identifier of the assessment that owns these details (UUID).</param>
             <param name="CreatedBy">Identifier of the user creating the assessment (UUID).</param>
             <param name="FrameworkId">Identifier of the framework this assessment uses (UUID).</param>
         </member>
@@ -33,6 +35,9 @@
         </member>
         <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.Description">
             <summary>Detailed description of the assessment.</summary>
+        </member>
+        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.AssessmentId">
+            <summary>Identifier of the assessment that owns these details (UUID).</summary>
         </member>
         <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.CreatedBy">
             <summary>Identifier of the user creating the assessment (UUID).</summary>

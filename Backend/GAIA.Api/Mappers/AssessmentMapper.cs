@@ -1,11 +1,12 @@
 using GAIA.Api.Contracts.Assessment;
+using GAIA.Core.Assessment.Queries;
 using GAIA.Domain.Assessment.Entities;
 
 namespace GAIA.Api.Mappers
 {
   public static class AssessmentMapper
   {
-    public static AssessmentDetailsResponse ToResponse(this Core.Assessment.Queries.AssessmentDetails details) => new(
+    public static AssessmentResponse ToResponse(this AssessmentDetails details) => new(
     details.Assessment.Id,
     details.Assessment.Title,
     details.Assessment.Description,
@@ -30,17 +31,6 @@ namespace GAIA.Api.Mappers
       scoring.FrameworkId,
       scoring.Name,
       scoring.Description
-    );
-
-    public static AssessmentResponse ToResponse(this Assessment assessment) => new(
-      assessment.Id,
-      assessment.Name,
-      assessment.StartDate,
-      assessment.EndDate,
-      assessment.Organization,
-      assessment.Language,
-      assessment.CreatedAt,
-      assessment.UpdatedAt
     );
   }
 }

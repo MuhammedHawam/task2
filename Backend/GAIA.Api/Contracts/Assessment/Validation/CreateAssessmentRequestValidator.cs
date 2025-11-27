@@ -1,29 +1,32 @@
 using FluentValidation;
+using GAIA.Api.Contracts.Assessment;
 
-namespace GAIA.Api.Contracts.Assessment.Validation;
-
-public class CreateAssessmentRequestValidator : AbstractValidator<CreateAssessmentRequest>
+namespace GAIA.Api.Contracts.Assessment.Validation
 {
-  public CreateAssessmentRequestValidator()
+  public class CreateAssessmentRequestValidator : AbstractValidator<CreateAssessmentRequest>
   {
-    RuleFor(x => x.Name)
-      .NotEmpty().WithMessage("Name is required.")
-      .MaximumLength(200).WithMessage("Name must be at most 200 characters.");
+    public CreateAssessmentRequestValidator()
+    {
+      RuleFor(x => x.Title)
+        .NotEmpty().WithMessage("Title is required.")
+        .MaximumLength(200).WithMessage("Title must be at most 200 characters.");
 
-    RuleFor(x => x.Organization)
-      .NotEmpty().WithMessage("Organization is required.")
-      .MaximumLength(200).WithMessage("Organization must be at most 200 characters.");
+      RuleFor(x => x.Description)
+        .NotEmpty().WithMessage("Description is required.")
+        .MaximumLength(5000).WithMessage("Description must be at most 5000 characters.");
 
-    RuleFor(x => x.Language)
-      .NotEmpty().WithMessage("Language is required.")
-      .MaximumLength(100).WithMessage("Language must be at most 100 characters.");
+      RuleFor(x => x.CreatedBy)
+        .NotEmpty().WithMessage("CreatedBy is required.");
 
-    RuleFor(x => x.StartDate)
-      .NotEmpty().WithMessage("StartDate is required.");
+      RuleFor(x => x.FrameworkId)
+        .NotEmpty().WithMessage("FrameworkId is required.");
 
-    RuleFor(x => x.EndDate)
-      .NotEmpty().WithMessage("EndDate is required.")
-      .GreaterThanOrEqualTo(x => x.StartDate)
-      .WithMessage("EndDate must be on or after StartDate.");
+      RuleFor(x => x.AssessmentDepthId)
+     .NotEmpty().WithMessage("AssessmentDepthId is required.");
+
+      RuleFor(x => x.AssessmentScoringId)
+        .NotEmpty().WithMessage("AssessmentScoringId is required.");
+    }
   }
+
 }

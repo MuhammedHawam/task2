@@ -1,4 +1,4 @@
-namespace GAIA.Api.Contracts.Document;
+﻿namespace GAIA.Api.Contracts.Document;
 
 public record UpdateDocumentRequest(
   string? Name,
@@ -6,3 +6,4 @@ public record UpdateDocumentRequest(
   string? Category,
   string? Content = null
 );
+

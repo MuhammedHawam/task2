@@ -37,14 +37,14 @@
         }
       }
     },
-    "/assessments": {
+    "/assessments/GetAllAssessmentDetails": {
       "get": {
         "tags": [
           "Assessments"
         ],
-        "summary": "Get assessments",
+        "summary": "Get assessments details",
         "description": "Returns the available assessments.",
-        "operationId": "getAssessments",
+        "operationId": "getAssessmentsDetails",
         "responses": {
           "200": {
             "description": "OK",
@@ -53,36 +53,38 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AssessmentResponse"
+                    "$ref": "#/components/schemas/AssessmentDetailsResponse"
                   }
                 }
               }
             }
           }
         }
-      },
+      }
+    },
+    "/assessments/CreateAssessmentDetails": {
       "post": {
         "tags": [
           "Assessments"
         ],
-        "summary": "Create new assessments",
+        "summary": "Create new assessment details",
         "description": "Returns the created assessment ID.",
-        "operationId": "createAssessment",
+        "operationId": "createAssessmentDetails",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateAssessmentRequest"
+                "$ref": "#/components/schemas/CreateAssessmentDetailsRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateAssessmentRequest"
+                "$ref": "#/components/schemas/CreateAssessmentDetailsRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateAssessmentRequest"
+                "$ref": "#/components/schemas/CreateAssessmentDetailsRequest"
               }
             }
           }
@@ -93,7 +95,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AssessmentResponse"
+                  "$ref": "#/components/schemas/AssessmentDetailsResponse"
                 }
               }
             }
@@ -101,14 +103,14 @@
         }
       }
     },
-    "/assessments/{id}": {
+    "/assessments/GetAssessmentDetails/{id}": {
       "get": {
         "tags": [
           "Assessments"
         ],
-        "summary": "Get assessment by ID",
+        "summary": "Get assessment details by ID",
         "description": "Returns the assessment details for the specified ID.",
-        "operationId": "getAssessmentById",
+        "operationId": "getAssessmentDetailsById",
         "parameters": [
           {
             "name": "id",
@@ -152,40 +154,40 @@
         }
       }
     },
-    "/api/Assessment/CreateAssessmentFirstStep": {
+    "/assessments/CreateAssessment": {
       "post": {
         "tags": [
           "Assessments"
         ],
         "summary": "Create the first step of an assessment",
         "description": "Creates the basic assessment details (name, dates, organization, language) and returns the persisted data.",
-        "operationId": "createAssessmentFirstStep",
+        "operationId": "createAssessment",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateAssessmentFirstStepRequest"
+                "$ref": "#/components/schemas/CreateAssessmentRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateAssessmentFirstStepRequest"
+                "$ref": "#/components/schemas/CreateAssessmentRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateAssessmentFirstStepRequest"
+                "$ref": "#/components/schemas/CreateAssessmentRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Assessment first step created.",
+            "description": "AssessmentDetails first step created.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AssessmentFirstStepResponse"
+                  "$ref": "#/components/schemas/AssessmentResponse"
                 }
               }
             }
@@ -193,14 +195,14 @@
         }
       }
     },
-    "/api/Assessment/UpdateAssessmentFirstStep": {
+    "/assessments/UpdateAssessment": {
       "put": {
         "tags": [
           "Assessments"
         ],
         "summary": "Update the first step of an assessment",
         "description": "Updates the previously saved first-step details for the specified assessment.",
-        "operationId": "updateAssessmentFirstStep",
+        "operationId": "updateAssessment",
         "parameters": [
           {
             "name": "assessmentId",
@@ -215,55 +217,55 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAssessmentFirstStepRequest"
+                "$ref": "#/components/schemas/UpdateAssessmentRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAssessmentFirstStepRequest"
+                "$ref": "#/components/schemas/UpdateAssessmentRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAssessmentFirstStepRequest"
+                "$ref": "#/components/schemas/UpdateAssessmentRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Assessment first step updated.",
+            "description": "AssessmentDetails first step updated.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AssessmentFirstStepResponse"
+                  "$ref": "#/components/schemas/AssessmentResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "Assessment first step not found."
+            "description": "AssessmentDetails first step not found."
           }
         }
       }
     },
-    "/api/Assessment/FirstSteps": {
+    "/assessments/GetAssessments": {
       "get": {
         "tags": [
           "Assessments"
         ],
-        "summary": "Get assessment first steps",
+        "summary": "Get assessments",
         "description": "Returns the first-step metadata for all assessments.",
-        "operationId": "getAssessmentFirstSteps",
+        "operationId": "getAssessments",
         "responses": {
           "200": {
-            "description": "Assessment first steps retrieved.",
+            "description": "Assessment data retrieved.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AssessmentFirstStepResponse"
+                    "$ref": "#/components/schemas/AssessmentResponse"
                   }
                 }
               }
@@ -272,14 +274,14 @@
         }
       }
     },
-    "/api/Assessment/FirstSteps/{assessmentId}": {
+    "/assessments/{assessmentId}": {
       "get": {
         "tags": [
           "Assessments"
         ],
-        "summary": "Get assessment first step by ID",
+        "summary": "Get assessment by ID",
         "description": "Returns the first-step details for the specified assessment.",
-        "operationId": "getAssessmentFirstStepById",
+        "operationId": "getAssessmentById",
         "parameters": [
           {
             "name": "assessmentId",
@@ -293,17 +295,278 @@
         ],
         "responses": {
           "200": {
-            "description": "Assessment first step retrieved.",
+            "description": "Assessment retrieved.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AssessmentFirstStepResponse"
+                  "$ref": "#/components/schemas/AssessmentResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "Assessment first step not found."
+            "description": "Assessment not found."
+          }
+        }
+      }
+    },
+    "/assessments/organizations": {
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Get organizations for assessment creation",
+        "description": "Returns the list of known organizations referenced by existing assessments.",
+        "operationId": "getAssessmentOrganizations",
+        "responses": {
+          "200": {
+            "description": "Organizations retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assessments/languages": {
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Get languages for assessment creation",
+        "description": "Returns the languages already used by stored assessments.",
+        "operationId": "getAssessmentLanguages",
+        "responses": {
+          "200": {
+            "description": "Languages retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LanguageListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assessments/users": {
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Get users for managing assessment access",
+        "description": "Returns the list of users that can be granted access to an assessment. Currently returns an empty list until the user source is integrated.",
+        "operationId": "getAssessmentAccessUsers",
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccessListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assessments/{assessmentId}/users": {
+      "post": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Assign users to an assessment",
+        "description": "Adds the provided users to the specified assessment.",
+        "operationId": "assignUsersToAssessment",
+        "parameters": [
+          {
+            "name": "assessmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Users assigned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentUsersResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Assessment not found."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Get users assigned to an assessment",
+        "description": "Retrieves the users that currently have access to the specified assessment.",
+        "operationId": "getAssessmentUsers",
+        "parameters": [
+          {
+            "name": "assessmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Assessment users retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentUsersResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Assessment not found."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Update users assigned to an assessment",
+        "description": "Replaces the assessment's user list with the provided collection.",
+        "operationId": "updateAssessmentUsers",
+        "parameters": [
+          {
+            "name": "assessmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assessment users updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentUsersResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Assessment not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Assessments"
+        ],
+        "summary": "Remove users from an assessment",
+        "description": "Removes the specified users from the assessment and returns the updated assignment.",
+        "operationId": "removeAssessmentUsers",
+        "parameters": [
+          {
+            "name": "assessmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersDeleteRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersDeleteRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentUsersDeleteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assessment users removed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentUsersResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Assessment not found or no assignments exist."
           }
         }
       }
@@ -332,43 +595,7 @@
         },
         "additionalProperties": false
       },
-      "AssessmentFirstStepResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "organization": {
-            "type": "string"
-          },
-          "language": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AssessmentResponse": {
+      "AssessmentDetailsResponse": {
         "type": "object",
         "properties": {
           "id": {
@@ -410,6 +637,46 @@
         },
         "additionalProperties": false
       },
+      "AssessmentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AssessmentScoringResponse": {
         "type": "object",
         "properties": {
@@ -431,35 +698,71 @@
         },
         "additionalProperties": false
       },
-      "CreateAssessmentFirstStepRequest": {
+      "AssessmentUserRequest": {
         "type": "object",
         "properties": {
-          "name": {
+          "id": {
             "type": "string",
-            "description": "Name of the assessment"
+            "format": "uuid"
           },
-          "startDate": {
-            "type": "string",
-            "description": "Assessment start date",
-            "format": "date-time"
+          "username": {
+            "type": "string"
           },
-          "endDate": {
-            "type": "string",
-            "description": "Assessment end date",
-            "format": "date-time"
+          "email": {
+            "type": "string"
           },
-          "organization": {
+          "avatar": {
             "type": "string",
-            "description": "Organization requesting the assessment"
+            "nullable": true
           },
-          "language": {
-            "type": "string",
-            "description": "Primary language selected for the assessment"
+          "role": {
+            "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "CreateAssessmentRequest": {
+      "AssessmentUsersDeleteRequest": {
+        "type": "object",
+        "properties": {
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssessmentUsersRequest": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssessmentUserRequest"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssessmentUsersResponse": {
+        "type": "object",
+        "properties": {
+          "assessmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateAssessmentDetailsRequest": {
         "type": "object",
         "properties": {
           "title": {
@@ -492,7 +795,40 @@
           }
         },
         "additionalProperties": false,
-        "description": "Request body used to create a new assessment."
+        "description": "Request body used to create a new assessment details."
+      },
+      "CreateAssessmentRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the assessment"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "AssessmentDetails start date",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "AssessmentDetails end date",
+            "format": "date-time"
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "Identifier of the organization requesting the assessment",
+            "format": "uuid"
+          },
+          "organization": {
+            "type": "string",
+            "description": "Organization requesting the assessment"
+          },
+          "language": {
+            "type": "string",
+            "description": "Primary language selected for the assessment"
+          }
+        },
+        "additionalProperties": false
       },
       "FrameworkConfigurationOptionsResponse": {
         "type": "object",
@@ -561,7 +897,56 @@
         },
         "additionalProperties": false
       },
-      "UpdateAssessmentFirstStepRequest": {
+      "LanguageListResponse": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrganizationListResponse": {
+        "type": "object",
+        "properties": {
+          "organizations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationResponse"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrganizationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "websiteUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAssessmentRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -570,13 +955,18 @@
           },
           "startDate": {
             "type": "string",
-            "description": "Assessment start date",
+            "description": "AssessmentDetails start date",
             "format": "date-time"
           },
           "endDate": {
             "type": "string",
-            "description": "Assessment end date",
+            "description": "AssessmentDetails end date",
             "format": "date-time"
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "Identifier of the organization requesting the assessment",
+            "format": "uuid"
           },
           "organization": {
             "type": "string",
@@ -585,6 +975,41 @@
           "language": {
             "type": "string",
             "description": "Primary language selected for the assessment"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserAccessListResponse": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string"
           }
         },
         "additionalProperties": false
