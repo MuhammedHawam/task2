@@ -1,10 +1,8 @@
 using GAIA.Core.Assessment.Interfaces;
-using GAIA.Core.InsightContent.Interfaces;
 using GAIA.Core.Services.Assessment;
 using GAIA.Domain.Assessment.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.InsightContent.DomainEvents;
-using GAIA.Domain.InsightContent.Entities;
 using GAIA.Infra.Projections;
 using GAIA.Infra.Repositories;
 using GAIA.Infra.SeedDataService;
@@ -25,13 +23,11 @@ namespace GAIA.Infra.Configurations
         options.DatabaseSchemaName = "marten";
         // Register entities for Marten
         options.Schema.For<Assessment>();
-        options.Schema.For<InsightContent>();
         options.Schema.For<AssessmentDepth>()
                   .UniqueIndex(depth => depth.FrameworkId, depth => depth.Depth);
         options.Schema.For<AssessmentScoring>();
         options.Events.AddEventType(typeof(AssessmentCreated));
         options.Events.AddEventType(typeof(UserUpdatedInsightEvent));
-        options.Events.AddEventType(typeof(InsightContentCreated));
 
         // Configure projections for the Assessment aggregate using a SingleStream projection
         // Inline lifecycle updates document state within the same transaction
@@ -43,7 +39,6 @@ namespace GAIA.Infra.Configurations
       services.AddScoped<IAssessmentEventWriter, AssessmentEventWriter>();
       services.AddHostedService<AssessmentConfigurationSeedService>();
       services.AddScoped<IAssessmentRepository, AssessmentRepository>();
-      services.AddScoped<IInsightContentRepository, InsightContentRepository>();
       services.AddMediatR(cfg =>
       cfg.RegisterServicesFromAssembly(AppDomain.CurrentDomain.Load("GAIA.Core")));
     }

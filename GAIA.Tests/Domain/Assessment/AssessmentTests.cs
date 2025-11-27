@@ -279,7 +279,7 @@ public class AssessmentTests
     var insightId = Guid.NewGuid();
     var controller = CreateController((request, _) => request switch
     {
-      UpdateInsightContentCommand => new UpdateInsightContentResult(assessmentId, insightId, "Updated content", false),
+      UpdateInsightContentCommand => new UpdateInsightContentResult(assessmentId, insightId, "Updated content"),
       _ => throw new InvalidOperationException("Unexpected request"),
     });
 
@@ -295,7 +295,6 @@ public class AssessmentTests
     var response = Assert.IsType<UpdateInsightContentResponse>(okResult.Value);
     Assert.Equal(assessmentId, response.AssessmentId);
     Assert.Equal(insightId, response.InsightId);
-    Assert.False(response.CreatedNew);
   }
 
   [Fact]

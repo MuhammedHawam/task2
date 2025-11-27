@@ -133,13 +133,9 @@ public class AssessmentsController : ControllerBase
   }
 
   /// <summary>
-  /// Updates (or creates) Insight content for an assessment.
+  /// Updates Insight content for an assessment.
   /// </summary>
-  /// <remarks>
-  /// Prior to the AI integration this behaves like an upsert operation.
-  /// </remarks>
   [HttpPut("{assessmentId:guid}/insights/{insightId:guid}/updateContent")]
-  [HttpPut("/api/assessments/{assessmentId:guid}/insights/{insightId:guid}/updateContent")]
   [Produces(MediaTypeNames.Application.Json)]
   [SwaggerOperation(
     Summary = "Update Insight content",
@@ -161,8 +157,7 @@ public class AssessmentsController : ControllerBase
       return NotFound();
     }
 
-    var response = new UpdateInsightContentResponse(result.AssessmentId, result.InsightId, result.Content,
-      result.CreatedNew);
+    var response = new UpdateInsightContentResponse(result.AssessmentId, result.InsightId, result.Content);
     return Ok(response);
   }
 }
