@@ -45,14 +45,6 @@ public class Assessment
       UploadedAt = e.UploadedAt
     };
 
-    var existingIndex = EvidenceDocuments.FindIndex(doc => doc.Id == e.EvidenceDocumentId);
-    if (existingIndex >= 0)
-    {
-      EvidenceDocuments[existingIndex] = document;
-    }
-    else
-    {
-      EvidenceDocuments.Add(document);
-    }
+    EvidenceDocuments.Add(document);
   }
 }

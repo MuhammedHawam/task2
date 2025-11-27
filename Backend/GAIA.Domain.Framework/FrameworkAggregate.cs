@@ -1,4 +1,4 @@
-using GAIA.Core;
+using GAIA.Domain;
 
 namespace GAIA.Domain.Framework;
 

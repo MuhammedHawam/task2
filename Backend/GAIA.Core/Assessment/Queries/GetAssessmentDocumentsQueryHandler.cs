@@ -22,7 +22,6 @@ public class GetAssessmentDocumentsQueryHandler
     }
 
     var documents = assessment.EvidenceDocuments
-      .OrderByDescending(doc => doc.UploadedAt)
       .Select(doc => new AssessmentEvidenceDocumentModel(
         doc.Id,
         doc.FileId,

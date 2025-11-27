@@ -1,3 +1,4 @@
+using GAIA.Domain;
 using System.Linq.Expressions;
 
 namespace GAIA.Core.Queries;

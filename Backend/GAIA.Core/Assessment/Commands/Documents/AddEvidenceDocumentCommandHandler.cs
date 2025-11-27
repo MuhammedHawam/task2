@@ -7,7 +7,6 @@ namespace GAIA.Core.Assessment.Commands.Documents;
 public class AddEvidenceDocumentCommandHandler
   : IRequestHandler<AddEvidenceDocumentCommand, AddEvidenceDocumentResult?>
 {
-  private const string AssessmentEvidenceContext = "AssessmentEvidence";
   private readonly IAssessmentRepository _assessmentRepository;
   private readonly IStoredFileRepository _storedFileRepository;
   private readonly IAssessmentEventWriter _eventWriter;
@@ -46,15 +45,13 @@ public class AddEvidenceDocumentCommandHandler
       FileName = string.IsNullOrWhiteSpace(request.FileName) ? "evidence-document" : request.FileName,
       ContentType = string.IsNullOrWhiteSpace(request.ContentType) ? "application/octet-stream" : request.ContentType,
       SizeInBytes = resolvedSize,
-      Category = category,
       Description = request.Description,
-      ContextId = request.AssessmentId,
-      ContextType = AssessmentEvidenceContext,
       CreatedBy = request.UploadedBy,
       Content = request.Content
     };
 
     var savedFile = await _storedFileRepository.SaveAsync(storedFile, cancellationToken);
+    var uploadedAt = savedFile.CreatedAt == default ? DateTime.UtcNow : savedFile.CreatedAt;
 
     var evidenceDocumentId = Guid.NewGuid();
     var evidenceEvent = new Domain.Assessment.DomainEvents.AssessmentEvidenceDocumentAdded
@@ -65,13 +62,13 @@ public class AddEvidenceDocumentCommandHandler
       FileName = savedFile.FileName,
       ContentType = savedFile.ContentType,
       SizeInBytes = savedFile.SizeInBytes,
-      Category = savedFile.Category,
-      Description = savedFile.Description,
-      UploadedAt = savedFile.CreatedAt,
-      UploadedBy = savedFile.CreatedBy
+      Category = category,
+      Description = request.Description,
+      UploadedAt = uploadedAt,
+      UploadedBy = request.UploadedBy
     };
 
-    await _eventWriter.AppendEvidenceDocumentAsync(evidenceEvent, cancellationToken);
+    await _eventWriter.AppendAsync(request.AssessmentId, evidenceEvent, cancellationToken);
 
     return new AddEvidenceDocumentResult(
       evidenceEvent.AssessmentId,
@@ -80,10 +77,10 @@ public class AddEvidenceDocumentCommandHandler
       evidenceEvent.FileName,
       evidenceEvent.ContentType,
       resolvedSize,
-      evidenceEvent.Category,
-      evidenceEvent.Description,
-      evidenceEvent.UploadedAt,
-      evidenceEvent.UploadedBy
+      category,
+      request.Description,
+      uploadedAt,
+      request.UploadedBy
     );
   }
 }
