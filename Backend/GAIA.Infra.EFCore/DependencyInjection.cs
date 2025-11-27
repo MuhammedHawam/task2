@@ -1,3 +1,4 @@
+using GAIA.Core.FileStorage.Interfaces;
 using GAIA.Core.Interfaces;
 using GAIA.Domain.Framework;
 using GAIA.Infra.EFCore.Repositories;
@@ -28,6 +29,7 @@ public static class DependencyInjection
     // .UseAsyncSeeding(async (ctx, _, cToken) => await FrameworksSeeder.SeedAsync(ctx, cToken)));
 
     services.AddScoped<IRepository<Framework>, FrameworkRepository>();
+    services.AddScoped<IStoredFileRepository, StoredFileRepository>();
   }
 
   public static async Task MigrateDatabase(this IServiceProvider serviceProvider)

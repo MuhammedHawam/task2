@@ -28,6 +28,7 @@ namespace GAIA.Infra.Configurations
                   .UniqueIndex(depth => depth.FrameworkId, depth => depth.Depth);
         options.Schema.For<AssessmentScoring>();
         options.Events.AddEventType(typeof(AssessmentCreated));
+        options.Events.AddEventType(typeof(AssessmentEvidenceDocumentAdded));
         options.Events.AddEventType(typeof(InsightContentCreated));
 
         // Configure projections for the Assessment aggregate using a SingleStream projection
