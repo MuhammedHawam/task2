@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GAIA.Infra.EFCore.Repositories;
 
-public class StoredFileRepository : IStoredFileRepository
+public class StoredFileRepository : BaseRepository<StoredFile>, IStoredFileRepository
 {
   private readonly GaiaDbContext _context;
 
   public StoredFileRepository(GaiaDbContext context)
+    : base(context)
   {
     _context = context;
   }

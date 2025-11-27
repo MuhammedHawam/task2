@@ -1,3 +1,4 @@
+using GAIA.Domain.FileStorage;
 using GAIA.Domain.FileStorage.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,21 +15,14 @@ public class StoredFileConfiguration : IEntityTypeConfiguration<StoredFile>
 
     builder.Property(file => file.FileName)
       .IsRequired()
-      .HasMaxLength(260);
+      .HasMaxLength(FileStorageConstraints.MaxFileNameLength);
 
     builder.Property(file => file.ContentType)
       .IsRequired()
       .HasMaxLength(256);
 
-    builder.Property(file => file.Category)
-      .IsRequired()
-      .HasMaxLength(128);
-
     builder.Property(file => file.Description)
       .HasMaxLength(512);
-
-    builder.Property(file => file.ContextType)
-      .HasMaxLength(128);
 
     builder.Property(file => file.SizeInBytes)
       .IsRequired();
@@ -41,7 +35,5 @@ public class StoredFileConfiguration : IEntityTypeConfiguration<StoredFile>
 
     builder.Property(file => file.CreatedBy)
       .IsRequired();
-
-    builder.HasIndex(file => file.ContextId);
   }
 }
