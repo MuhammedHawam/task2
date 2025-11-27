@@ -30,20 +30,19 @@ namespace GAIA.Core.Services.Assessment
       return @event.Id;
     }
 
-    public async Task AppendAsync<TEvent>(Guid assessmentId, TEvent @event, CancellationToken cancellationToken)
-      where TEvent : class
+    public async Task AppendEvidenceDocumentAsync(AssessmentEvidenceDocumentAdded @event, CancellationToken cancellationToken)
     {
       if (@event is null)
       {
         throw new ArgumentNullException(nameof(@event));
       }
 
-      if (assessmentId == Guid.Empty)
+      if (@event.AssessmentId == Guid.Empty)
       {
-        throw new ArgumentException("assessmentId must be a non-empty GUID.", nameof(assessmentId));
+        throw new ArgumentException("AssessmentEvidenceDocumentAdded.AssessmentId must be provided.", nameof(@event));
       }
 
-      _session.Events.Append(assessmentId, @event);
+      _session.Events.Append(@event.AssessmentId, @event);
       await _session.SaveChangesAsync(cancellationToken);
     }
   }

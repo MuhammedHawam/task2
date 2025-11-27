@@ -1,8 +1,5 @@
-using System;
 using GAIA.Core.Assessment.Interfaces;
 using GAIA.Core.FileStorage.Interfaces;
-using GAIA.Domain.Assessment.DomainEvents;
-using GAIA.Domain.FileStorage.Entities;
 using MediatR;
 
 namespace GAIA.Core.Assessment.Commands.Documents;
@@ -44,7 +41,7 @@ public class AddEvidenceDocumentCommandHandler
 
     var resolvedSize = Math.Max(request.FileSize, request.Content.LongLength);
 
-    var storedFile = new StoredFile
+    var storedFile = new Domain.FileStorage.Entities.StoredFile
     {
       FileName = string.IsNullOrWhiteSpace(request.FileName) ? "evidence-document" : request.FileName,
       ContentType = string.IsNullOrWhiteSpace(request.ContentType) ? "application/octet-stream" : request.ContentType,
@@ -60,7 +57,7 @@ public class AddEvidenceDocumentCommandHandler
     var savedFile = await _storedFileRepository.SaveAsync(storedFile, cancellationToken);
 
     var evidenceDocumentId = Guid.NewGuid();
-    var evidenceEvent = new AssessmentEvidenceDocumentAdded
+    var evidenceEvent = new Domain.Assessment.DomainEvents.AssessmentEvidenceDocumentAdded
     {
       AssessmentId = request.AssessmentId,
       EvidenceDocumentId = evidenceDocumentId,
@@ -90,3 +87,4 @@ public class AddEvidenceDocumentCommandHandler
     );
   }
 }
+

@@ -1,6 +1,4 @@
-using System.IO;
-using System.Linq;
-using GAIA.Api.Contracts.Assessment.EvidenceDocuments;
+using GAIA.Api.Contracts.Assessment.EvidenceDocument;
 using GAIA.Core.Assessment.Commands.Documents;
 using GAIA.Core.Assessment.Queries;
 using MediatR;

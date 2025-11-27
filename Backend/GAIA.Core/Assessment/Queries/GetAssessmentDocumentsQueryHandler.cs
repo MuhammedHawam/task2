@@ -1,4 +1,3 @@
-using System.Linq;
 using GAIA.Core.Assessment.Interfaces;
 using MediatR;
 
@@ -40,3 +39,4 @@ public class GetAssessmentDocumentsQueryHandler
     return new AssessmentDocumentsResult(request.AssessmentId, documents);
   }
 }
+

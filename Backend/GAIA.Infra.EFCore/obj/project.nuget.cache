@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "oMw+oC2c5HU=",
+  "dgSpecHash": "F6TR/iaU2kw=",
   "success": true,
   "projectFilePath": "C:\\Users\\mhawwam\\OneDrive - Deloitte (O365D)\\Documents\\GAIA\\GAIA Solution\\GAIA\\Backend\\GAIA.Infra.EFCore\\GAIA.Infra.EFCore.csproj",
   "expectedPackageFiles": [
@@ -17,8 +17,11 @@
     "C:\\Users\\mhawwam\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\9.0.0\\microsoft.bcl.asyncinterfaces.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.bcl.timeprovider\\8.0.1\\microsoft.bcl.timeprovider.8.0.1.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.build\\17.7.2\\microsoft.build.17.7.2.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.build.framework\\17.8.3\\microsoft.build.framework.17.8.3.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.build.locator\\1.7.8\\microsoft.build.locator.1.7.8.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.build.tasks.core\\17.7.2\\microsoft.build.tasks.core.17.7.2.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.build.utilities.core\\17.7.2\\microsoft.build.utilities.core.17.7.2.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis\\4.14.0\\microsoft.codeanalysis.4.14.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.11.0\\microsoft.codeanalysis.analyzers.3.11.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.common\\4.14.0\\microsoft.codeanalysis.common.4.14.0.nupkg.sha512",
@@ -30,12 +33,13 @@
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.visualbasic\\4.14.0\\microsoft.codeanalysis.visualbasic.4.14.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.visualbasic.workspaces\\4.14.0\\microsoft.codeanalysis.visualbasic.workspaces.4.14.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.workspaces.common\\4.14.0\\microsoft.codeanalysis.workspaces.common.4.14.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.workspaces.msbuild\\4.8.0\\microsoft.codeanalysis.workspaces.msbuild.4.8.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.workspaces.msbuild\\4.14.0\\microsoft.codeanalysis.workspaces.msbuild.4.14.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.11\\microsoft.entityframeworkcore.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.11\\microsoft.entityframeworkcore.abstractions.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.11\\microsoft.entityframeworkcore.analyzers.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.entityframeworkcore.design\\9.0.11\\microsoft.entityframeworkcore.design.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.11\\microsoft.entityframeworkcore.relational.9.0.11.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\9.0.11\\microsoft.entityframeworkcore.tools.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.11\\microsoft.extensions.caching.abstractions.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.11\\microsoft.extensions.caching.memory.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.9\\microsoft.extensions.configuration.9.0.9.nupkg.sha512",
@@ -71,6 +75,8 @@
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.14.0\\microsoft.identitymodel.jsonwebtokens.8.14.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.identitymodel.logging\\8.14.0\\microsoft.identitymodel.logging.8.14.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.14.0\\microsoft.identitymodel.tokens.8.14.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.net.stringtools\\17.7.2\\microsoft.net.stringtools.17.7.2.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.visualstudio.setup.configuration.interop\\3.2.2146\\microsoft.visualstudio.setup.configuration.interop.3.2.2146.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\nettopologysuite\\2.5.0\\nettopologysuite.2.5.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\nettopologysuite.io.postgis\\2.1.0\\nettopologysuite.io.postgis.2.1.0.nupkg.sha512",
@@ -81,44 +87,28 @@
     "C:\\Users\\mhawwam\\.nuget\\packages\\npgsql.nettopologysuite\\9.0.2\\npgsql.nettopologysuite.9.0.2.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\polly.core\\8.5.2\\polly.core.8.5.2.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\spectre.console\\0.50.0\\spectre.console.0.50.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.codedom\\7.0.0\\system.codedom.7.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition\\9.0.0\\system.composition.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.attributedmodel\\9.0.0\\system.composition.attributedmodel.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.convention\\9.0.0\\system.composition.convention.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.hosting\\9.0.0\\system.composition.hosting.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.runtime\\9.0.0\\system.composition.runtime.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.typedparts\\9.0.0\\system.composition.typedparts.9.0.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.configuration.configurationmanager\\9.0.0\\system.configuration.configurationmanager.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.diagnostics.eventlog\\9.0.0\\system.diagnostics.eventlog.9.0.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.formats.nrbf\\9.0.0\\system.formats.nrbf.9.0.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.reflection.metadataloadcontext\\7.0.0\\system.reflection.metadataloadcontext.7.0.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.resources.extensions\\9.0.0\\system.resources.extensions.9.0.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.security.cryptography.pkcs\\7.0.2\\system.security.cryptography.pkcs.7.0.2.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.0\\system.security.cryptography.protecteddata.9.0.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.security.cryptography.xml\\7.0.1\\system.security.cryptography.xml.7.0.1.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.security.permissions\\9.0.0\\system.security.permissions.9.0.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\system.windows.extensions\\9.0.0\\system.windows.extensions.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\weasel.core\\8.3.0\\weasel.core.8.3.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\weasel.postgresql\\8.3.0\\weasel.postgresql.8.3.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.11\\microsoft.windowsdesktop.app.ref.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.11\\microsoft.netcore.app.ref.9.0.11.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.11\\microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1608",
-      "level": "Warning",
-      "message": "Detected package version outside of dependency constraint: Microsoft.CodeAnalysis.Workspaces.MSBuild 4.8.0 requires Microsoft.CodeAnalysis.Common (= 4.8.0) but version Microsoft.CodeAnalysis.Common 4.14.0 was resolved.",
-      "projectPath": "C:\\Users\\mhawwam\\OneDrive - Deloitte (O365D)\\Documents\\GAIA\\GAIA Solution\\GAIA\\Backend\\GAIA.Infra.EFCore\\GAIA.Infra.EFCore.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\mhawwam\\OneDrive - Deloitte (O365D)\\Documents\\GAIA\\GAIA Solution\\GAIA\\Backend\\GAIA.Infra.EFCore\\GAIA.Infra.EFCore.csproj",
-      "libraryId": "Microsoft.CodeAnalysis.Common",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1608",
-      "level": "Warning",
-      "message": "Detected package version outside of dependency constraint: Microsoft.CodeAnalysis.Workspaces.MSBuild 4.8.0 requires Microsoft.CodeAnalysis.Workspaces.Common (= 4.8.0) but version Microsoft.CodeAnalysis.Workspaces.Common 4.14.0 was resolved.",
-      "projectPath": "C:\\Users\\mhawwam\\OneDrive - Deloitte (O365D)\\Documents\\GAIA\\GAIA Solution\\GAIA\\Backend\\GAIA.Infra.EFCore\\GAIA.Infra.EFCore.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\mhawwam\\OneDrive - Deloitte (O365D)\\Documents\\GAIA\\GAIA Solution\\GAIA\\Backend\\GAIA.Infra.EFCore\\GAIA.Infra.EFCore.csproj",
-      "libraryId": "Microsoft.CodeAnalysis.Workspaces.Common",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    }
-  ]
+  "logs": []
 }

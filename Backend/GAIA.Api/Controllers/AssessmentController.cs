@@ -1,14 +1,13 @@
+using System.Net.Mime;
 using GAIA.Api.Contracts;
 using GAIA.Api.Contracts.Assessment;
 using GAIA.Api.Mappers;
 using GAIA.Core.Assessment.Commands.Assessment;
 using GAIA.Core.Assessment.Queries;
-using GAIA.Core.InsightContent.Commands;
 using GAIA.Core.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 using FrameworkOptionsDto = GAIA.Api.Contracts.FrameworkOptionsDto;
 
 namespace GAIA.Api.Controllers;
@@ -129,40 +128,6 @@ public class AssessmentsController : ControllerBase
         .ToList()
     );
 
-    return Ok(response);
-  }
-
-  /// <summary>
-  /// Updates (or creates) Insight content for an assessment.
-  /// </summary>
-  /// <remarks>
-  /// Prior to the AI integration this behaves like an upsert operation.
-  /// </remarks>
-  [HttpPut("{assessmentId:guid}/insights/{insightId:guid}/updateContent")]
-  [HttpPut("/api/assessments/{assessmentId:guid}/insights/{insightId:guid}/updateContent")]
-  [Produces(MediaTypeNames.Application.Json)]
-  [SwaggerOperation(
-    Summary = "Update Insight content",
-    Description = "Allows a user to provide manual content for an Insight and emits a UserUpdatedInsightEvent."
-  )]
-  [SwaggerResponse(StatusCodes.Status200OK, "Insight content updated.", typeof(UpdateInsightContentResponse))]
-  [SwaggerResponse(StatusCodes.Status404NotFound, "Assessment not found.")]
-  public async Task<ActionResult<UpdateInsightContentResponse>> UpdateInsightContent(
-    Guid assessmentId,
-    Guid insightId,
-    [FromBody] UpdateInsightContentRequest request,
-    CancellationToken cancellationToken)
-  {
-    var result =
-      await _sender.Send(new UpdateInsightContentCommand(assessmentId, insightId, request.Content), cancellationToken);
-
-    if (result is null)
-    {
-      return NotFound();
-    }
-
-    var response = new UpdateInsightContentResponse(result.AssessmentId, result.InsightId, result.Content,
-      result.CreatedNew);
     return Ok(response);
   }
 }

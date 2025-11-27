@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GAIA.Infra")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5bf96c64ef99ece4f05e475a8763dd671c6dbe0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f4c06fad6f2379502fe81b60a3ed0e8c75e7f28")]
 [assembly: System.Reflection.AssemblyProductAttribute("GAIA.Infra")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GAIA.Infra")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

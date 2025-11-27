@@ -1,7 +1,6 @@
 using GAIA.Api.Contracts.Assessment;
 using GAIA.Api.Controllers;
 using GAIA.Core.Assessment.Queries;
-using GAIA.Core.InsightContent.Commands;
 using GAIA.Domain.Assessment.DomainEvents;
 using GAIA.Domain.Assessment.Entities;
 using GAIA.Domain.Framework;
@@ -266,54 +265,6 @@ public class AssessmentTests
 
     // Act
     var result = await controller.GetById(Guid.NewGuid(), CancellationToken.None);
-
-    // Assert
-    Assert.IsType<NotFoundResult>(result.Result);
-  }
-
-  [Fact]
-  public async Task UpdateInsightContent_ReturnsOk_WhenCommandSucceeds()
-  {
-    // Arrange
-    var assessmentId = Guid.NewGuid();
-    var insightId = Guid.NewGuid();
-    var controller = CreateController((request, _) => request switch
-    {
-      UpdateInsightContentCommand => new UpdateInsightContentResult(assessmentId, insightId, "Updated content", false),
-      _ => throw new InvalidOperationException("Unexpected request"),
-    });
-
-    // Act
-    var result = await controller.UpdateInsightContent(
-      assessmentId,
-      insightId,
-      new UpdateInsightContentRequest("Updated content"),
-      CancellationToken.None);
-
-    // Assert
-    var okResult = Assert.IsType<OkObjectResult>(result.Result);
-    var response = Assert.IsType<UpdateInsightContentResponse>(okResult.Value);
-    Assert.Equal(assessmentId, response.AssessmentId);
-    Assert.Equal(insightId, response.InsightId);
-    Assert.False(response.CreatedNew);
-  }
-
-  [Fact]
-  public async Task UpdateInsightContent_ReturnsNotFound_WhenCommandReturnsNull()
-  {
-    // Arrange
-    var controller = CreateController((request, _) => request switch
-    {
-      UpdateInsightContentCommand => null,
-      _ => throw new InvalidOperationException("Unexpected request"),
-    });
-
-    // Act
-    var result = await controller.UpdateInsightContent(
-      Guid.NewGuid(),
-      Guid.NewGuid(),
-      new UpdateInsightContentRequest("content"),
-      CancellationToken.None);
 
     // Assert
     Assert.IsType<NotFoundResult>(result.Result);

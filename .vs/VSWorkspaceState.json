@@ -7,6 +7,5 @@
     "\\Backend\\GAIA.Api\\Contracts\\Assessment",
     "\\Backend\\GAIA.Api\\Contracts\\Assessment\\Validation"
   ],
-  "SelectedNode": "\\Backend\\GAIA.Api\\Contracts\\Assessment\\Validation\\CreateAssessmentRequestValidator.cs",
   "PreviewInSolutionExplorer": false
 }

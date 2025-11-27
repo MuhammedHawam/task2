@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GAIA.Infra.EFCore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3325a624645b3be21e1517c52ec1245688648830")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f4c06fad6f2379502fe81b60a3ed0e8c75e7f28")]
 [assembly: System.Reflection.AssemblyProductAttribute("GAIA.Infra.EFCore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GAIA.Infra.EFCore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
