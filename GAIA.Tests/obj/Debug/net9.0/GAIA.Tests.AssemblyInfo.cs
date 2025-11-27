@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GAIA.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37fcab5355584c7bfe280dc5c466fb91b3889805")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3325a624645b3be21e1517c52ec1245688648830")]
 [assembly: System.Reflection.AssemblyProductAttribute("GAIA.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GAIA.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

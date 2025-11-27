@@ -29,5 +29,22 @@ namespace GAIA.Core.Services.Assessment
       await _session.SaveChangesAsync(cancellationToken);
       return @event.Id;
     }
+
+    public async Task AppendAsync<TEvent>(Guid assessmentId, TEvent @event, CancellationToken cancellationToken)
+      where TEvent : class
+    {
+      if (@event is null)
+      {
+        throw new ArgumentNullException(nameof(@event));
+      }
+
+      if (assessmentId == Guid.Empty)
+      {
+        throw new ArgumentException("assessmentId must be a non-empty GUID.", nameof(assessmentId));
+      }
+
+      _session.Events.Append(assessmentId, @event);
+      await _session.SaveChangesAsync(cancellationToken);
+    }
   }
 }

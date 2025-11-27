@@ -4,45 +4,40 @@
         <name>GAIA.Api</name>
     </assembly>
     <members>
-        <member name="T:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest">
+        <member name="T:GAIA.Api.Contracts.Assessment.CreateAssessmentRequest">
             <summary>
-            Request body used to create a new assessment details.
+            Request body used to create a new assessment.
             </summary>
             <remarks>
-            Consumed by POST /assessmentsdetails.
+            Consumed by POST /assessments.
             </remarks>
             <param name="Title">Title of the assessment.</param>
             <param name="Description">Detailed description of the assessment.</param>
-            <param name="AssessmentId">Identifier of the assessment that owns these details (UUID).</param>
             <param name="CreatedBy">Identifier of the user creating the assessment (UUID).</param>
             <param name="FrameworkId">Identifier of the framework this assessment uses (UUID).</param>
         </member>
-        <member name="M:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.#ctor(System.String,System.String,System.Guid,System.Guid,System.Guid,System.Guid,System.Guid)">
+        <member name="M:GAIA.Api.Contracts.Assessment.CreateAssessmentRequest.#ctor(System.String,System.String,System.Guid,System.Guid,System.Guid,System.Guid)">
             <summary>
-            Request body used to create a new assessment details.
+            Request body used to create a new assessment.
             </summary>
             <remarks>
-            Consumed by POST /assessmentsdetails.
+            Consumed by POST /assessments.
             </remarks>
             <param name="Title">Title of the assessment.</param>
             <param name="Description">Detailed description of the assessment.</param>
-            <param name="AssessmentId">Identifier of the assessment that owns these details (UUID).</param>
             <param name="CreatedBy">Identifier of the user creating the assessment (UUID).</param>
             <param name="FrameworkId">Identifier of the framework this assessment uses (UUID).</param>
         </member>
-        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.Title">
+        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentRequest.Title">
             <summary>Title of the assessment.</summary>
         </member>
-        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.Description">
+        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentRequest.Description">
             <summary>Detailed description of the assessment.</summary>
         </member>
-        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.AssessmentId">
-            <summary>Identifier of the assessment that owns these details (UUID).</summary>
-        </member>
-        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.CreatedBy">
+        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentRequest.CreatedBy">
             <summary>Identifier of the user creating the assessment (UUID).</summary>
         </member>
-        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentDetailsRequest.FrameworkId">
+        <member name="P:GAIA.Api.Contracts.Assessment.CreateAssessmentRequest.FrameworkId">
             <summary>Identifier of the framework this assessment uses (UUID).</summary>
         </member>
         <member name="M:GAIA.Api.Controllers.AssessmentsController.GetConfigurationOptions(System.Threading.CancellationToken)">

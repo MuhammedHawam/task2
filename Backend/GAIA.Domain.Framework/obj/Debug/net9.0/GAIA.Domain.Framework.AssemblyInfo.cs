@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GAIA.Domain.Framework")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37fcab5355584c7bfe280dc5c466fb91b3889805")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5bf96c64ef99ece4f05e475a8763dd671c6dbe0")]
 [assembly: System.Reflection.AssemblyProductAttribute("GAIA.Domain.Framework")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GAIA.Domain.Framework")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

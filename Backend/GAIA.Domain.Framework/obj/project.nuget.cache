@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "51ImLLw1LKI=",
+  "dgSpecHash": "oML4oGmWSrE=",
   "success": true,
   "projectFilePath": "C:\\Users\\mhawwam\\OneDrive - Deloitte (O365D)\\Documents\\GAIA\\GAIA Solution\\GAIA\\Backend\\GAIA.Domain.Framework\\GAIA.Domain.Framework.csproj",
   "expectedPackageFiles": [
@@ -28,7 +28,6 @@
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.visualbasic\\4.14.0\\microsoft.codeanalysis.visualbasic.4.14.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.visualbasic.workspaces\\4.14.0\\microsoft.codeanalysis.visualbasic.workspaces.4.14.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.codeanalysis.workspaces.common\\4.14.0\\microsoft.codeanalysis.workspaces.common.4.14.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.9\\microsoft.extensions.configuration.9.0.9.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.9\\microsoft.extensions.configuration.abstractions.9.0.9.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.extensions.configuration.binder\\9.0.0\\microsoft.extensions.configuration.binder.9.0.0.nupkg.sha512",
@@ -69,8 +68,6 @@
     "C:\\Users\\mhawwam\\.nuget\\packages\\npgsql.nettopologysuite\\9.0.2\\npgsql.nettopologysuite.9.0.2.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\polly.core\\8.5.2\\polly.core.8.5.2.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\spectre.console\\0.50.0\\spectre.console.0.50.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.collections.immutable\\9.0.0\\system.collections.immutable.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition\\9.0.0\\system.composition.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.attributedmodel\\9.0.0\\system.composition.attributedmodel.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.convention\\9.0.0\\system.composition.convention.9.0.0.nupkg.sha512",
@@ -78,16 +75,11 @@
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.runtime\\9.0.0\\system.composition.runtime.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.composition.typedparts\\9.0.0\\system.composition.typedparts.9.0.0.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\system.diagnostics.eventlog\\9.0.0\\system.diagnostics.eventlog.9.0.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.io.pipelines\\9.0.0\\system.io.pipelines.9.0.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.memory\\4.6.3\\system.memory.4.6.3.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.reflection.metadata\\9.0.0\\system.reflection.metadata.9.0.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.text.encoding.codepages\\7.0.0\\system.text.encoding.codepages.7.0.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\mhawwam\\.nuget\\packages\\weasel.core\\8.3.0\\weasel.core.8.3.0.nupkg.sha512",
-    "C:\\Users\\mhawwam\\.nuget\\packages\\weasel.postgresql\\8.3.0\\weasel.postgresql.8.3.0.nupkg.sha512"
+    "C:\\Users\\mhawwam\\.nuget\\packages\\weasel.postgresql\\8.3.0\\weasel.postgresql.8.3.0.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.11\\microsoft.windowsdesktop.app.ref.9.0.11.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.11\\microsoft.netcore.app.ref.9.0.11.nupkg.sha512",
+    "C:\\Users\\mhawwam\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.11\\microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512"
   ],
   "logs": []
 }
