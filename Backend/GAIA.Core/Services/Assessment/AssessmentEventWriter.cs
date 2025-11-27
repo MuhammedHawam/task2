@@ -29,5 +29,21 @@ namespace GAIA.Core.Services.Assessment
       await _session.SaveChangesAsync(cancellationToken);
       return @event.Id;
     }
+
+    public async Task AppendEvidenceDocumentAsync(AssessmentEvidenceDocumentAdded @event, CancellationToken cancellationToken)
+    {
+      if (@event is null)
+      {
+        throw new ArgumentNullException(nameof(@event));
+      }
+
+      if (@event.AssessmentId == Guid.Empty)
+      {
+        throw new ArgumentException("AssessmentEvidenceDocumentAdded.AssessmentId must be provided.", nameof(@event));
+      }
+
+      _session.Events.Append(@event.AssessmentId, @event);
+      await _session.SaveChangesAsync(cancellationToken);
+    }
   }
 }

@@ -17,5 +17,10 @@ namespace GAIA.Infra.Projections
       assessment.AssessmentDepthId = e.AssessmentDepthId;
       assessment.AssessmentScoringId = e.AssessmentScoringId;
     }
+
+    public void Apply(AssessmentEvidenceDocumentAdded e, Assessment assessment)
+    {
+      assessment.Apply(e);
+    }
   }
 }
