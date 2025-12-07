@@ -893,17 +893,29 @@ namespace PIF.EBP.WebAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("budget/{id}")]
-        public async Task<IHttpActionResult> DeleteBudget(long id)
+        [Route("budget/{budgetId:long}")]
+        public Task<IHttpActionResult> DeleteBudget(long budgetId)
         {
-            if (id <= 0)
+            return DeleteBudgetInternal(budgetId);
+        }
+
+        [HttpDelete]
+        [Route("budget")]
+        public Task<IHttpActionResult> DeleteBudgetByQuery(long budgetId)
+        {
+            return DeleteBudgetInternal(budgetId);
+        }
+
+        private async Task<IHttpActionResult> DeleteBudgetInternal(long budgetId)
+        {
+            if (budgetId <= 0)
             {
                 return BadRequest("Budget ID must be greater than zero");
             }
 
             try
             {
-                var result = await _grtAppService.DeleteBudgetAsync(id);
+                var result = await _grtAppService.DeleteBudgetAsync(budgetId);
 
                 if (result)
                 {
