@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Services.Logging.Log4netIntegration</name>
+    </assembly>
+    <members>
+        <member name="M:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netFactory.#ctor(System.Boolean)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netFactory" /> class.
+            </summary>
+            <param name="configuredExternally"> If <c>true</c> . Skips the initialization of log4net assuming it will happen externally. Useful if you're using another framework that wants to take over configuration of log4net. </param>
+        </member>
+        <member name="M:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netFactory.#ctor(System.IO.Stream)">
+            <summary>
+              Configures log4net with a stream containing XML.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netFactory.Create(System.String)">
+            <summary>
+              Creates a new extended logger.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netFactory.Create(System.String,Castle.Core.Logging.LoggerLevel)">
+            <summary>
+              Creates a new extended logger.
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netLogger.GlobalProperties">
+            <summary>
+              Exposes the Global Context of the extended logger.
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netLogger.ThreadProperties">
+            <summary>
+              Exposes the Thread Context of the extended logger.
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netLogger.ThreadStacks">
+            <summary>
+              Exposes the Thread Stack of the extended logger.
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Logging.Log4netIntegration.GlobalContextProperties.Item(System.String)">
+            <summary>
+              Gets or sets the value of a property
+            </summary>
+            <value>
+              The value for the property with the specified key
+            </value>
+            <remarks>
+              <para>
+                Gets or sets the value of a property
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Castle.Services.Logging.Log4netIntegration.Log4netFactory.#ctor(System.Boolean)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Castle.Services.Logging.Log4netIntegration.Log4netFactory" /> class.
+            </summary>
+            <param name="configuredExternally"> If <c>true</c> . Skips the initialization of log4net assuming it will happen externally. Useful if you're using another framework that wants to take over configuration of log4net. </param>
+        </member>
+        <member name="M:Castle.Services.Logging.Log4netIntegration.Log4netFactory.#ctor(System.IO.Stream)">
+            <summary>
+              Configures log4net with a stream containing XML.
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Logging.Log4netIntegration.ThreadContextProperties.Item(System.String)">
+            <summary>
+              Gets or sets the value of a property
+            </summary>
+            <value>
+              The value for the property with the specified key
+            </value>
+            <remarks>
+              <para>
+                Gets or sets the value of a property
+              </para>
+            </remarks>
+        </member>
+    </members>
+</doc>

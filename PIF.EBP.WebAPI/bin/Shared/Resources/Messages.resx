@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ContactDoesNotExist" xml:space="preserve">
+    <value>Contact Does Not Exist</value>
+  </data>
+  <data name="InvalidAttributeName" xml:space="preserve">
+    <value>Invalid attribute name</value>
+  </data>
+  <data name="InvalidAttributeType" xml:space="preserve">
+    <value>Invalid attribute type</value>
+  </data>
+  <data name="InvalidEntityId" xml:space="preserve">
+    <value>Invalid entity Id</value>
+  </data>
+  <data name="InvalidEntityName" xml:space="preserve">
+    <value>Invalid entity name</value>
+  </data>
+  <data name="InvalidContactIdValue" xml:space="preserve">
+    <value>Contact Id cannot be null or whitespace.</value>
+  </data>
+  <data name="InvalidMonthvalue" xml:space="preserve">
+    <value>Month must be integer number between 1 to 12.</value>
+  </data>
+  <data name="InvalidEmailDomainValue" xml:space="preserve">
+    <value>Email domain not matched with company email domain</value>
+  </data>
+  <data name="LinkExpired" xml:space="preserve">
+    <value>The invitation link has expired. Please request a new link from a company administrator and try again. If the problem persists, contact support to resolve this issue.</value>
+  </data>
+  <data name="MsgUnexpectedError" xml:space="preserve">
+    <value>An unexpected error occurred. Please try again later.</value>
+  </data>
+  <data name="NullArgument" xml:space="preserve">
+    <value>Argument Null Exception.</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>Unauthorized</value>
+  </data>
+  <data name="UsernameAndPasswordAreRequired" xml:space="preserve">
+    <value>Username and Password are required</value>
+  </data>
+  <data name="EntityNameCannotNullOrWhitespace" xml:space="preserve">
+    <value>Entity name cannot be null or whitespace.</value>
+  </data>
+  <data name="CouldNotChangePassword" xml:space="preserve">
+    <value>Could Not Change Password</value>
+  </data>
+  <data name="CouldNotFindOtp" xml:space="preserve">
+    <value>Could Not Find Otp</value>
+  </data>
+  <data name="CouldNotUpdateProfileImage" xml:space="preserve">
+    <value>Could Not Update Profile Image</value>
+  </data>
+  <data name="CouldNotUpdateTutorial" xml:space="preserve">
+    <value>Could Not Update Field To Show User Guide</value>
+  </data>
+  <data name="EmailFieldCannotBeEmpty" xml:space="preserve">
+    <value>Email Field Cannot Be Empty</value>
+  </data>
+  <data name="EncryptedInvitationIdIsRequired" xml:space="preserve">
+    <value>Encrypted Invitation Id Is Required</value>
+  </data>
+  <data name="ErrorFromAuthenticationLayer" xml:space="preserve">
+    <value>Error From Authentication Layer</value>
+  </data>
+  <data name="ErrorHappenedWhileTryingToCreateCredentials" xml:space="preserve">
+    <value>Error Happened While Trying to Create Credentials</value>
+  </data>
+  <data name="ErrorInCreatingUserCredentials" xml:space="preserve">
+    <value>Error In Creating User Credentials</value>
+  </data>
+  <data name="InvalidCredentials" xml:space="preserve">
+    <value>Invalid Credentials</value>
+  </data>
+  <data name="InvalidInvitationLink" xml:space="preserve">
+    <value>Invalid Invitation Link</value>
+  </data>
+  <data name="InvalidLoginAttempt" xml:space="preserve">
+    <value>Invalid Login Attempts</value>
+  </data>
+  <data name="InvitationLinkHasExpired" xml:space="preserve">
+    <value>Invitation Link Has Expired</value>
+  </data>
+  <data name="LastVerifyAttemptForLogin" xml:space="preserve">
+    <value>You are reaching the maximum login attempts authorised. If this login attempt fails, your account will be locked.</value>
+  </data>
+  <data name="ModelCannotBeNull" xml:space="preserve">
+    <value>Model Cannot Be Null</value>
+  </data>
+  <data name="OtpDoesNotMatch" xml:space="preserve">
+    <value>Otp Does Not Match</value>
+  </data>
+  <data name="PasswordDoesNotMatchRules" xml:space="preserve">
+    <value>Password Does Not Match Rules</value>
+  </data>
+  <data name="ThisEmailIsNotValid" xml:space="preserve">
+    <value>This Email Is Not Valid</value>
+  </data>
+  <data name="UserCannotAccessPortal" xml:space="preserve">
+    <value>User Cannot Access Portal</value>
+  </data>
+  <data name="UserDoesNotExist" xml:space="preserve">
+    <value>User Does Not Exist</value>
+  </data>
+  <data name="UserStatusLocked" xml:space="preserve">
+    <value>You have exceeded the maximum login attempts authorised. Please reset your password to proceed.</value>
+  </data>
+  <data name="RequiredParameters" xml:space="preserve">
+    <value>Required parameters are missing or invalid.</value>
+  </data>
+  <data name="TheValueForTheTypeCodeMustBeValidInteger" xml:space="preserve">
+    <value>The Value for the type code must be a valid integer.</value>
+  </data>
+  <data name="ErrorHappenedWhileTryingToLogout" xml:space="preserve">
+    <value>Error Happened While Trying To Log out</value>
+  </data>
+  <data name="TokenIsRequired" xml:space="preserve">
+    <value>Token Is Required</value>
+  </data>
+  <data name="InvalidCompanyIdValue" xml:space="preserve">
+    <value>Company Id cannot be null or whitespace.</value>
+  </data>
+  <data name="InvalidFeedbackTypeValue" xml:space="preserve">
+    <value>Invalid feedback type it must be either report a bug or share feedback</value>
+  </data>
+  <data name="InvalidTypeofFeedbackValue" xml:space="preserve">
+    <value>Invalid share feedback type it must either complain or suggestion</value>
+  </data>
+  <data name="InvalidFileExtension" xml:space="preserve">
+    <value>Invalid file extension</value>
+  </data>
+  <data name="ProvidedNumberAlreadyHasActiveContactRoleAssociation" xml:space="preserve">
+    <value>Provided Number Already Has Active Contact</value>
+  </data>
+  <data name="CouldNotUpdateRoleForContact" xml:space="preserve">
+    <value>Could Not Update Role For Contact</value>
+  </data>
+  <data name="UserShouldInvited" xml:space="preserve">
+    <value>This User should be invited before</value>
+  </data>
+  <data name="LastVerifyAttemptForOtp" xml:space="preserve">
+    <value>Last Verify Attempt For Otp</value>
+  </data>
+  <data name="ErrorInDeletingContact" xml:space="preserve">
+    <value>Error In Deleting Contact</value>
+  </data>
+  <data name="InvalidInviteAction" xml:space="preserve">
+    <value>The Invitation process is invalid,please check the parameters.</value>
+  </data>
+  <data name="ErrorInDeletingContactNoExperience" xml:space="preserve">
+    <value>This User Cannot be deleted , there is no experience.</value>
+  </data>
+  <data name="CouldNotUpdateContact" xml:space="preserve">
+    <value>Could not update contact</value>
+  </data>
+  <data name="AttachmentInformationShouldNotBeEmpty" xml:space="preserve">
+    <value>Attachment information should not be empty</value>
+  </data>
+  <data name="DocumentPathShouldNotBeEmpty" xml:space="preserve">
+    <value>Document path should not be empty</value>
+  </data>
+  <data name="OtpDoesntMatch" xml:space="preserve">
+    <value>Otp does not match</value>
+  </data>
+  <data name="RegardingObjectShouldNotBeEmpty" xml:space="preserve">
+    <value>Regarding object should not be empty</value>
+  </data>
+  <data name="RootFolderNotFound" xml:space="preserve">
+    <value>Root folder not found</value>
+  </data>
+  <data name="TheItemAlreadyPinned" xml:space="preserve">
+    <value>The item already pinned</value>
+  </data>
+  <data name="TheUserShouldBeAbleToPinUpToItems" xml:space="preserve">
+    <value>A maximum of {0} items may be pinned.</value>
+  </data>
+  <data name="UploadedFileTypeIsNotAllowed" xml:space="preserve">
+    <value>Uploaded file type is not allowed</value>
+  </data>
+  <data name="IncorrectCurrentPassword" xml:space="preserve">
+    <value>Incorrect current password</value>
+  </data>
+  <data name="RestrictProfileUpdate" xml:space="preserve">
+    <value>Logged in User should not be able to update his own profile</value>
+  </data>
+  <data name="UserUnauthorized" xml:space="preserve">
+    <value>You are not authorized to perform this operation</value>
+  </data>
+  <data name="UserHasNoDeletedAssociationsWithThisCompany" xml:space="preserve">
+    <value>The user has no deleted or inactive associations with this company</value>
+  </data>
+  <data name="UserReinvitedSuccessfully" xml:space="preserve">
+    <value>User Reinvited Successfully</value>
+  </data>
+  <data name="CannotAccessThisRequest" xml:space="preserve">
+    <value>Cannot Access This Request</value>
+  </data>
+  <data name="UnxpectedErrorOccured" xml:space="preserve">
+    <value>Unexpected Error Occurred {0}</value>
+  </data>
+  <data name="OtpLengthShouldNotBeLessThanOrEqualZero" xml:space="preserve">
+    <value>Invalid Otp length, please contact system administrator</value>
+  </data>
+  <data name="UsedPasswordBefore" xml:space="preserve">
+    <value>You have already used this password before</value>
+  </data>
+  <data name="ContactLeadDuplicationDetected" xml:space="preserve">
+    <value>Contact with same Contact and company already Exist</value>
+  </data>
+  <data name="ContactMobilePhoneNumberAlreadyExistsInTheSystem" xml:space="preserve">
+    <value>Mobile Phone Number already exists in the system</value>
+  </data>
+  <data name="ContactRoleAssociationActivatingAlreadyExistErrorMessage" xml:space="preserve">
+    <value>Active contact already exist and it's status changed to Active</value>
+  </data>
+  <data name="ContactRoleAssociationAlreadyExistErrorMessage" xml:space="preserve">
+    <value>Active contact already exist</value>
+  </data>
+  <data name="ContactRoleAssociationApproveAssociationRecordNotFound" xml:space="preserve">
+    <value>Pending approval Record Not found</value>
+  </data>
+  <data name="ContactRoleAssociationInvlaidPortalRoleIDErrorMessage" xml:space="preserve">
+    <value>Invalid Portal Role.</value>
+  </data>
+  <data name="ContactRoleAssociationUsedEmailAddress" xml:space="preserve">
+    <value>Provided email address already has a role</value>
+  </data>
+  <data name="InvalidEntityReferenceName" xml:space="preserve">
+    <value>Invalid Entity Reference Name</value>
+  </data>
+  <data name="PortalInvitationActiveInvitationDuplication" xml:space="preserve">
+    <value>Active portal invitation record already exists with contact and company details</value>
+  </data>
+  <data name="ValidateContactLeadCreationProvidedNumberAlreadyHasContactRoleAssociation" xml:space="preserve">
+    <value>Provided Number Already Has Active Contact</value>
+  </data>
+  <data name="ValidateContactRoleAssociationInactivecontact" xml:space="preserve">
+    <value>Inactive Contact</value>
+  </data>
+  <data name="PasswordUserBefore" xml:space="preserve">
+    <value>The password you entered has been used previously. Please choose a different password.</value>
+  </data>
+  <data name="RequiredParametersSearch" xml:space="preserve">
+    <value>No keywords entered to search</value>
+  </data>
+  <data name="ExceededMaxNumberOfUploadedFiles" xml:space="preserve">
+    <value>You have exceeded the maximum number of uploaded files.</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>File Not Found.</value>
+  </data>
+  <data name="TheItemIsNotPinned" xml:space="preserve">
+    <value>The item is not pinned</value>
+  </data>
+  <data name="PortalRoleIsNotFilledOnTheRequestStep" xml:space="preserve">
+    <value>Portal Role Is Not Filled On The Request Step</value>
+  </data>
+</root>

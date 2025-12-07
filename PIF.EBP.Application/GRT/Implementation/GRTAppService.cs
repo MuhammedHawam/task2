@@ -1,0 +1,1806 @@
+using PIF.EBP.Application.GRT.DTOs;
+using PIF.EBP.Core.GRT;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace PIF.EBP.Application.GRT.Implementation
+{
+    /// <summary>
+    /// Implementation of GRT Application Service
+    /// </summary>
+    public class GRTAppService : IGRTAppService
+    {
+        private readonly IGRTIntegrationService _grtIntegrationService;
+
+        public GRTAppService(IGRTIntegrationService grtIntegrationService)
+        {
+            _grtIntegrationService = grtIntegrationService;
+        }
+
+        public async Task<List<GRTLookupEntryDto>> GetLookupByExternalReferenceCodeAsync(
+            string externalReferenceCode,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(externalReferenceCode))
+            {
+                throw new ArgumentNullException(nameof(externalReferenceCode), "External reference code cannot be null or empty");
+            }
+
+            try
+            {
+                var response = await _grtIntegrationService.GetListTypeDefinitionByExternalReferenceCodeAsync(
+                    externalReferenceCode,
+                    cancellationToken);
+
+                if (response == null || response.ListTypeEntries == null)
+                {
+                    return new List<GRTLookupEntryDto>();
+                }
+
+                // Map integration DTOs to application DTOs
+                var result = response.ListTypeEntries.Select(entry => new GRTLookupEntryDto
+                {
+                    ExternalReferenceCode = entry.ExternalReferenceCode,
+                    Id = entry.Id,
+                    Name = entry.Name,
+                    ArSA = entry.Name_i18n?.ArSA ?? string.Empty,
+                    EnUS = entry.Name_i18n?.EnUS ?? string.Empty
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetLookupByExternalReferenceCodeAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTProjectOverviewResponseDto> CreateProjectOverviewAsync(
+            GRTProjectOverviewDto projectOverview,
+            CancellationToken cancellationToken = default)
+        {
+            if (projectOverview == null)
+            {
+                throw new ArgumentNullException(nameof(projectOverview), "Project overview cannot be null");
+            }
+
+            try
+            {
+                // Map application DTO to integration request DTO
+                var request = new GRTProjectOverviewRequest
+                {
+                    ProjectCompanyFullName = projectOverview.ProjectCompanyFullName,
+                    LocationCity = projectOverview.LocationCity,
+                    ConceptDescription = projectOverview.ConceptDescription,
+                    LandSize = projectOverview.LandSize,
+                    LandTake = projectOverview.LandTake,
+                    DevelopableLand = projectOverview.DevelopableLand,
+                    LandValueUsedInIRRCalculation = projectOverview.LandValueUsedInIRRCalculation,
+                    TotalFundingRequiredAllSources = projectOverview.TotalFundingRequiredAllSources,
+                    Latitude = projectOverview.Latitude,
+                    Longitude = projectOverview.Longitude,
+                    
+                    // Map list entry references - send int directly
+                    LastYearOfFundingRequired = projectOverview.LastYearOfFundingRequiredId,
+                    DataFilledBasedOnAnApprovedBPByCompanyBoD = !string.IsNullOrEmpty(projectOverview.DataFilledBasedOnAnApprovedBPByCompanyBoD) 
+                        ? new GRTKeyValue { Key = projectOverview.DataFilledBasedOnAnApprovedBPByCompanyBoD } 
+                        : null,
+                    DataFilledBasedOnAnApprovedBPByPIF = !string.IsNullOrEmpty(projectOverview.DataFilledBasedOnAnApprovedBPByPIF) 
+                        ? new GRTKeyValue { Key = projectOverview.DataFilledBasedOnAnApprovedBPByPIF } 
+                        : null,
+                    
+                    // Management
+                    CEO = projectOverview.CEO,
+                    CEOIsActing = !string.IsNullOrEmpty(projectOverview.CEOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.CEOIsActing } 
+                        : null,
+                    CFO = projectOverview.CFO,
+                    CFOIsActing = !string.IsNullOrEmpty(projectOverview.CFOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.CFOIsActing } 
+                        : null,
+                    CDO = projectOverview.CDO,
+                    CDOIsActing = !string.IsNullOrEmpty(projectOverview.CDOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.CDOIsActing } 
+                        : null,
+                    COO = projectOverview.COO,
+                    COOIsActing = !string.IsNullOrEmpty(projectOverview.COOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.COOIsActing } 
+                        : null,
+                    CSO = projectOverview.CSO,
+                    CSOIsActing = !string.IsNullOrEmpty(projectOverview.CSOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.CSOIsActing } 
+                        : null,
+                    
+                    // Project Key Stages
+                    CompanyEstablishmentPlanned = !string.IsNullOrEmpty(projectOverview.CompanyEstablishmentPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.CompanyEstablishmentPlanned } 
+                        : null,
+                    CompanyEstablishmentActual = !string.IsNullOrEmpty(projectOverview.CompanyEstablishmentActual) 
+                        ? new GRTKeyValue { Key = projectOverview.CompanyEstablishmentActual } 
+                        : null,
+                    CompanyIncorporationCRPlanned = !string.IsNullOrEmpty(projectOverview.CompanyIncorporationCRPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.CompanyIncorporationCRPlanned } 
+                        : null,
+                    CompanyIncorporationCRActual = !string.IsNullOrEmpty(projectOverview.CompanyIncorporationCRActual) 
+                        ? new GRTKeyValue { Key = projectOverview.CompanyIncorporationCRActual } 
+                        : null,
+                    FirstDesignContractsAwardPlanned = !string.IsNullOrEmpty(projectOverview.FirstDesignContractsAwardPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstDesignContractsAwardPlanned } 
+                        : null,
+                    FirstDesignContractsAwardActual = !string.IsNullOrEmpty(projectOverview.FirstDesignContractsAwardActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstDesignContractsAwardActual } 
+                        : null,
+                    FirstInfrastructureAwardPlanned = !string.IsNullOrEmpty(projectOverview.FirstInfrastructureAwardPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstInfrastructureAwardPlanned } 
+                        : null,
+                    FirstInfrastructureAwardActual = !string.IsNullOrEmpty(projectOverview.FirstInfrastructureAwardActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstInfrastructureAwardActual } 
+                        : null,
+                    FirstInfrastructureStartDatePlanned = !string.IsNullOrEmpty(projectOverview.FirstInfrastructureStartDatePlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstInfrastructureStartDatePlanned } 
+                        : null,
+                    FirstInfrastructureStartDateActual = !string.IsNullOrEmpty(projectOverview.FirstInfrastructureStartDateActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstInfrastructureStartDateActual } 
+                        : null,
+                    FirstVerticalConstructionAwardPlanned = !string.IsNullOrEmpty(projectOverview.FirstVerticalConstructionAwardPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstVerticalConstructionAwardPlanned } 
+                        : null,
+                    FirstVerticalConstructionAwardActual = !string.IsNullOrEmpty(projectOverview.FirstVerticalConstructionAwardActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstVerticalConstructionAwardActual } 
+                        : null,
+                    FirstVerticalConstructionStartDatePlanned = !string.IsNullOrEmpty(projectOverview.FirstVerticalConstructionStartDatePlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstVerticalConstructionStartDatePlanned } 
+                        : null,
+                    FirstVerticalConstructionStartDateActual = !string.IsNullOrEmpty(projectOverview.FirstVerticalConstructionStartDateActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstVerticalConstructionStartDateActual } 
+                        : null,
+                    LastInfrastructureCompleteDatePlanned = !string.IsNullOrEmpty(projectOverview.LastInfrastructureCompleteDatePlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.LastInfrastructureCompleteDatePlanned } 
+                        : null,
+                    LastInfrastructureCompleteDateActual = !string.IsNullOrEmpty(projectOverview.LastInfrastructureCompleteDateActual) 
+                        ? new GRTKeyValue { Key = projectOverview.LastInfrastructureCompleteDateActual } 
+                        : null,
+                    LastVerticalConstructionCompletePlanned = !string.IsNullOrEmpty(projectOverview.LastVerticalConstructionCompletePlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.LastVerticalConstructionCompletePlanned } 
+                        : null,
+                    LastVerticalConstructionCompleteActual = !string.IsNullOrEmpty(projectOverview.LastVerticalConstructionCompleteActual) 
+                        ? new GRTKeyValue { Key = projectOverview.LastVerticalConstructionCompleteActual } 
+                        : null,
+                    OperationsStartDateFirstGuestPlanned = !string.IsNullOrEmpty(projectOverview.OperationsStartDateFirstGuestPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.OperationsStartDateFirstGuestPlanned } 
+                        : null,
+                    OperationsStartDateFirstGuestActual = !string.IsNullOrEmpty(projectOverview.OperationsStartDateFirstGuestActual) 
+                        ? new GRTKeyValue { Key = projectOverview.OperationsStartDateFirstGuestActual } 
+                        : null,
+                    
+                    // Key Financials
+                    CapRate = projectOverview.CapRate,
+                    TerminalValueGrowthRate = projectOverview.TerminalValueGrowthRate,
+                    Inflation = projectOverview.Inflation,
+                    CostOfEquity = projectOverview.CostOfEquity,
+                    WACC = projectOverview.WACC,
+                    CostOfDebt = projectOverview.CostOfDebt,
+                    DebtToEquityRatio = projectOverview.DebtToEquityRatio,
+                    StableReturnOnInvestedCapitalROIC = projectOverview.StableReturnOnInvestedCapitalROIC,
+                    TargetDebtServiceCoverageRatioDSCR = projectOverview.TargetDebtServiceCoverageRatioDSCR,
+                    
+                    // Reference Documents
+                    ReferenceDocumentName1 = projectOverview.ReferenceDocumentName1,
+                    ReferenceDocumentName2 = projectOverview.ReferenceDocumentName2,
+                    ReferenceDocumentName3 = projectOverview.ReferenceDocumentName3,
+                    ReferenceDocumentName4 = projectOverview.ReferenceDocumentName4,
+                    ReferenceDocumentName5 = projectOverview.ReferenceDocumentName5,
+                    ReferenceDocumentName6 = projectOverview.ReferenceDocumentName6,
+                    ReferenceDocumentName7 = projectOverview.ReferenceDocumentName7,
+                    ReferenceDocumentName8 = projectOverview.ReferenceDocumentName8,
+                    ReferenceDocumentName9 = projectOverview.ReferenceDocumentName9,
+                    ReferenceDocumentName10 = projectOverview.ReferenceDocumentName10,
+                    
+                    // Relationships
+                    GRTCycleCompanyMapRelationshipId = projectOverview.GRTCycleCompanyMapRelationshipId,
+                    GRTCycleCompanyMapRelationshipERC = projectOverview.GRTCycleCompanyMapRelationshipERC
+                };
+
+                var response = await _grtIntegrationService.CreateProjectOverviewAsync(request, cancellationToken);
+
+                return new GRTProjectOverviewResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Project overview created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateProjectOverviewAsync: {ex.Message}");
+                return new GRTProjectOverviewResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating project overview: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTProjectOverviewDto> GetProjectOverviewAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var response = await _grtIntegrationService.GetProjectOverviewByIdAsync(
+                    id,
+                    cancellationToken);
+
+                if (response == null)
+                {
+                    return null;
+                }
+
+                // Map integration response DTO to application DTO
+                var result = new GRTProjectOverviewDto
+                {
+                    ProjectCompanyFullName = response.ProjectCompanyFullName,
+                    LocationCity = response.LocationCity,
+                    ConceptDescription = response.ConceptDescription,
+                    LandSize = response.LandSize,
+                    LandTake = response.LandTake,
+                    DevelopableLand = response.DevelopableLand,
+                    LandValueUsedInIRRCalculation = response.LandValueUsedInIRRCalculation,
+                    TotalFundingRequiredAllSources = response.TotalFundingRequiredAllSources,
+                    Latitude = response.Latitude,
+                    Longitude = response.Longitude,
+                    
+                    // Map list entry references - extract key from GRTKeyValue and parse as int
+                    LastYearOfFundingRequiredId = response.LastYearOfFundingRequired != null && 
+                                                  int.TryParse(response.LastYearOfFundingRequired.Key, out var yearId) 
+                                                  ? yearId : (int?)null,
+                    DataFilledBasedOnAnApprovedBPByCompanyBoD = response.DataFilledBasedOnAnApprovedBPByCompanyBoD?.Key,
+                    DataFilledBasedOnAnApprovedBPByPIF = response.DataFilledBasedOnAnApprovedBPByPIF?.Key,
+                    
+                    // Management
+                    CEO = response.CEO,
+                    CEOIsActing = response.CEOIsActing?.Key,
+                    CFO = response.CFO,
+                    CFOIsActing = response.CFOIsActing?.Key,
+                    CDO = response.CDO,
+                    CDOIsActing = response.CDOIsActing?.Key,
+                    COO = response.COO,
+                    COOIsActing = response.COOIsActing?.Key,
+                    CSO = response.CSO,
+                    CSOIsActing = response.CSOIsActing?.Key,
+                    
+                    // Project Key Stages
+                    CompanyEstablishmentPlanned = response.CompanyEstablishmentPlanned?.Key,
+                    CompanyEstablishmentActual = response.CompanyEstablishmentActual?.Key,
+                    CompanyIncorporationCRPlanned = response.CompanyIncorporationCRPlanned?.Key,
+                    CompanyIncorporationCRActual = response.CompanyIncorporationCRActual?.Key,
+                    FirstDesignContractsAwardPlanned = response.FirstDesignContractsAwardPlanned?.Key,
+                    FirstDesignContractsAwardActual = response.FirstDesignContractsAwardActual?.Key,
+                    FirstInfrastructureAwardPlanned = response.FirstInfrastructureAwardPlanned?.Key,
+                    FirstInfrastructureAwardActual = response.FirstInfrastructureAwardActual?.Key,
+                    FirstInfrastructureStartDatePlanned = response.FirstInfrastructureStartDatePlanned?.Key,
+                    FirstInfrastructureStartDateActual = response.FirstInfrastructureStartDateActual?.Key,
+                    FirstVerticalConstructionAwardPlanned = response.FirstVerticalConstructionAwardPlanned?.Key,
+                    FirstVerticalConstructionAwardActual = response.FirstVerticalConstructionAwardActual?.Key,
+                    FirstVerticalConstructionStartDatePlanned = response.FirstVerticalConstructionStartDatePlanned?.Key,
+                    FirstVerticalConstructionStartDateActual = response.FirstVerticalConstructionStartDateActual?.Key,
+                    LastInfrastructureCompleteDatePlanned = response.LastInfrastructureCompleteDatePlanned?.Key,
+                    LastInfrastructureCompleteDateActual = response.LastInfrastructureCompleteDateActual?.Key,
+                    LastVerticalConstructionCompletePlanned = response.LastVerticalConstructionCompletePlanned?.Key,
+                    LastVerticalConstructionCompleteActual = response.LastVerticalConstructionCompleteActual?.Key,
+                    OperationsStartDateFirstGuestPlanned = response.OperationsStartDateFirstGuestPlanned?.Key,
+                    OperationsStartDateFirstGuestActual = response.OperationsStartDateFirstGuestActual?.Key,
+                    
+                    // Key Financials
+                    CapRate = response.CapRate,
+                    TerminalValueGrowthRate = response.TerminalValueGrowthRate,
+                    Inflation = response.Inflation,
+                    CostOfEquity = response.CostOfEquity,
+                    WACC = response.WACC,
+                    CostOfDebt = response.CostOfDebt,
+                    DebtToEquityRatio = response.DebtToEquityRatio,
+                    StableReturnOnInvestedCapitalROIC = response.StableReturnOnInvestedCapitalROIC,
+                    TargetDebtServiceCoverageRatioDSCR = response.TargetDebtServiceCoverageRatioDSCR,
+                    
+                    // Reference Documents
+                    ReferenceDocumentName1 = response.ReferenceDocumentName1,
+                    ReferenceDocumentName2 = response.ReferenceDocumentName2,
+                    ReferenceDocumentName3 = response.ReferenceDocumentName3,
+                    ReferenceDocumentName4 = response.ReferenceDocumentName4,
+                    ReferenceDocumentName5 = response.ReferenceDocumentName5,
+                    ReferenceDocumentName6 = response.ReferenceDocumentName6,
+                    ReferenceDocumentName7 = response.ReferenceDocumentName7,
+                    ReferenceDocumentName8 = response.ReferenceDocumentName8,
+                    ReferenceDocumentName9 = response.ReferenceDocumentName9,
+                    ReferenceDocumentName10 = response.ReferenceDocumentName10,
+                    
+                    // Relationships
+                    GRTCycleCompanyMapRelationshipId = response.GRTCycleCompanyMapRelationshipId,
+                    GRTCycleCompanyMapRelationshipERC = response.GRTCycleCompanyMapRelationshipERC
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetProjectOverviewAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTProjectOverviewResponseDto> UpdateProjectOverviewAsync(
+            long id,
+            GRTProjectOverviewDto projectOverview,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(id));
+            }
+
+            if (projectOverview == null)
+            {
+                throw new ArgumentNullException(nameof(projectOverview), "Project overview cannot be null");
+            }
+
+            try
+            {
+                // Map application DTO to integration request DTO
+                var request = new GRTProjectOverviewRequest
+                {
+                    ProjectCompanyFullName = projectOverview.ProjectCompanyFullName,
+                    LocationCity = projectOverview.LocationCity,
+                    ConceptDescription = projectOverview.ConceptDescription,
+                    LandSize = projectOverview.LandSize,
+                    LandTake = projectOverview.LandTake,
+                    DevelopableLand = projectOverview.DevelopableLand,
+                    LandValueUsedInIRRCalculation = projectOverview.LandValueUsedInIRRCalculation,
+                    TotalFundingRequiredAllSources = projectOverview.TotalFundingRequiredAllSources,
+                    Latitude = projectOverview.Latitude,
+                    Longitude = projectOverview.Longitude,
+                    
+                    // Map list entry references - send int directly
+                    LastYearOfFundingRequired = projectOverview.LastYearOfFundingRequiredId,
+                    DataFilledBasedOnAnApprovedBPByCompanyBoD = !string.IsNullOrEmpty(projectOverview.DataFilledBasedOnAnApprovedBPByCompanyBoD) 
+                        ? new GRTKeyValue { Key = projectOverview.DataFilledBasedOnAnApprovedBPByCompanyBoD } 
+                        : null,
+                    DataFilledBasedOnAnApprovedBPByPIF = !string.IsNullOrEmpty(projectOverview.DataFilledBasedOnAnApprovedBPByPIF) 
+                        ? new GRTKeyValue { Key = projectOverview.DataFilledBasedOnAnApprovedBPByPIF } 
+                        : null,
+                    
+                    // Management
+                    CEO = projectOverview.CEO,
+                    CEOIsActing = !string.IsNullOrEmpty(projectOverview.CEOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.CEOIsActing } 
+                        : null,
+                    CFO = projectOverview.CFO,
+                    CFOIsActing = !string.IsNullOrEmpty(projectOverview.CFOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.CFOIsActing } 
+                        : null,
+                    CDO = projectOverview.CDO,
+                    CDOIsActing = !string.IsNullOrEmpty(projectOverview.CDOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.CDOIsActing } 
+                        : null,
+                    COO = projectOverview.COO,
+                    COOIsActing = !string.IsNullOrEmpty(projectOverview.COOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.COOIsActing } 
+                        : null,
+                    CSO = projectOverview.CSO,
+                    CSOIsActing = !string.IsNullOrEmpty(projectOverview.CSOIsActing) 
+                        ? new GRTKeyValue { Key = projectOverview.CSOIsActing } 
+                        : null,
+                    
+                    // Project Key Stages
+                    CompanyEstablishmentPlanned = !string.IsNullOrEmpty(projectOverview.CompanyEstablishmentPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.CompanyEstablishmentPlanned } 
+                        : null,
+                    CompanyEstablishmentActual = !string.IsNullOrEmpty(projectOverview.CompanyEstablishmentActual) 
+                        ? new GRTKeyValue { Key = projectOverview.CompanyEstablishmentActual } 
+                        : null,
+                    CompanyIncorporationCRPlanned = !string.IsNullOrEmpty(projectOverview.CompanyIncorporationCRPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.CompanyIncorporationCRPlanned } 
+                        : null,
+                    CompanyIncorporationCRActual = !string.IsNullOrEmpty(projectOverview.CompanyIncorporationCRActual) 
+                        ? new GRTKeyValue { Key = projectOverview.CompanyIncorporationCRActual } 
+                        : null,
+                    FirstDesignContractsAwardPlanned = !string.IsNullOrEmpty(projectOverview.FirstDesignContractsAwardPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstDesignContractsAwardPlanned } 
+                        : null,
+                    FirstDesignContractsAwardActual = !string.IsNullOrEmpty(projectOverview.FirstDesignContractsAwardActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstDesignContractsAwardActual } 
+                        : null,
+                    FirstInfrastructureAwardPlanned = !string.IsNullOrEmpty(projectOverview.FirstInfrastructureAwardPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstInfrastructureAwardPlanned } 
+                        : null,
+                    FirstInfrastructureAwardActual = !string.IsNullOrEmpty(projectOverview.FirstInfrastructureAwardActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstInfrastructureAwardActual } 
+                        : null,
+                    FirstInfrastructureStartDatePlanned = !string.IsNullOrEmpty(projectOverview.FirstInfrastructureStartDatePlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstInfrastructureStartDatePlanned } 
+                        : null,
+                    FirstInfrastructureStartDateActual = !string.IsNullOrEmpty(projectOverview.FirstInfrastructureStartDateActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstInfrastructureStartDateActual } 
+                        : null,
+                    FirstVerticalConstructionAwardPlanned = !string.IsNullOrEmpty(projectOverview.FirstVerticalConstructionAwardPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstVerticalConstructionAwardPlanned } 
+                        : null,
+                    FirstVerticalConstructionAwardActual = !string.IsNullOrEmpty(projectOverview.FirstVerticalConstructionAwardActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstVerticalConstructionAwardActual } 
+                        : null,
+                    FirstVerticalConstructionStartDatePlanned = !string.IsNullOrEmpty(projectOverview.FirstVerticalConstructionStartDatePlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstVerticalConstructionStartDatePlanned } 
+                        : null,
+                    FirstVerticalConstructionStartDateActual = !string.IsNullOrEmpty(projectOverview.FirstVerticalConstructionStartDateActual) 
+                        ? new GRTKeyValue { Key = projectOverview.FirstVerticalConstructionStartDateActual } 
+                        : null,
+                    LastInfrastructureCompleteDatePlanned = !string.IsNullOrEmpty(projectOverview.LastInfrastructureCompleteDatePlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.LastInfrastructureCompleteDatePlanned } 
+                        : null,
+                    LastInfrastructureCompleteDateActual = !string.IsNullOrEmpty(projectOverview.LastInfrastructureCompleteDateActual) 
+                        ? new GRTKeyValue { Key = projectOverview.LastInfrastructureCompleteDateActual } 
+                        : null,
+                    LastVerticalConstructionCompletePlanned = !string.IsNullOrEmpty(projectOverview.LastVerticalConstructionCompletePlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.LastVerticalConstructionCompletePlanned } 
+                        : null,
+                    LastVerticalConstructionCompleteActual = !string.IsNullOrEmpty(projectOverview.LastVerticalConstructionCompleteActual) 
+                        ? new GRTKeyValue { Key = projectOverview.LastVerticalConstructionCompleteActual } 
+                        : null,
+                    OperationsStartDateFirstGuestPlanned = !string.IsNullOrEmpty(projectOverview.OperationsStartDateFirstGuestPlanned) 
+                        ? new GRTKeyValue { Key = projectOverview.OperationsStartDateFirstGuestPlanned } 
+                        : null,
+                    OperationsStartDateFirstGuestActual = !string.IsNullOrEmpty(projectOverview.OperationsStartDateFirstGuestActual) 
+                        ? new GRTKeyValue { Key = projectOverview.OperationsStartDateFirstGuestActual } 
+                        : null,
+                    
+                    // Key Financials
+                    CapRate = projectOverview.CapRate,
+                    TerminalValueGrowthRate = projectOverview.TerminalValueGrowthRate,
+                    Inflation = projectOverview.Inflation,
+                    CostOfEquity = projectOverview.CostOfEquity,
+                    WACC = projectOverview.WACC,
+                    CostOfDebt = projectOverview.CostOfDebt,
+                    DebtToEquityRatio = projectOverview.DebtToEquityRatio,
+                    StableReturnOnInvestedCapitalROIC = projectOverview.StableReturnOnInvestedCapitalROIC,
+                    TargetDebtServiceCoverageRatioDSCR = projectOverview.TargetDebtServiceCoverageRatioDSCR,
+                    
+                    // Reference Documents
+                    ReferenceDocumentName1 = projectOverview.ReferenceDocumentName1,
+                    ReferenceDocumentName2 = projectOverview.ReferenceDocumentName2,
+                    ReferenceDocumentName3 = projectOverview.ReferenceDocumentName3,
+                    ReferenceDocumentName4 = projectOverview.ReferenceDocumentName4,
+                    ReferenceDocumentName5 = projectOverview.ReferenceDocumentName5,
+                    ReferenceDocumentName6 = projectOverview.ReferenceDocumentName6,
+                    ReferenceDocumentName7 = projectOverview.ReferenceDocumentName7,
+                    ReferenceDocumentName8 = projectOverview.ReferenceDocumentName8,
+                    ReferenceDocumentName9 = projectOverview.ReferenceDocumentName9,
+                    ReferenceDocumentName10 = projectOverview.ReferenceDocumentName10,
+                    
+                    // Relationships
+                    GRTCycleCompanyMapRelationshipId = projectOverview.GRTCycleCompanyMapRelationshipId,
+                    GRTCycleCompanyMapRelationshipERC = projectOverview.GRTCycleCompanyMapRelationshipERC
+                };
+
+                var response = await _grtIntegrationService.UpdateProjectOverviewAsync(id, request, cancellationToken);
+
+                return new GRTProjectOverviewResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Project overview updated successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateProjectOverviewAsync: {ex.Message}");
+                return new GRTProjectOverviewResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating project overview: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTUiCyclesPagedDto> GetCyclesPagedAsync(
+            long companyId,
+            int page = 1,
+            int pageSize = 20,
+            string search = null,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetCyclesPagedAsync(
+                    companyId,
+                    page,
+                    pageSize,
+                    search,
+                    cancellationToken);
+
+                if (response == null || (response.ActiveCycles == null && response.PreviousCycles == null))
+                {
+                    return new GRTUiCyclesPagedDto
+                    {
+                        ActiveCycles = new List<GRTUiCycleDto>(),
+                        PreviousCycles = new List<GRTUiCycleDto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+
+                // Map active cycles
+                var activeCycles = response.ActiveCycles?.Select(cycle => new GRTUiCycleDto
+                {
+                    CycleId = cycle.CycleId,
+                    PoId = cycle.PoId,
+                    CompanyId = cycle.CompanyId,
+                    CycleName = cycle.CycleName,
+                    CycleStartDate = DateTime.TryParse(cycle.CycleStartDate, out var startDate) ? startDate : (DateTime?)null,
+                    CycleEndDate = DateTime.TryParse(cycle.CycleEndDate, out var endDate) ? endDate : (DateTime?)null,
+                    Status = cycle.Status,
+                    RawCycleCompanyStatus = cycle.RawCycleCompanyStatus,
+                    RawSystemStatus = cycle.RawSystemStatus
+                }).ToList() ?? new List<GRTUiCycleDto>();
+
+                // Map previous cycles (paginated)
+                var previousCycles = response.PreviousCycles?.Select(cycle => new GRTUiCycleDto
+                {
+                    CycleId = cycle.CycleId,
+                    PoId = cycle.PoId,
+                    CompanyId = cycle.CompanyId,
+                    CycleName = cycle.CycleName,
+                    CycleStartDate = DateTime.TryParse(cycle.CycleStartDate, out var startDate) ? startDate : (DateTime?)null,
+                    CycleEndDate = DateTime.TryParse(cycle.CycleEndDate, out var endDate) ? endDate : (DateTime?)null,
+                    Status = cycle.Status,
+                    RawCycleCompanyStatus = cycle.RawCycleCompanyStatus,
+                    RawSystemStatus = cycle.RawSystemStatus
+                }).ToList() ?? new List<GRTUiCycleDto>();
+
+                var result = new GRTUiCyclesPagedDto
+                {
+                    ActiveCycles = activeCycles,
+                    PreviousCycles = previousCycles,
+                    Page = response.Page,
+                    PageSize = response.PageSize,
+                    TotalCount = response.TotalCount,
+                    LastPage = response.LastPage
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetCyclesPagedAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTDeliveryPlansPagedDto> GetDeliveryPlansPagedAsync(
+            int page = 1,
+            int pageSize = 20,
+            string search = null,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetDeliveryPlansPagedAsync(
+                    page,
+                    pageSize,
+                    search,
+                    cancellationToken);
+
+                if (response == null || response.Items == null)
+                {
+                    return new GRTDeliveryPlansPagedDto
+                    {
+                        Items = new List<GRTDeliveryPlanListDto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+
+                // Map integration DTOs to simplified list DTOs
+                var result = new GRTDeliveryPlansPagedDto
+                {
+                    Page = response.Page,
+                    PageSize = response.PageSize,
+                    TotalCount = response.TotalCount,
+                    LastPage = response.LastPage,
+                    Items = response.Items.Select(plan => new GRTDeliveryPlanListDto
+                    {
+                        Id = plan.Id,
+                        PlanNumber = plan.PlanNumber,
+                        ParcelID = plan.ParcelID,
+                        AssetID = plan.AssetID,
+                        AssetName = plan.AssetName
+                    }).ToList()
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetDeliveryPlansPagedAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTDeliveryPlanDetailDto> GetDeliveryPlanByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Delivery plan ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var response = await _grtIntegrationService.GetDeliveryPlanByIdAsync(
+                    id,
+                    cancellationToken);
+
+                if (response == null)
+                {
+                    return null;
+                }
+
+                // Map integration response DTO to application detail DTO
+                var result = new GRTDeliveryPlanDetailDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+                    
+                    // ASSET IDENTIFICATION
+                    PlanNumber = response.PlanNumber,
+                    ParcelID = response.ParcelID,
+                    AssetID = response.AssetID,
+                    AssetName = response.AssetName,
+                    AssetType = response.AssetType,
+                    SubAsset = response.SubAsset,
+                    Description = response.Description,
+                    
+                    // LOCATION DETAILS
+                    City = response.City,
+                    Region = response.Region?.Name,
+                    RegionKey = response.Region?.Name,
+                    ProgramAssetPackage = response.ProgramAssetPackage,
+                    
+                    // DEVELOPMENT PROFILE
+                    TypeOfDevelopment = response.TypeOfDevelopment?.Name,
+                    TypeOfDevelopmentKey = response.TypeOfDevelopment?.Name,
+                    PrimarySecondaryHomesForResidential = response.PrimarySecondaryHomesForResidential?.Name,
+                    PrimarySecondaryHomesForResidentialKey = response.PrimarySecondaryHomesForResidential?.Name,
+                    BrandedNonBranded = response.BrandedNonBranded?.Name,
+                    BrandedNonBrandedKey = response.BrandedNonBranded?.Name,
+                    RetailType = response.RetailType?.Name,
+                    RetailTypeKey = response.RetailType?.Name,
+                    Phase = response.Phase,
+                    ConstructionStart = response.ConstructionStart?.Name,
+                    ConstructionStartKey = response.ConstructionStart?.Name,
+                    AssetStartOperatingDeliveryDate = response.AssetStartOperatingDeliveryDate?.Name,
+                    AssetStartOperatingDeliveryDateKey = response.AssetStartOperatingDeliveryDate?.Name,
+                    
+                    // ASSET SPECIFICATION
+                    ParkingBaysLinkedToAsset = response.ParkingBaysLinkedToAsset,
+                    NumberOfFloorsForBuildingsOnly = response.NumberOfFloorsForBuildingsOnly,
+                    LandTake = response.LandTake,
+                    BUA = response.BUA,
+                    GFA = response.GFA,
+                    GLA = response.GLA,
+                    ResidentialHospitalityKeysLaborStaffRooms = response.ResidentialHospitalityKeysLaborStaffRooms,
+                    
+                    // FINANCIAL INPUTS
+                    DevelopmentIsFundedBy = response.DevelopmentIsFundedBy?.Name,
+                    DevelopmentIsFundedByKey = response.DevelopmentIsFundedBy?.Name,
+                    RevenueDriver = response.RevenueDriver?.Name,
+                    RevenueDriverKey = response.RevenueDriver?.Name,
+                    SaleForecastYear = response.SaleForecastYear?.Name,
+                    SaleForecastYearKey = response.SaleForecastYear?.Name,
+                    SaleStrategy = response.SaleStrategy?.Name,
+                    SaleStrategyKey = response.SaleStrategy?.Name,
+                    AvgSaleRate = response.AvgSaleRate,
+                    LeaseRateOrADRForKeys = response.LeaseRateOrADRForKeys,
+                    OccupancyInFirstYearOfOperation = response.OccupancyInFirstYearOfOperation,
+                    YearOfStabilization = response.YearOfStabilization?.Name,
+                    YearOfStabilizationKey = response.YearOfStabilization?.Name,
+                    StableLeaseADR = response.StableLeaseADR,
+                    StableOccupancy = response.StableOccupancy,
+                    
+                    // COST BREAKDOWN
+                    ValueOfLandAllocatedToAsset = response.ValueOfLandAllocatedToAsset,
+                    ValueOfInfrastructureAllocatedToAsset = response.ValueOfInfrastructureAllocatedToAsset,
+                    SoftCost = response.SoftCost,
+                    Contingencies = response.Contingencies,
+                    VerticalConstructionCost = response.VerticalConstructionCost,
+                    
+                    // RETURN & PERFORMANCE
+                    RevenueProceeds = response.RevenueProceeds,
+                    UnleveredIRR = response.UnleveredIRR,
+                    VerticalConstructionCostPerSqm = response.VerticalConstructionCostPerSqm,
+                    
+                    // ADDITIONAL NOTES
+                    Comments = response.Comments,
+                    
+                    // Relationships
+                    ProjectToDeliveryPlanRelationshipProjectOverviewId = response.ProjectToDeliveryPlanRelationshipProjectOverviewId,
+                    ProjectToDeliveryPlanRelationshipProjectOverviewERC = response.ProjectToDeliveryPlanRelationshipProjectOverviewERC
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetDeliveryPlanByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteDeliveryPlanAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Delivery plan ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                return await _grtIntegrationService.DeleteDeliveryPlanAsync(id, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.DeleteDeliveryPlanAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTDeliveryPlanResponseDto> CreateDeliveryPlanAsync(
+            GRTDeliveryPlanDto deliveryPlan,
+            CancellationToken cancellationToken = default)
+        {
+            if (deliveryPlan == null)
+            {
+                throw new ArgumentNullException(nameof(deliveryPlan), "Delivery plan cannot be null");
+            }
+
+            try
+            {
+                // Map application DTO to integration request DTO
+                var request = new GRTDeliveryPlanRequest
+                {
+                    // ASSET IDENTIFICATION
+                    PlanNumber = deliveryPlan.PlanNumber,
+                    ParcelID = deliveryPlan.ParcelID,
+                    AssetID = deliveryPlan.AssetID,
+                    AssetName = deliveryPlan.AssetName,
+                    AssetType = deliveryPlan.AssetType,
+                    SubAsset = deliveryPlan.SubAsset,
+                    Description = deliveryPlan.Description,
+
+                    // LOCATION DETAILS
+                    City = deliveryPlan.City,
+                    Region = !string.IsNullOrEmpty(deliveryPlan.RegionKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.RegionKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RegionKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    ProgramAssetPackage = deliveryPlan.ProgramAssetPackage,
+
+                    // DEVELOPMENT PROFILE
+                    TypeOfDevelopment = !string.IsNullOrEmpty(deliveryPlan.TypeOfDevelopmentKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.TypeOfDevelopmentKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.TypeOfDevelopmentKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    PrimarySecondaryHomesForResidential = !string.IsNullOrEmpty(deliveryPlan.PrimarySecondaryHomesForResidentialKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.PrimarySecondaryHomesForResidentialKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.PrimarySecondaryHomesForResidentialKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    BrandedNonBranded = !string.IsNullOrEmpty(deliveryPlan.BrandedNonBrandedKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.BrandedNonBrandedKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.BrandedNonBrandedKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    RetailType = !string.IsNullOrEmpty(deliveryPlan.RetailTypeKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.RetailTypeKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RetailTypeKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    Phase = deliveryPlan.Phase,
+                    ConstructionStart = !string.IsNullOrEmpty(deliveryPlan.ConstructionStartKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.ConstructionStartKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.ConstructionStartKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    AssetStartOperatingDeliveryDate = !string.IsNullOrEmpty(deliveryPlan.AssetStartOperatingDeliveryDateKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.AssetStartOperatingDeliveryDateKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.AssetStartOperatingDeliveryDateKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+
+                    // ASSET SPECIFICATION
+                    ParkingBaysLinkedToAsset = deliveryPlan.ParkingBaysLinkedToAsset,
+                    NumberOfFloorsForBuildingsOnly = deliveryPlan.NumberOfFloorsForBuildingsOnly,
+                    LandTake = deliveryPlan.LandTake,
+                    BUA = deliveryPlan.BUA,
+                    GFA = deliveryPlan.GFA,
+                    GLA = deliveryPlan.GLA,
+                    ResidentialHospitalityKeysLaborStaffRooms = deliveryPlan.ResidentialHospitalityKeysLaborStaffRooms,
+
+                    // FINANCIAL INPUTS
+                    DevelopmentIsFundedBy = !string.IsNullOrEmpty(deliveryPlan.DevelopmentIsFundedByKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.DevelopmentIsFundedByKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.DevelopmentIsFundedByKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    RevenueDriver = !string.IsNullOrEmpty(deliveryPlan.RevenueDriverKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.RevenueDriverKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RevenueDriverKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    SaleForecastYear = !string.IsNullOrEmpty(deliveryPlan.SaleForecastYearKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.SaleForecastYearKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.SaleForecastYearKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    SaleStrategy = !string.IsNullOrEmpty(deliveryPlan.SaleStrategyKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.SaleStrategyKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.SaleStrategyKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    AvgSaleRate = deliveryPlan.AvgSaleRate,
+                    LeaseRateOrADRForKeys = deliveryPlan.LeaseRateOrADRForKeys,
+                    OccupancyInFirstYearOfOperation = deliveryPlan.OccupancyInFirstYearOfOperation,
+                    YearOfStabilization = !string.IsNullOrEmpty(deliveryPlan.YearOfStabilizationKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.YearOfStabilizationKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.YearOfStabilizationKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    StableLeaseADR = deliveryPlan.StableLeaseADR,
+                    StableOccupancy = deliveryPlan.StableOccupancy,
+
+                    // COST BREAKDOWN
+                    ValueOfLandAllocatedToAsset = deliveryPlan.ValueOfLandAllocatedToAsset,
+                    ValueOfInfrastructureAllocatedToAsset = deliveryPlan.ValueOfInfrastructureAllocatedToAsset,
+                    SoftCost = deliveryPlan.SoftCost,
+                    Contingencies = deliveryPlan.Contingencies,
+                    VerticalConstructionCost = deliveryPlan.VerticalConstructionCost,
+
+                    // RETURN & PERFORMANCE
+                    RevenueProceeds = deliveryPlan.RevenueProceeds,
+                    UnleveredIRR = deliveryPlan.UnleveredIRR,
+                    VerticalConstructionCostPerSqm = deliveryPlan.VerticalConstructionCostPerSqm,
+
+                    // ADDITIONAL NOTES
+                    Comments = deliveryPlan.Comments,
+
+                    // Relationships
+                    ProjectToDeliveryPlanRelationshipProjectOverviewId = deliveryPlan.ProjectToDeliveryPlanRelationshipProjectOverviewId,
+                    ProjectToDeliveryPlanRelationshipProjectOverviewERC = deliveryPlan.ProjectToDeliveryPlanRelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.CreateDeliveryPlanAsync(request, cancellationToken);
+
+                return new GRTDeliveryPlanResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Delivery plan created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateDeliveryPlanAsync: {ex.Message}");
+                return new GRTDeliveryPlanResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating delivery plan: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTDeliveryPlanResponseDto> UpdateDeliveryPlanAsync(
+            long id,
+            GRTDeliveryPlanDto deliveryPlan,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Delivery plan ID must be greater than zero", nameof(id));
+            }
+
+            if (deliveryPlan == null)
+            {
+                throw new ArgumentNullException(nameof(deliveryPlan), "Delivery plan cannot be null");
+            }
+
+            try
+            {
+                // Map application DTO to integration request DTO
+                var request = new GRTDeliveryPlanRequest
+                {
+                    // ASSET IDENTIFICATION
+                    PlanNumber = deliveryPlan.PlanNumber,
+                    ParcelID = deliveryPlan.ParcelID,
+                    AssetID = deliveryPlan.AssetID,
+                    AssetName = deliveryPlan.AssetName,
+                    AssetType = deliveryPlan.AssetType,
+                    SubAsset = deliveryPlan.SubAsset,
+                    Description = deliveryPlan.Description,
+
+                    // LOCATION DETAILS
+                    City = deliveryPlan.City,
+                    Region = !string.IsNullOrEmpty(deliveryPlan.RegionKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.RegionKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RegionKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    ProgramAssetPackage = deliveryPlan.ProgramAssetPackage,
+
+                    // DEVELOPMENT PROFILE
+                    TypeOfDevelopment = !string.IsNullOrEmpty(deliveryPlan.TypeOfDevelopmentKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.TypeOfDevelopmentKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.TypeOfDevelopmentKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    PrimarySecondaryHomesForResidential = !string.IsNullOrEmpty(deliveryPlan.PrimarySecondaryHomesForResidentialKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.PrimarySecondaryHomesForResidentialKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.PrimarySecondaryHomesForResidentialKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    BrandedNonBranded = !string.IsNullOrEmpty(deliveryPlan.BrandedNonBrandedKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.BrandedNonBrandedKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.BrandedNonBrandedKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    RetailType = !string.IsNullOrEmpty(deliveryPlan.RetailTypeKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.RetailTypeKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RetailTypeKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    Phase = deliveryPlan.Phase,
+                    ConstructionStart = !string.IsNullOrEmpty(deliveryPlan.ConstructionStartKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.ConstructionStartKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.ConstructionStartKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    AssetStartOperatingDeliveryDate = !string.IsNullOrEmpty(deliveryPlan.AssetStartOperatingDeliveryDateKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.AssetStartOperatingDeliveryDateKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.AssetStartOperatingDeliveryDateKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+
+                    // ASSET SPECIFICATION
+                    ParkingBaysLinkedToAsset = deliveryPlan.ParkingBaysLinkedToAsset,
+                    NumberOfFloorsForBuildingsOnly = deliveryPlan.NumberOfFloorsForBuildingsOnly,
+                    LandTake = deliveryPlan.LandTake,
+                    BUA = deliveryPlan.BUA,
+                    GFA = deliveryPlan.GFA,
+                    GLA = deliveryPlan.GLA,
+                    ResidentialHospitalityKeysLaborStaffRooms = deliveryPlan.ResidentialHospitalityKeysLaborStaffRooms,
+
+                    // FINANCIAL INPUTS
+                    DevelopmentIsFundedBy = !string.IsNullOrEmpty(deliveryPlan.DevelopmentIsFundedByKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.DevelopmentIsFundedByKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.DevelopmentIsFundedByKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    RevenueDriver = !string.IsNullOrEmpty(deliveryPlan.RevenueDriverKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.RevenueDriverKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RevenueDriverKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    SaleForecastYear = !string.IsNullOrEmpty(deliveryPlan.SaleForecastYearKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.SaleForecastYearKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.SaleForecastYearKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    SaleStrategy = !string.IsNullOrEmpty(deliveryPlan.SaleStrategyKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.SaleStrategyKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.SaleStrategyKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    AvgSaleRate = deliveryPlan.AvgSaleRate,
+                    LeaseRateOrADRForKeys = deliveryPlan.LeaseRateOrADRForKeys,
+                    OccupancyInFirstYearOfOperation = deliveryPlan.OccupancyInFirstYearOfOperation,
+                    YearOfStabilization = !string.IsNullOrEmpty(deliveryPlan.YearOfStabilizationKey) 
+                        ? new GRTKeyValue { Key = deliveryPlan.YearOfStabilizationKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.YearOfStabilizationKey.Replace(" ", "").Replace("-", "") } 
+                        : null,
+                    StableLeaseADR = deliveryPlan.StableLeaseADR,
+                    StableOccupancy = deliveryPlan.StableOccupancy,
+
+                    // COST BREAKDOWN
+                    ValueOfLandAllocatedToAsset = deliveryPlan.ValueOfLandAllocatedToAsset,
+                    ValueOfInfrastructureAllocatedToAsset = deliveryPlan.ValueOfInfrastructureAllocatedToAsset,
+                    SoftCost = deliveryPlan.SoftCost,
+                    Contingencies = deliveryPlan.Contingencies,
+                    VerticalConstructionCost = deliveryPlan.VerticalConstructionCost,
+
+                    // RETURN & PERFORMANCE
+                    RevenueProceeds = deliveryPlan.RevenueProceeds,
+                    UnleveredIRR = deliveryPlan.UnleveredIRR,
+                    VerticalConstructionCostPerSqm = deliveryPlan.VerticalConstructionCostPerSqm,
+
+                    // ADDITIONAL NOTES
+                    Comments = deliveryPlan.Comments,
+
+                    // Relationships
+                    ProjectToDeliveryPlanRelationshipProjectOverviewId = deliveryPlan.ProjectToDeliveryPlanRelationshipProjectOverviewId,
+                    ProjectToDeliveryPlanRelationshipProjectOverviewERC = deliveryPlan.ProjectToDeliveryPlanRelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.UpdateDeliveryPlanAsync(id, request, cancellationToken);
+
+                return new GRTDeliveryPlanResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Delivery plan updated successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateDeliveryPlanAsync: {ex.Message}");
+                return new GRTDeliveryPlanResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating delivery plan: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTInfraDeliveryPlansPagedDto> GetInfraDeliveryPlansByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetInfraDeliveryPlansByProjectIdAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    cancellationToken);
+
+                if (response == null || response.Items == null)
+                {
+                    return new GRTInfraDeliveryPlansPagedDto
+                    {
+                        Items = new List<GRTInfraDeliveryPlanListDto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+
+                var result = new GRTInfraDeliveryPlansPagedDto
+                {
+                    Page = response.Page,
+                    PageSize = response.PageSize,
+                    TotalCount = response.TotalCount,
+                    LastPage = response.LastPage,
+                    Items = response.Items.Select(plan => new GRTInfraDeliveryPlanListDto
+                    {
+                        Id = plan.Id,
+                        InfrastructureType = plan.InfrastructureType?.Name,
+                        InfrastructureTypeKey = plan.InfrastructureType?.Key,
+                        InfrastructureSector = plan.InfrastructureSector?.Name,
+                        InfrastructureSectorKey = plan.InfrastructureSector?.Key,
+                        Total = plan.Total
+                    }).ToList()
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetInfraDeliveryPlansByProjectIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTInfraDeliveryPlanDetailDto> GetInfraDeliveryPlanByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Infrastructure delivery plan ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                // Get the infrastructure delivery plan
+                var infraPlan = await _grtIntegrationService.GetInfraDeliveryPlanByIdAsync(id, cancellationToken);
+
+                if (infraPlan == null)
+                {
+                    return null;
+                }
+
+                // Get the years for this plan
+                var yearsResponse = await _grtIntegrationService.GetInfraDeliveryPlanYearsByPlanIdAsync(id, 1, 100, cancellationToken);
+
+                var result = new GRTInfraDeliveryPlanDetailDto
+                {
+                    Id = infraPlan.Id,
+                    ExternalReferenceCode = infraPlan.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(infraPlan.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                    DateModified = DateTime.TryParse(infraPlan.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+                    InfrastructureType = infraPlan.InfrastructureType?.Name,
+                    InfrastructureTypeKey = infraPlan.InfrastructureType?.Key,
+                    InfrastructureSector = infraPlan.InfrastructureSector?.Name,
+                    InfrastructureSectorKey = infraPlan.InfrastructureSector?.Key,
+                    Total = infraPlan.Total,
+                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
+                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC,
+                    Years = yearsResponse?.Items?.Select(year => new GRTInfraDeliveryPlanYearDto
+                    {
+                        Id = year.Id,
+                        ActualPlanned = year.ActualPlanned?.Name,
+                        ActualPlannedKey = year.ActualPlanned?.Key,
+                        Year = year.Year?.Name,
+                        YearKey = year.Year?.Key,
+                        Amount = year.Amount
+                    }).ToList() ?? new List<GRTInfraDeliveryPlanYearDto>()
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetInfraDeliveryPlanByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTInfraDeliveryPlanResponseDto> CreateInfraDeliveryPlanAsync(
+            GRTInfraDeliveryPlanDto infraDeliveryPlan,
+            CancellationToken cancellationToken = default)
+        {
+            if (infraDeliveryPlan == null)
+            {
+                throw new ArgumentNullException(nameof(infraDeliveryPlan), "Infrastructure delivery plan cannot be null");
+            }
+
+            try
+            {
+                // Create the infrastructure delivery plan
+                var request = new GRTInfraDeliveryPlanRequest
+                {
+
+                    InfrastructureType = !string.IsNullOrEmpty(infraDeliveryPlan.InfrastructureTypeKey)
+                        ? new GRTKeyValue { Key = infraDeliveryPlan.InfrastructureTypeKey.Replace(" ", "").Replace("-", ""), Name = infraDeliveryPlan.InfrastructureTypeKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    InfrastructureSector = !string.IsNullOrEmpty(infraDeliveryPlan.InfrastructureSectorKey)
+                        ? new GRTKeyValue { Key = infraDeliveryPlan.InfrastructureSectorKey.Replace(" ", "").Replace("-", ""), Name = infraDeliveryPlan.InfrastructureSectorKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
+                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.CreateInfraDeliveryPlanAsync(request, cancellationToken);
+
+                // Create year entries if provided
+                if (infraDeliveryPlan.Years != null && infraDeliveryPlan.Years.Any())
+                {
+                    foreach (var year in infraDeliveryPlan.Years)
+                    {
+                        var yearRequest = new GRTInfraDeliveryPlanYearRequest
+                        {
+                            ActualPlanned = !string.IsNullOrEmpty(year.ActualPlannedKey)
+                        ? new GRTKeyValue { Key = year.ActualPlannedKey.Replace(" ", "").Replace("-", ""), Name = year.ActualPlannedKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                            Year = !string.IsNullOrEmpty(year.YearKey)
+                        ? new GRTKeyValue { Key = year.YearKey.Replace(" ", "").Replace("-", ""), Name = year.YearKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+
+                            Amount = year.Amount,
+                            InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanId = response.Id,
+                            InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanERC = response.ExternalReferenceCode
+                        };
+
+                        await _grtIntegrationService.CreateInfraDeliveryPlanYearAsync(yearRequest, cancellationToken);
+                    }
+                }
+
+                return new GRTInfraDeliveryPlanResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Infrastructure delivery plan created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateInfraDeliveryPlanAsync: {ex.Message}");
+                return new GRTInfraDeliveryPlanResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating infrastructure delivery plan: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTInfraDeliveryPlanResponseDto> UpdateInfraDeliveryPlanAsync(
+            long id,
+            GRTInfraDeliveryPlanDto infraDeliveryPlan,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Infrastructure delivery plan ID must be greater than zero", nameof(id));
+            }
+
+            if (infraDeliveryPlan == null)
+            {
+                throw new ArgumentNullException(nameof(infraDeliveryPlan), "Infrastructure delivery plan cannot be null");
+            }
+
+            try
+            {
+                // Update the infrastructure delivery plan
+                var request = new GRTInfraDeliveryPlanRequest
+                {
+                    InfrastructureType = !string.IsNullOrEmpty(infraDeliveryPlan.InfrastructureTypeKey)
+                        ? new GRTKeyValue { Key = infraDeliveryPlan.InfrastructureTypeKey.Replace(" ", "").Replace("-", ""), Name = infraDeliveryPlan.InfrastructureTypeKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    InfrastructureSector = !string.IsNullOrEmpty(infraDeliveryPlan.InfrastructureSectorKey)
+                        ? new GRTKeyValue { Key = infraDeliveryPlan.InfrastructureSectorKey.Replace(" ", "").Replace("-", ""), Name = infraDeliveryPlan.InfrastructureSectorKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
+                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.UpdateInfraDeliveryPlanAsync(id, request, cancellationToken);
+
+                // Get existing years
+                var existingYears = await _grtIntegrationService.GetInfraDeliveryPlanYearsByPlanIdAsync(id, 1, 100, cancellationToken);
+
+                // Update or create year entries
+                if (infraDeliveryPlan.Years != null && infraDeliveryPlan.Years.Any())
+                {
+                    foreach (var year in infraDeliveryPlan.Years)
+                    {
+                        var yearRequest = new GRTInfraDeliveryPlanYearRequest
+                        {
+                            ActualPlanned = !string.IsNullOrEmpty(year.ActualPlannedKey)
+                        ? new GRTKeyValue { Key = year.ActualPlannedKey.Replace(" ", "").Replace("-", ""), Name = year.ActualPlannedKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                            Year = !string.IsNullOrEmpty(year.YearKey)
+                        ? new GRTKeyValue { Key = year.YearKey.Replace(" ", "").Replace("-", ""), Name = year.YearKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                            Amount = year.Amount,
+                            InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanId = id,
+                            InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanERC = response.ExternalReferenceCode
+                        };
+
+                        if (year.Id.HasValue && year.Id.Value > 0)
+                        {
+                            // Update existing year
+                            await _grtIntegrationService.UpdateInfraDeliveryPlanYearAsync(year.Id.Value, yearRequest, cancellationToken);
+                        }
+                        else
+                        {
+                            // Create new year
+                            await _grtIntegrationService.CreateInfraDeliveryPlanYearAsync(yearRequest, cancellationToken);
+                        }
+                    }
+                }
+
+                // Delete years that are no longer in the list
+                if (existingYears?.Items != null)
+                {
+                    var yearIdsToKeep = infraDeliveryPlan.Years?.Where(y => y.Id.HasValue).Select(y => y.Id.Value).ToList() ?? new List<long>();
+                    var yearsToDelete = existingYears.Items.Where(y => !yearIdsToKeep.Contains(y.Id)).ToList();
+
+                    foreach (var yearToDelete in yearsToDelete)
+                    {
+                        await _grtIntegrationService.DeleteInfraDeliveryPlanYearAsync(yearToDelete.Id, cancellationToken);
+                    }
+                }
+
+                return new GRTInfraDeliveryPlanResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Infrastructure delivery plan updated successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateInfraDeliveryPlanAsync: {ex.Message}");
+                return new GRTInfraDeliveryPlanResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating infrastructure delivery plan: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<bool> DeleteInfraDeliveryPlanAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Infrastructure delivery plan ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                // First, delete all associated years
+                var years = await _grtIntegrationService.GetInfraDeliveryPlanYearsByPlanIdAsync(id, 1, 100, cancellationToken);
+                if (years?.Items != null)
+                {
+                    foreach (var year in years.Items)
+                    {
+                        await _grtIntegrationService.DeleteInfraDeliveryPlanYearAsync(year.Id, cancellationToken);
+                    }
+                }
+
+                // Then delete the plan itself
+                return await _grtIntegrationService.DeleteInfraDeliveryPlanAsync(id, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.DeleteInfraDeliveryPlanAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTLandSalesPagedDto> GetLandSalesByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetLandSalesByProjectIdAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    cancellationToken);
+
+                if (response == null || response.Items == null)
+                {
+                    return new GRTLandSalesPagedDto
+                    {
+                        Items = new List<GRTLandSaleListDto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+
+                var result = new GRTLandSalesPagedDto
+                {
+                    Page = response.Page,
+                    PageSize = response.PageSize,
+                    TotalCount = response.TotalCount,
+                    LastPage = response.LastPage,
+                    Items = response.Items.Select(ls => new GRTLandSaleListDto
+                    {
+                        Id = ls.Id,
+                        PlotName = ls.PlotName,
+                        LandUse = ls.LandUse?.Name,
+                        LandType = ls.LandType?.Name,
+                        City = ls.City,
+                        Region = ls.Region?.Name
+                    }).ToList()
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetLandSalesByProjectIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTLandSaleDetailDto> GetLandSaleByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Land sale ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var response = await _grtIntegrationService.GetLandSaleByIdAsync(
+                    id,
+                    cancellationToken);
+
+                if (response == null)
+                {
+                    return null;
+                }
+
+                var result = new GRTLandSaleDetailDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+                    PlotName = response.PlotName,
+                    LandUse = response.LandUse?.Name,
+                    LandUseKey = response.LandUse?.Key,
+                    LandType = response.LandType?.Name,
+                    LandTypeKey = response.LandType?.Key,
+                    City = response.City,
+                    Region = response.Region?.Name,
+                    RegionKey = response.Region?.Key,
+                    RestrictedDevelopmentToSpecificCriteria = response.RestrictedDevelopmentToSpecificCriteria?.Name,
+                    RestrictedDevelopmentToSpecificCriteriaKey = response.RestrictedDevelopmentToSpecificCriteria?.Key,
+                    SaleLease = response.SaleLease?.Name,
+                    SaleLeaseKey = response.SaleLease?.Key,
+                    NumberOfPlots = response.NumberOfPlots,
+                    TotalLandArea = response.TotalLandArea,
+                    AvgSaleLeaseRate = response.AvgSaleLeaseRate,
+                    YearOfSaleLeaseStart = response.YearOfSaleLeaseStart?.Name,
+                    YearOfSaleLeaseStartKey = response.YearOfSaleLeaseStart?.Key,
+                    ValueOfInfrastructureAllocatedToLand = response.ValueOfInfrastructureAllocatedToLand,
+                    ProjectToLandSaleRelationshipProjectOverviewId = response.ProjectToLandSaleRelationshipProjectOverviewId,
+                    ProjectToLandSaleRelationshipProjectOverviewERC = response.ProjectToLandSaleRelationshipProjectOverviewERC
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetLandSaleByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTLandSaleResponseDto> CreateLandSaleAsync(
+            GRTLandSaleDto landSale,
+            CancellationToken cancellationToken = default)
+        {
+            if (landSale == null)
+            {
+                throw new ArgumentNullException(nameof(landSale), "Land sale cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTLandSaleRequest
+                {
+                    PlotName = landSale.PlotName,
+                    LandUse = !string.IsNullOrEmpty(landSale.LandUseKey)
+                        ? new GRTKeyValue { Key = landSale.LandUseKey.Replace(" ", "").Replace("-", ""), Name = landSale.LandUseKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    LandType = !string.IsNullOrEmpty(landSale.LandTypeKey)
+                        ? new GRTKeyValue { Key = landSale.LandTypeKey.Replace(" ", "").Replace("-", ""), Name = landSale.LandTypeKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    City = landSale.City,
+                    Region = !string.IsNullOrEmpty(landSale.RegionKey)
+                        ? new GRTKeyValue { Key = landSale.RegionKey.Replace(" ", "").Replace("-", ""), Name = landSale.RegionKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    RestrictedDevelopmentToSpecificCriteria = !string.IsNullOrEmpty(landSale.RestrictedDevelopmentToSpecificCriteriaKey)
+                        ? new GRTKeyValue { Key = landSale.RestrictedDevelopmentToSpecificCriteriaKey.Replace(" ", "").Replace("-", ""), Name = landSale.RestrictedDevelopmentToSpecificCriteriaKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    SaleLease = !string.IsNullOrEmpty(landSale.SaleLeaseKey)
+                        ? new GRTKeyValue { Key = landSale.SaleLeaseKey.Replace(" ", "").Replace("-", ""), Name = landSale.SaleLeaseKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    NumberOfPlots = landSale.NumberOfPlots,
+                    TotalLandArea = landSale.TotalLandArea,
+                    AvgSaleLeaseRate = landSale.AvgSaleLeaseRate,
+                    YearOfSaleLeaseStart = !string.IsNullOrEmpty(landSale.YearOfSaleLeaseStartKey)
+                        ? new GRTKeyValue { Key = landSale.YearOfSaleLeaseStartKey.Replace(" ", "").Replace("-", ""), Name = landSale.YearOfSaleLeaseStartKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    ValueOfInfrastructureAllocatedToLand = landSale.ValueOfInfrastructureAllocatedToLand,
+                    ProjectToLandSaleRelationshipProjectOverviewId = landSale.ProjectToLandSaleRelationshipProjectOverviewId,
+                    ProjectToLandSaleRelationshipProjectOverviewERC = landSale.ProjectToLandSaleRelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.CreateLandSaleAsync(request, cancellationToken);
+
+                return new GRTLandSaleResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Land sale created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateLandSaleAsync: {ex.Message}");
+                return new GRTLandSaleResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating land sale: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTLandSaleResponseDto> UpdateLandSaleAsync(
+            long id,
+            GRTLandSaleDto landSale,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Land sale ID must be greater than zero", nameof(id));
+            }
+
+            if (landSale == null)
+            {
+                throw new ArgumentNullException(nameof(landSale), "Land sale cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTLandSaleRequest
+                {
+                    PlotName = landSale.PlotName,
+                    LandUse = !string.IsNullOrEmpty(landSale.LandUseKey)
+                        ? new GRTKeyValue { Key = landSale.LandUseKey.Replace(" ", "").Replace("-", ""), Name = landSale.LandUseKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    LandType = !string.IsNullOrEmpty(landSale.LandTypeKey)
+                        ? new GRTKeyValue { Key = landSale.LandTypeKey.Replace(" ", "").Replace("-", ""), Name = landSale.LandTypeKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    City = landSale.City,
+                    Region = !string.IsNullOrEmpty(landSale.RegionKey)
+                        ? new GRTKeyValue { Key = landSale.RegionKey.Replace(" ", "").Replace("-", ""), Name = landSale.RegionKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    RestrictedDevelopmentToSpecificCriteria = !string.IsNullOrEmpty(landSale.RestrictedDevelopmentToSpecificCriteriaKey)
+                        ? new GRTKeyValue { Key = landSale.RestrictedDevelopmentToSpecificCriteriaKey.Replace(" ", "").Replace("-", ""), Name = landSale.RestrictedDevelopmentToSpecificCriteriaKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    SaleLease = !string.IsNullOrEmpty(landSale.SaleLeaseKey)
+                        ? new GRTKeyValue { Key = landSale.SaleLeaseKey.Replace(" ", "").Replace("-", ""), Name = landSale.SaleLeaseKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    NumberOfPlots = landSale.NumberOfPlots,
+                    TotalLandArea = landSale.TotalLandArea,
+                    AvgSaleLeaseRate = landSale.AvgSaleLeaseRate,
+                    YearOfSaleLeaseStart = !string.IsNullOrEmpty(landSale.YearOfSaleLeaseStartKey)
+                        ? new GRTKeyValue { Key = landSale.YearOfSaleLeaseStartKey.Replace(" ", "").Replace("-", ""), Name = landSale.YearOfSaleLeaseStartKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    ValueOfInfrastructureAllocatedToLand = landSale.ValueOfInfrastructureAllocatedToLand,
+                    ProjectToLandSaleRelationshipProjectOverviewId = landSale.ProjectToLandSaleRelationshipProjectOverviewId,
+                    ProjectToLandSaleRelationshipProjectOverviewERC = landSale.ProjectToLandSaleRelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.UpdateLandSaleAsync(id, request, cancellationToken);
+
+                return new GRTLandSaleResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Land sale updated successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateLandSaleAsync: {ex.Message}");
+                return new GRTLandSaleResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating land sale: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<bool> DeleteLandSaleAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Land sale ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                return await _grtIntegrationService.DeleteLandSaleAsync(id, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.DeleteLandSaleAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTCashflowsPagedDto> GetCashflowsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetCashflowsByProjectIdAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    cancellationToken);
+
+                if (response == null || response.Items == null)
+                {
+                    return new GRTCashflowsPagedDto
+                    {
+                        Items = new List<GRTCashflowDto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+
+                var result = new GRTCashflowsPagedDto
+                {
+                    Page = response.Page,
+                    PageSize = response.PageSize,
+                    TotalCount = response.TotalCount,
+                    LastPage = response.LastPage,
+                    Items = response.Items.Select(cashflow => new GRTCashflowDto
+                    {
+                        Id = cashflow.Id,
+                        ExternalReferenceCode = cashflow.ExternalReferenceCode,
+                        DateCreated = DateTime.TryParse(cashflow.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                        DateModified = DateTime.TryParse(cashflow.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+                        ProjectOverviewId = cashflow.ProjectToCashflowRelationshipProjectOverviewId,
+                        ProjectOverviewERC = cashflow.ProjectToCashflowRelationshipProjectOverviewERC,
+                        Summary = cashflow.Summary,
+                        Education = cashflow.Education,
+                        PrivateSector = cashflow.PrivateSector,
+                        LaborAndStaffAccommodation = cashflow.LaborAndStaffAccommodation,
+                        Office = cashflow.Office,
+                        SocialInfrastructure = cashflow.SocialInfrastructure,
+                        SourcesOfFunds = cashflow.SourcesOfFunds,
+                        ProjectLevelIRR = cashflow.ProjectLevelIRR,
+                        Retail = cashflow.Retail,
+                        Healthcare = cashflow.Healthcare,
+                        TransportLogisticIndustrial = cashflow.TransportLogisticIndustrial,
+                        GeneralInfrastructure = cashflow.GeneralInfrastructure,
+                        OtherAssetClasses = cashflow.OtherAssetClasses,
+                        Hospitality = cashflow.Hospitality,
+                        EntertainmentAndSport = cashflow.EntertainmentAndSport,
+                        UsesOfFunds = cashflow.UsesOfFunds,
+                        DevcoFinancials = cashflow.DevcoFinancials
+                    }).ToList()
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetCashflowsByProjectIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTCashflowDto> GetCashflowByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Cashflow ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var response = await _grtIntegrationService.GetCashflowByIdAsync(
+                    id,
+                    cancellationToken);
+
+                if (response == null)
+                {
+                    return null;
+                }
+
+                var result = new GRTCashflowDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+                    ProjectOverviewId = response.ProjectToCashflowRelationshipProjectOverviewId,
+                    ProjectOverviewERC = response.ProjectToCashflowRelationshipProjectOverviewERC,
+                    Summary = response.Summary,
+                    Education = response.Education,
+                    PrivateSector = response.PrivateSector,
+                    LaborAndStaffAccommodation = response.LaborAndStaffAccommodation,
+                    Office = response.Office,
+                    SocialInfrastructure = response.SocialInfrastructure,
+                    SourcesOfFunds = response.SourcesOfFunds,
+                    ProjectLevelIRR = response.ProjectLevelIRR,
+                    Retail = response.Retail,
+                    Healthcare = response.Healthcare,
+                    TransportLogisticIndustrial = response.TransportLogisticIndustrial,
+                    GeneralInfrastructure = response.GeneralInfrastructure,
+                    OtherAssetClasses = response.OtherAssetClasses,
+                    Hospitality = response.Hospitality,
+                    EntertainmentAndSport = response.EntertainmentAndSport,
+                    UsesOfFunds = response.UsesOfFunds,
+                    DevcoFinancials = response.DevcoFinancials
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetCashflowByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+        #region Budgets
+        public async Task<GRTBudgetsPagedDto> GetGRTBudgetsPagedAsync(long poid, int page = 1, int pageSize = 20, string search = null, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetGRTBudgetsPagedAsync(
+                  poid,
+                  page,
+                  pageSize,
+                  search,
+                  cancellationToken);
+
+                if (response != null)
+                {
+                    return new GRTBudgetsPagedDto
+                    {
+                        Items = response.Items.Select(budget => new GRTBudgetsSummaryDto
+                        {
+                            Id = budget.Id,
+                            StatusLabel = budget.Status.Label,
+                            Year = budget.Year.Key
+                        }).ToList(),
+                        LastPage = response.LastPage,
+                        Page = response.Page,
+                        PageSize = response.PageSize,
+                        TotalCount = response.TotalCount
+                    };
+                }
+                else
+                {
+                    return new GRTBudgetsPagedDto
+                    {
+                        Items = new List<GRTBudgetsSummaryDto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetGRTBudgetsPagedAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTBudgetsSummaryDto> GetBudgetByIdAsync(long id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetBudgetByIdAsync(id, cancellationToken);
+                if (response != null)
+                {
+                    return new GRTBudgetsSummaryDto
+                    {
+                       Id = response.Id,
+                       StatusLabel = response.Status.Label,
+                       Year = response.Year.Key
+                    };
+                }
+                else
+                {
+                    return new GRTBudgetsSummaryDto();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetBudgetByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+        #endregion
+    }
+}

@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ContactDoesNotExist" xml:space="preserve">
+    <value>المستخدم غير موجود</value>
+  </data>
+  <data name="InvalidAttributeName" xml:space="preserve">
+    <value>اسم السمة غير صالح</value>
+  </data>
+  <data name="InvalidAttributeType" xml:space="preserve">
+    <value>نوع السمة غير صالح</value>
+  </data>
+  <data name="InvalidEntityId" xml:space="preserve">
+    <value>معرف الكيان غير صالح</value>
+  </data>
+  <data name="InvalidEntityName" xml:space="preserve">
+    <value>اسم الكيان غير صالح</value>
+  </data>
+  <data name="InvalidContactIdValue" xml:space="preserve">
+    <value>لا يمكن أن يكون معرف جهة الاتصال خاليا أو مسافة بيضاء.</value>
+  </data>
+  <data name="InvalidMonthvalue" xml:space="preserve">
+    <value>يجب أن يكون الشهر رقما صحيحا بين 1 إلى 12.</value>
+  </data>
+  <data name="InvalidEmailDomainValue" xml:space="preserve">
+    <value>مجال البريد الإلكتروني غير متطابق مع مجال البريد الإلكتروني للشركة</value>
+  </data>
+  <data name="LinkExpired" xml:space="preserve">
+    <value>انتهت صلاحية رابط الدعوة. يرجى طلب رابط جديد من مسؤول الشركة والمحاولة مرة أخرى. إذا استمرت المشكلة، فاتصل بالدعم لحل هذه المشكلة.</value>
+  </data>
+  <data name="MsgUnexpectedError" xml:space="preserve">
+    <value>.حدث خطأ غير متوقع. الرجاء معاودة المحاولة في وقت لاحق</value>
+  </data>
+  <data name="NullArgument" xml:space="preserve">
+    <value>الحقل خالي</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>غير مصرح</value>
+  </data>
+  <data name="UsernameAndPasswordAreRequired" xml:space="preserve">
+    <value>اسم المستخدم وكلمة المرور مطلوبة</value>
+  </data>
+  <data name="EntityNameCannotNullOrWhitespace" xml:space="preserve">
+    <value>لا يمكن أن يكون اسم الكيان خاليًا أو مسافة بيضاء.</value>
+  </data>
+  <data name="CouldNotChangePassword" xml:space="preserve">
+    <value>لا يمكن تغيير كلمة المرور</value>
+  </data>
+  <data name="CouldNotFindOtp" xml:space="preserve">
+    <value>تعذر العثور على رمز المرور لمرة واحدة</value>
+  </data>
+  <data name="CouldNotUpdateProfileImage" xml:space="preserve">
+    <value>تعذر تحديث صورة الملف الشخصي</value>
+  </data>
+  <data name="CouldNotUpdateTutorial" xml:space="preserve">
+    <value>تعذر تحديث الحقل لإظهار دليل المستخدم</value>
+  </data>
+  <data name="EmailFieldCannotBeEmpty" xml:space="preserve">
+    <value>لا يمكن أن يكون حقل البريد الإلكتروني فارغًا</value>
+  </data>
+  <data name="EncryptedInvitationIdIsRequired" xml:space="preserve">
+    <value>مطلوب معرف الدعوة المشفرة</value>
+  </data>
+  <data name="ErrorFromAuthenticationLayer" xml:space="preserve">
+    <value>خطأ من طبقة المصادقة</value>
+  </data>
+  <data name="ErrorHappenedWhileTryingToCreateCredentials" xml:space="preserve">
+    <value>حدث خطأ أثناء محاولة إنشاء بيانات الاعتماد</value>
+  </data>
+  <data name="ErrorInCreatingUserCredentials" xml:space="preserve">
+    <value>خطأ في إنشاء بيانات اعتماد المستخدم</value>
+  </data>
+  <data name="InvalidCredentials" xml:space="preserve">
+    <value>بيانات الاعتماد غير صالحة</value>
+  </data>
+  <data name="InvalidInvitationLink" xml:space="preserve">
+    <value>رابط الدعوة غير صالح</value>
+  </data>
+  <data name="InvalidLoginAttempt" xml:space="preserve">
+    <value>محاولات تسجيل الدخول غير صالحة</value>
+  </data>
+  <data name="InvitationLinkHasExpired" xml:space="preserve">
+    <value>انتهت صلاحية رابط الدعوة</value>
+  </data>
+  <data name="LastVerifyAttemptForLogin" xml:space="preserve">
+    <value>لقد وصلت إلى الحد الأقصى لمحاولات تسجيل الدخول المسموح بها. إذا فشلت محاولة تسجيل الدخول هذه، فسيتم قفل حسابك.</value>
+  </data>
+  <data name="ModelCannotBeNull" xml:space="preserve">
+    <value>لا يمكن أن يكون النموذج فارغًا</value>
+  </data>
+  <data name="OtpDoesNotMatch" xml:space="preserve">
+    <value>رمز المرور لمرة واحدة غير متطابق</value>
+  </data>
+  <data name="PasswordDoesNotMatchRules" xml:space="preserve">
+    <value>كلمة المرور لا تتطابق مع القواعد</value>
+  </data>
+  <data name="ThisEmailIsNotValid" xml:space="preserve">
+    <value>هذا البريد الإلكتروني غير صالح</value>
+  </data>
+  <data name="UserCannotAccessPortal" xml:space="preserve">
+    <value>لا يمكن للمستخدم الوصول إلى البوابة</value>
+  </data>
+  <data name="UserDoesNotExist" xml:space="preserve">
+    <value>المستخدم غير موجود</value>
+  </data>
+  <data name="UserStatusLocked" xml:space="preserve">
+    <value>لقد تجاوزت الحد الأقصى لمحاولات تسجيل الدخول المسموح بها. يرجى إعادة تعيين كلمة المرور الخاصة بك للمتابعة.</value>
+  </data>
+  <data name="RequiredParameters" xml:space="preserve">
+    <value>الحقول مطلوبة او غير صحيحة</value>
+  </data>
+  <data name="TheValueForTheTypeCodeMustBeValidInteger" xml:space="preserve">
+    <value>يجب أن تكون قيمة رمز النوع عددًا صحيحًا صالحًا.</value>
+  </data>
+  <data name="ErrorHappenedWhileTryingToLogout" xml:space="preserve">
+    <value>حدث خطأ أثناء محاولة تسجيل الخروج</value>
+  </data>
+  <data name="TokenIsRequired" xml:space="preserve">
+    <value>مطلوب رمز وصول المستخدم</value>
+  </data>
+  <data name="InvalidCompanyIdValue" xml:space="preserve">
+    <value>لا يمكن أن يكون معرف الشركة خاليا أو مسافة بيضاء.</value>
+  </data>
+  <data name="InvalidFeedbackTypeValue" xml:space="preserve">
+    <value>نوع التعليقات غير صالح، يجب ان يكون إما الإبلاغ عن خطأ أو مشاركة التعليقات</value>
+  </data>
+  <data name="InvalidTypeofFeedbackValue" xml:space="preserve">
+    <value>نوع تعليق المشاركة غير صالح، يجب أن يكون إما شكوى أو اقتراح</value>
+  </data>
+  <data name="InvalidFileExtension" xml:space="preserve">
+    <value>ملحق الملف غير صالح</value>
+  </data>
+  <data name="ProvidedNumberAlreadyHasActiveContactRoleAssociation" xml:space="preserve">
+    <value>المستخدم لهذا الرقم يمتلك بالفعل صلاحية</value>
+  </data>
+  <data name="CouldNotUpdateRoleForContact" xml:space="preserve">
+    <value>لم يتمكن من تحديث الدور الخاص بالمستخدم</value>
+  </data>
+  <data name="UserShouldInvited" xml:space="preserve">
+    <value>يجب ان يتم دعوته قبل</value>
+  </data>
+  <data name="LastVerifyAttemptForOtp" xml:space="preserve">
+    <value>آخر محاولة للتحقق من رمز المرور لمرة واحده</value>
+  </data>
+  <data name="ErrorInDeletingContact" xml:space="preserve">
+    <value>خطأ في حذف جهة الاتصال</value>
+  </data>
+  <data name="InvalidInviteAction" xml:space="preserve">
+    <value>عملية الدعوة غير صالحة، يرجى التحقق من المعلومات.</value>
+  </data>
+  <data name="ErrorInDeletingContactNoExperience" xml:space="preserve">
+    <value>لا يمكن حذف هذا المستخدم، ليس هناك خبرات.</value>
+  </data>
+  <data name="CouldNotUpdateContact" xml:space="preserve">
+    <value>لم يتمكن من تحديث المستخدم</value>
+  </data>
+  <data name="AttachmentInformationShouldNotBeEmpty" xml:space="preserve">
+    <value>بيانات الملف لا يمكن ان تكون فارغة</value>
+  </data>
+  <data name="DocumentPathShouldNotBeEmpty" xml:space="preserve">
+    <value>لا يمكن أن يكون الملف فارغا</value>
+  </data>
+  <data name="OtpDoesntMatch" xml:space="preserve">
+    <value>رمز التحقق لمرة واحدة غير متطابق</value>
+  </data>
+  <data name="RegardingObjectShouldNotBeEmpty" xml:space="preserve">
+    <value>الكائن المحدد لا يمكن أن يكون فارغا</value>
+  </data>
+  <data name="RootFolderNotFound" xml:space="preserve">
+    <value>المجلد الرئيسي غير موجود</value>
+  </data>
+  <data name="TheItemAlreadyPinned" xml:space="preserve">
+    <value>العنصر بالفعل مثبت</value>
+  </data>
+  <data name="TheUserShouldBeAbleToPinUpToItems" xml:space="preserve">
+    <value>الحد الأقصى لتثبيت العناصر هو {0}</value>
+  </data>
+  <data name="UploadedFileTypeIsNotAllowed" xml:space="preserve">
+    <value>نوع الملف غير مسموح به</value>
+  </data>
+  <data name="IncorrectCurrentPassword" xml:space="preserve">
+    <value>كلمة الرور الحالية غير صحيحة</value>
+  </data>
+  <data name="RestrictProfileUpdate" xml:space="preserve">
+    <value>يجب ألا يتمكن المستخدم الذي قام بتسجيل الدخول من تحديث ملفه الشخصي</value>
+  </data>
+  <data name="UserUnauthorized" xml:space="preserve">
+    <value>غير مصرح لك باجراء هذه العملية</value>
+  </data>
+  <data name="UserHasNoDeletedAssociationsWithThisCompany" xml:space="preserve">
+    <value>لا يوجد لدى المستخدم أي ارتباطات محذوفة مع هذه الشركة</value>
+  </data>
+  <data name="UserReinvitedSuccessfully" xml:space="preserve">
+    <value>تمت إعادة دعوة المستخدم بنجاح</value>
+  </data>
+  <data name="CannotAccessThisRequest" xml:space="preserve">
+    <value>لا يمكن الوصول إلى هذا الطلب</value>
+  </data>
+  <data name="UnxpectedErrorOccured" xml:space="preserve">
+    <value>حدث خطأ غير متوقع {0}</value>
+  </data>
+  <data name="OtpLengthShouldNotBeLessThanOrEqualZero" xml:space="preserve">
+    <value>طول OTP غير صالح، يرجى الاتصال بمسؤول النظام</value>
+  </data>
+  <data name="UsedPasswordBefore" xml:space="preserve">
+    <value>لقد استخدمت بالفعل كلمة المرور هذه من قبل</value>
+  </data>
+  <data name="ContactLeadDuplicationDetected" xml:space="preserve">
+    <value>المستخدم موجود بالفعل بنفس جهة الاتصال وداخل نفس الشركة</value>
+  </data>
+  <data name="ContactMobilePhoneNumberAlreadyExistsInTheSystem" xml:space="preserve">
+    <value>رقم الهاتف لهذا المستخدم موجود مسبقا</value>
+  </data>
+  <data name="ContactRoleAssociationActivatingAlreadyExistErrorMessage" xml:space="preserve">
+    <value>هذه الصلاحية موجود بالفعل وتم تغير الحالة الي نشطة</value>
+  </data>
+  <data name="ContactRoleAssociationAlreadyExistErrorMessage" xml:space="preserve">
+    <value>هذه الصلاحية موجود بالفعل</value>
+  </data>
+  <data name="ContactRoleAssociationApproveAssociationRecordNotFound" xml:space="preserve">
+    <value>لم يتم العثور على سجل الموافقة المعلق</value>
+  </data>
+  <data name="ContactRoleAssociationInvlaidPortalRoleIDErrorMessage" xml:space="preserve">
+    <value>هذه الصلاحية غير صالحة</value>
+  </data>
+  <data name="ContactRoleAssociationUsedEmailAddress" xml:space="preserve">
+    <value>هذا البريد الالكتروني يمتلك بالفعل صلاحية</value>
+  </data>
+  <data name="InvalidEntityReferenceName" xml:space="preserve">
+    <value>لا يوجد كيان بهذا الاسم</value>
+  </data>
+  <data name="PortalInvitationActiveInvitationDuplication" xml:space="preserve">
+    <value>سجل دعوة المدخل النشط موجود بالفعل مع تفاصيل الاتصال والشركة</value>
+  </data>
+  <data name="ValidateContactLeadCreationProvidedNumberAlreadyHasContactRoleAssociation" xml:space="preserve">
+    <value>المستخدم لهذا الرقم يمتلك بالفعل صلاحية</value>
+  </data>
+  <data name="ValidateContactRoleAssociationInactivecontact" xml:space="preserve">
+    <value>هذا المستخدم غير نشط</value>
+  </data>
+  <data name="PasswordUserBefore" xml:space="preserve">
+    <value>كلمة المرور التي أدخلتها قد تم استخدامها سابقًا. يرجى اختيار كلمة مرور مختلفة</value>
+  </data>
+  <data name="RequiredParametersSearch" xml:space="preserve">
+    <value>لم يتم إدخال كلمات رئيسية للبحث</value>
+  </data>
+  <data name="ExceededMaxNumberOfUploadedFiles" xml:space="preserve">
+    <value>لقد تجاوزت الحد الأقصى لعدد الملفات التي تم تحميلها.</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>الملف غير يوجد</value>
+  </data>
+  <data name="TheItemIsNotPinned" xml:space="preserve">
+    <value>العنصر لم يتم تثبيته</value>
+  </data>
+  <data name="PortalRoleIsNotFilledOnTheRequestStep" xml:space="preserve">
+    <value>لم يتم ملء دور البوابة في خطوة الطلب</value>
+  </data>
+</root>
