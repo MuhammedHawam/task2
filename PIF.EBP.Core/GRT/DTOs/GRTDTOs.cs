@@ -1509,6 +1509,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("varianceBudgetByMonth")]
         public string VarianceBudgetByMonth { get; set; }
 
+        [JsonProperty("variance")]
+        public string Variance { get; set; }
+
         [JsonProperty("cashDepositsBudgetByMonth")]
         public string CashDepositsBudgetByMonth { get; set; }
 
@@ -1559,6 +1562,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("varianceBudgetByMonth")]
         public string VarianceBudgetByMonth { get; set; }
+
+        [JsonProperty("variance")]
+        public string Variance { get; set; }
 
         [JsonProperty("cashDepositsBudgetByMonth")]
         public string CashDepositsBudgetByMonth { get; set; }

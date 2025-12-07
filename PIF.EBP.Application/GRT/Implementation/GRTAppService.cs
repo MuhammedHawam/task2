@@ -1985,11 +1985,26 @@ namespace PIF.EBP.Application.GRT.Implementation
                 return null;
             }
 
+            var varianceMatrix = DeserializeVarianceMatrix(response.Variance);
+            var varianceBudgetMatrix = DeserializeBudgetMatrix(response.VarianceBudgetByMonth);
+
+            // Keep both shapes populated for maximum compatibility
+            if (varianceMatrix == null && varianceBudgetMatrix != null)
+            {
+                varianceMatrix = ConvertMatrixToVariance(varianceBudgetMatrix);
+            }
+
+            if (varianceBudgetMatrix == null && varianceMatrix != null)
+            {
+                varianceBudgetMatrix = ConvertVarianceToMatrix(varianceMatrix);
+            }
+
             var sections = new GRTBudgetSectionsDto
             {
                 ForecastSpendingBudgetByMonth = DeserializeBudgetMatrix(response.ForecastSpendingBudgetByMonth),
                 ActualSpendingBudgetByMonth = DeserializeBudgetMatrix(response.ActualSpendingBudgetByMonth),
-                VarianceBudgetByMonth = DeserializeBudgetMatrix(response.VarianceBudgetByMonth),
+                VarianceBudgetByMonth = varianceBudgetMatrix,
+                Variance = varianceMatrix,
                 CashDepositsBudgetByMonth = DeserializeBudgetMatrix(response.CashDepositsBudgetByMonth),
                 CommitmentsForecastBudgetByMonth = DeserializeBudgetMatrix(response.CommitmentsForecastBudgetByMonth),
                 CommitmentsActualBudgetByMonth = DeserializeBudgetMatrix(response.CommitmentsActualBudgetByMonth)
@@ -2025,6 +2040,7 @@ namespace PIF.EBP.Application.GRT.Implementation
             request.ForecastSpendingBudgetByMonth = SerializeBudgetMatrix(sections.ForecastSpendingBudgetByMonth);
             request.ActualSpendingBudgetByMonth = SerializeBudgetMatrix(sections.ActualSpendingBudgetByMonth);
             request.VarianceBudgetByMonth = SerializeBudgetMatrix(sections.VarianceBudgetByMonth);
+            request.Variance = SerializeVarianceMatrix(sections.Variance);
             request.CashDepositsBudgetByMonth = SerializeBudgetMatrix(sections.CashDepositsBudgetByMonth);
             request.CommitmentsForecastBudgetByMonth = SerializeBudgetMatrix(sections.CommitmentsForecastBudgetByMonth);
             request.CommitmentsActualBudgetByMonth = SerializeBudgetMatrix(sections.CommitmentsActualBudgetByMonth);
@@ -2075,6 +2091,118 @@ namespace PIF.EBP.Application.GRT.Implementation
             {
                 return null;
             }
+        }
+
+        private static string SerializeVarianceMatrix(BudgetVarianceMatrixDto matrix)
+        {
+            if (matrix == null || matrix.Columns == null || !matrix.Columns.Any())
+            {
+                return null;
+            }
+
+            var payload = new BudgetVarianceMatrixPayload
+            {
+                Columns = matrix.Columns,
+                Rows = matrix.Rows ?? new Dictionary<string, Dictionary<string, decimal?>>()
+            };
+
+            return JsonConvert.SerializeObject(payload, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Include,
+                Formatting = Formatting.None
+            });
+        }
+
+        private static BudgetVarianceMatrixDto DeserializeVarianceMatrix(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                var payload = JsonConvert.DeserializeObject<BudgetVarianceMatrixPayload>(json);
+                if (payload == null)
+                {
+                    return null;
+                }
+
+                return new BudgetVarianceMatrixDto
+                {
+                    Columns = payload.Columns,
+                    Rows = payload.Rows
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static BudgetVarianceMatrixDto ConvertMatrixToVariance(BudgetMatrixDto matrix)
+        {
+            if (matrix?.Columns == null || matrix.Rows == null)
+            {
+                return null;
+            }
+
+            var convertedRows = new Dictionary<string, Dictionary<string, decimal?>>();
+
+            foreach (var row in matrix.Rows)
+            {
+                var values = row.Value ?? new List<decimal?>();
+                var labeledValues = new Dictionary<string, decimal?>();
+
+                for (var i = 0; i < matrix.Columns.Count; i++)
+                {
+                    var column = matrix.Columns[i];
+                    var value = i < values.Count ? values[i] : null;
+                    labeledValues[column] = value;
+                }
+
+                convertedRows[row.Key] = labeledValues;
+            }
+
+            return new BudgetVarianceMatrixDto
+            {
+                Columns = matrix.Columns,
+                Rows = convertedRows
+            };
+        }
+
+        private static BudgetMatrixDto ConvertVarianceToMatrix(BudgetVarianceMatrixDto variance)
+        {
+            if (variance?.Columns == null || variance.Rows == null)
+            {
+                return null;
+            }
+
+            var convertedRows = new Dictionary<string, List<decimal?>>();
+
+            foreach (var row in variance.Rows)
+            {
+                var list = new List<decimal?>();
+                foreach (var column in variance.Columns)
+                {
+                    decimal? value = null;
+
+                    if (row.Value != null && row.Value.TryGetValue(column, out var cellValue))
+                    {
+                        value = cellValue;
+                    }
+
+                    list.Add(value);
+                }
+
+                convertedRows[row.Key] = list;
+            }
+
+            return new BudgetMatrixDto
+            {
+                Columns = variance.Columns,
+                Rows = convertedRows
+            };
         }
 
         private static GRTKeyValue BuildKeyValue(string key, string name)

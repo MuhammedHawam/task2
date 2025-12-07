@@ -43,9 +43,19 @@ namespace PIF.EBP.Application.GRT.DTOs
         public BudgetMatrixDto ForecastSpendingBudgetByMonth { get; set; }
         public BudgetMatrixDto ActualSpendingBudgetByMonth { get; set; }
         public BudgetMatrixDto VarianceBudgetByMonth { get; set; }
+        public BudgetVarianceMatrixDto Variance { get; set; }
         public BudgetMatrixDto CashDepositsBudgetByMonth { get; set; }
         public BudgetMatrixDto CommitmentsForecastBudgetByMonth { get; set; }
         public BudgetMatrixDto CommitmentsActualBudgetByMonth { get; set; }
+    }
+
+    /// <summary>
+    /// Matrix payload with labeled month data (used by variance endpoint).
+    /// </summary>
+    public class BudgetVarianceMatrixDto
+    {
+        public List<string> Columns { get; set; }
+        public Dictionary<string, Dictionary<string, decimal?>> Rows { get; set; }
     }
 
     /// <summary>
@@ -67,6 +77,15 @@ namespace PIF.EBP.Application.GRT.DTOs
 
         [JsonProperty("rows")]
         public Dictionary<string, List<decimal?>> Rows { get; set; }
+    }
+
+    internal class BudgetVarianceMatrixPayload
+    {
+        [JsonProperty("cols")]
+        public List<string> Columns { get; set; }
+
+        [JsonProperty("rows")]
+        public Dictionary<string, Dictionary<string, decimal?>> Rows { get; set; }
     }
 
     /// <summary>
