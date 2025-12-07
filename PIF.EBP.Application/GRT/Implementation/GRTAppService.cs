@@ -1743,13 +1743,22 @@ namespace PIF.EBP.Application.GRT.Implementation
 
                 if (response != null)
                 {
+                    var items = response.Items ?? new List<GRTBudgetResponse>();
                     return new GRTBudgetsPagedDto
                     {
-                        Items = response.Items.Select(budget => new GRTBudgetsSummaryDto
+                        Items = items.Select(budget => new GRTBudgetsSummaryDto
                         {
                             Id = budget.Id,
-                            StatusLabel = budget.Status.Label,
-                            Year = budget.Year.Key
+                            StatusLabel = budget.Status?.Label,
+                            StatusCode = budget.Status?.Code,
+                            Year = budget.BudgetYear?.Key ?? budget.BudgetYear?.Name,
+                            BudgetYearKey = budget.BudgetYear?.Key,
+                            BudgetYearName = budget.BudgetYear?.Name,
+                            ExternalReferenceCode = budget.ExternalReferenceCode,
+                            BudgetApprovalStatusKey = budget.BudgetApprovedByCompanyBoDOrItsDelegation?.Key,
+                            BudgetApprovalStatusName = budget.BudgetApprovedByCompanyBoDOrItsDelegation?.Name,
+                            ProjectOverviewId = budget.ProjectOverviewId,
+                            ProjectOverviewERC = budget.ProjectOverviewERC
                         }).ToList(),
                         LastPage = response.LastPage,
                         Page = response.Page,
@@ -1776,25 +1785,17 @@ namespace PIF.EBP.Application.GRT.Implementation
             }
         }
 
-        public async Task<GRTBudgetsSummaryDto> GetBudgetByIdAsync(long id, CancellationToken cancellationToken = default)
+        public async Task<GRTBudgetResponseDto> GetBudgetByIdAsync(long id, CancellationToken cancellationToken = default)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget ID must be greater than zero", nameof(id));
+            }
+
             try
             {
                 var response = await _grtIntegrationService.GetBudgetByIdAsync(id, cancellationToken);
-                if (response != null)
-                {
-                    return new GRTBudgetsSummaryDto
-                    {
-                       Id = response.Id,
-                       StatusLabel = response.Status.Label,
-                       Year = response.Year.Key
-                    };
-                }
-                else
-                {
-                    return new GRTBudgetsSummaryDto();
-                }
-
+                return MapBudgetResponse(response, "Budget retrieved successfully");
             }
             catch (Exception ex)
             {

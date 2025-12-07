@@ -7,8 +7,16 @@ namespace PIF.EBP.Application.GRT.DTOs
     public class GRTBudgetsSummaryDto
     {
         public long Id { get; set; }
-        public string Year { get; set; }         // From budgetYear.name 
+        public string Year { get; set; }         // Backwards-compatible year field
+        public string BudgetYearKey { get; set; }
+        public string BudgetYearName { get; set; }
         public string StatusLabel { get; set; }  // From status.label_i18n
+        public int? StatusCode { get; set; }
+        public string ExternalReferenceCode { get; set; }
+        public string BudgetApprovalStatusKey { get; set; }
+        public string BudgetApprovalStatusName { get; set; }
+        public long? ProjectOverviewId { get; set; }
+        public string ProjectOverviewERC { get; set; }
     }
 
     public class GRTBudgetsPagedDto

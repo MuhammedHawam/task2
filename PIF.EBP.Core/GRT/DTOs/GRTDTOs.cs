@@ -1461,7 +1461,7 @@ namespace PIF.EBP.Core.GRT
     public class GRTBudgetsResponse
     {
         [JsonProperty("items")]
-        public List<GRTBudgets> Items { get; set; }
+        public List<GRTBudgetResponse> Items { get; set; }
 
         [JsonProperty("page")]
         public int Page { get; set; }
@@ -1474,16 +1474,6 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
-    }
-
-    public class GRTBudgets
-    {
-        [JsonProperty("id")]
-        public long Id { get; set; }
-        [JsonProperty("budgetYear")]
-        public GRTKeyValue Year { get; set; }
-        [JsonProperty("status")]
-        public GRTStatus Status { get; set; }
     }
 
     public class GRTBudgetRequest

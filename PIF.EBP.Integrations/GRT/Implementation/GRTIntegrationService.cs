@@ -1298,7 +1298,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             }
             try
             {
-                var url = $"/o/c/grtbudgets?poid={poid}/?page={page}&pageSize={pageSize}";
+                var filter = $"r_projectToBudgetRelationship_c_grtProjectOverviewId eq '{poid}'";
+                var url = $"/o/c/grtbudgets?filter={Uri.EscapeDataString(filter)}&page={page}&pageSize={pageSize}";
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {
@@ -1320,7 +1321,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                         $"GRT API error getting budgets: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
                     return new GRTBudgetsResponse
                     {
-                        Items = new List<GRTBudgets>(),
+                        Items = new List<GRTBudgetResponse>(),
                         Page = page,
                         PageSize = pageSize,
                         TotalCount = 0,
@@ -1335,7 +1336,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             }
         }
 
-        public async Task<GRTBudgets> GetBudgetByIdAsync(long id, CancellationToken cancellationToken = default)
+        public async Task<GRTBudgetResponse> GetBudgetByIdAsync(long id, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -1345,7 +1346,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<GRTBudgets>(responseContent);
+                    var result = JsonConvert.DeserializeObject<GRTBudgetResponse>(responseContent);
                     return result;
                 }
                 else
@@ -1353,7 +1354,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                     var errorContent = await response.Content.ReadAsStringAsync();
                     System.Diagnostics.Trace.TraceError(
                         $"GRT API error getting budget by id: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
-                    return new GRTBudgets();
+                    return null;
                 }
             }
             catch (Exception ex)

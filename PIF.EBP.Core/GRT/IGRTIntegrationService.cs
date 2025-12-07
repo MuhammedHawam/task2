@@ -326,7 +326,7 @@ namespace PIF.EBP.Core.GRT
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<GRTBudgets> GetBudgetByIdAsync(long id, CancellationToken cancellationToken = default);
+        Task<GRTBudgetResponse> GetBudgetByIdAsync(long id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create a new budget record in GRT.
