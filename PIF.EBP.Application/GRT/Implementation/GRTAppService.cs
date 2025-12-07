@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using PIF.EBP.Application.GRT.DTOs;
 using PIF.EBP.Core.GRT;
 using System;
@@ -1800,6 +1801,470 @@ namespace PIF.EBP.Application.GRT.Implementation
                 System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetBudgetByIdAsync: {ex.Message}");
                 throw;
             }
+        }
+
+        public async Task<GRTBudgetResponseDto> CreateBudgetAsync(GRTBudgetCreateDto budget, CancellationToken cancellationToken = default)
+        {
+            ValidateBudgetPayload(budget);
+
+            try
+            {
+                var request = BuildBudgetRequest(budget);
+                var response = await _grtIntegrationService.CreateBudgetAsync(request, cancellationToken);
+                var result = MapBudgetResponse(response, "Budget created successfully");
+
+                return result ?? new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = "Budget creation returned no data"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateBudgetAsync: {ex.Message}");
+                return new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating budget: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTBudgetResponseDto> UpdateBudgetAsync(long id, GRTBudgetCreateDto budget, CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget ID must be greater than zero", nameof(id));
+            }
+
+            ValidateBudgetPayload(budget);
+
+            try
+            {
+                var request = BuildBudgetRequest(budget);
+                var response = await _grtIntegrationService.UpdateBudgetAsync(id, request, cancellationToken);
+                var result = MapBudgetResponse(response, "Budget updated successfully");
+
+                return result ?? new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = "Budget update returned no data"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateBudgetAsync: {ex.Message}");
+                return new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating budget: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<bool> DeleteBudgetAsync(long id, CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                return await _grtIntegrationService.DeleteBudgetAsync(id, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.DeleteBudgetAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTBudgetResponseDto> UpdateBudgetSectionsAsync(
+            string externalReferenceCode,
+            GRTBudgetSectionsDto sections,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(externalReferenceCode))
+            {
+                throw new ArgumentNullException(nameof(externalReferenceCode), "External reference code cannot be null or empty");
+            }
+
+            if (sections == null)
+            {
+                throw new ArgumentNullException(nameof(sections), "Budget sections cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTBudgetRequest();
+                ApplyBudgetSectionsDtoToRequest(sections, request);
+
+                var response = await _grtIntegrationService.PatchBudgetByExternalReferenceAsync(
+                    externalReferenceCode,
+                    request,
+                    cancellationToken);
+
+                var result = MapBudgetResponse(response, "Budget sections updated successfully");
+
+                return result ?? new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = "Budget sections update returned no data"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateBudgetSectionsAsync: {ex.Message}");
+                return new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating budget sections: {ex.Message}"
+                };
+            }
+        }
+
+        private static void ValidateBudgetPayload(GRTBudgetCreateDto budget)
+        {
+            if (budget == null)
+            {
+                throw new ArgumentNullException(nameof(budget), "Budget data cannot be null");
+            }
+
+            if (string.IsNullOrWhiteSpace(budget.BudgetYearKey))
+            {
+                throw new ArgumentException("Budget year key is required", nameof(budget.BudgetYearKey));
+            }
+
+            if (string.IsNullOrWhiteSpace(budget.BudgetApprovalStatusKey))
+            {
+                throw new ArgumentException("Budget approval status key is required", nameof(budget.BudgetApprovalStatusKey));
+            }
+
+            if (!budget.ProjectOverviewId.HasValue && string.IsNullOrWhiteSpace(budget.ProjectOverviewERC))
+            {
+                throw new ArgumentException("Either ProjectOverviewId or ProjectOverviewERC must be provided", nameof(budget.ProjectOverviewId));
+            }
+        }
+
+        private static GRTBudgetResponseDto MapBudgetResponse(GRTBudgetResponse response, string successMessage = null)
+        {
+            if (response == null)
+            {
+                return null;
+            }
+
+            return new GRTBudgetResponseDto
+            {
+                Id = response.Id,
+                ExternalReferenceCode = response.ExternalReferenceCode,
+                DateCreated = ParseNullableDate(response.DateCreated),
+                DateModified = ParseNullableDate(response.DateModified),
+                BudgetYearKey = response.BudgetYear?.Key,
+                BudgetYearName = response.BudgetYear?.Name,
+                BudgetApprovalStatusKey = response.BudgetApprovedByCompanyBoDOrItsDelegation?.Key,
+                BudgetApprovalStatusName = response.BudgetApprovedByCompanyBoDOrItsDelegation?.Name,
+                StatusLabel = response.Status?.Label,
+                ProjectOverviewId = response.ProjectOverviewId,
+                ProjectOverviewERC = response.ProjectOverviewERC,
+                Sections = MapSectionsFromResponse(response),
+                Success = true,
+                Message = successMessage
+            };
+        }
+
+        private static DateTime? ParseNullableDate(string value)
+        {
+            return DateTime.TryParse(value, out var parsed) ? parsed : (DateTime?)null;
+        }
+
+        private static GRTBudgetSectionsDto MapSectionsFromResponse(GRTBudgetResponse response)
+        {
+            if (response == null)
+            {
+                return null;
+            }
+
+            var varianceMatrix = DeserializeVarianceMatrix(response.Variance);
+            var varianceBudgetMatrix = DeserializeBudgetMatrix(response.VarianceBudgetByMonth);
+            var cashDepositsMatrix = DeserializeBudgetMatrix(response.CashDeposits);
+            var cashDepositsBudgetMatrix = DeserializeBudgetMatrix(response.CashDepositsBudgetByMonth);
+            var commitmentsMatrix = DeserializeBudgetMatrix(response.Commitments);
+            var commitmentsForecastMatrix = DeserializeBudgetMatrix(response.CommitmentsForecastBudgetByMonth);
+            var commitmentActualMatrix = DeserializeBudgetMatrix(response.CommitmentActual);
+            var commitmentsActualBudgetMatrix = DeserializeBudgetMatrix(response.CommitmentsActualBudgetByMonth);
+
+            // Keep both shapes populated for maximum compatibility
+            if (varianceMatrix == null && varianceBudgetMatrix != null)
+            {
+                varianceMatrix = ConvertMatrixToVariance(varianceBudgetMatrix);
+            }
+
+            if (varianceBudgetMatrix == null && varianceMatrix != null)
+            {
+                varianceBudgetMatrix = ConvertVarianceToMatrix(varianceMatrix);
+            }
+
+            if (cashDepositsMatrix == null)
+            {
+                cashDepositsMatrix = cashDepositsBudgetMatrix;
+            }
+
+            if (cashDepositsBudgetMatrix == null)
+            {
+                cashDepositsBudgetMatrix = cashDepositsMatrix;
+            }
+
+            if (commitmentsMatrix == null)
+            {
+                commitmentsMatrix = commitmentsForecastMatrix;
+            }
+
+            if (commitmentsForecastMatrix == null)
+            {
+                commitmentsForecastMatrix = commitmentsMatrix;
+            }
+
+            if (commitmentActualMatrix == null)
+            {
+                commitmentActualMatrix = commitmentsActualBudgetMatrix;
+            }
+
+            if (commitmentsActualBudgetMatrix == null)
+            {
+                commitmentsActualBudgetMatrix = commitmentActualMatrix;
+            }
+
+            var sections = new GRTBudgetSectionsDto
+            {
+                ForecastSpendingBudgetByMonth = DeserializeBudgetMatrix(response.ForecastSpendingBudgetByMonth),
+                ActualSpendingBudgetByMonth = DeserializeBudgetMatrix(response.ActualSpendingBudgetByMonth),
+                VarianceBudgetByMonth = varianceBudgetMatrix,
+                Variance = varianceMatrix,
+                CashDepositsBudgetByMonth = cashDepositsBudgetMatrix,
+                CashDeposits = cashDepositsMatrix,
+                CommitmentsForecastBudgetByMonth = commitmentsForecastMatrix,
+                Commitments = commitmentsMatrix,
+                CommitmentsActualBudgetByMonth = commitmentsActualBudgetMatrix,
+                CommitmentActual = commitmentActualMatrix
+            };
+
+            return sections;
+        }
+
+        private static GRTBudgetRequest BuildBudgetRequest(GRTBudgetCreateDto budget)
+        {
+            var request = new GRTBudgetRequest
+            {
+                BudgetYear = BuildKeyValue(budget.BudgetYearKey, budget.BudgetYearName),
+                BudgetApprovedByCompanyBoDOrItsDelegation = BuildKeyValue(
+                    budget.BudgetApprovalStatusKey,
+                    budget.BudgetApprovalStatusName),
+                ProjectOverviewId = budget.ProjectOverviewId,
+                ProjectOverviewERC = budget.ProjectOverviewERC
+            };
+
+            ApplyBudgetSectionsDtoToRequest(budget.Sections, request);
+
+            return request;
+        }
+
+        private static void ApplyBudgetSectionsDtoToRequest(GRTBudgetSectionsDto sections, GRTBudgetRequest request)
+        {
+            if (sections == null || request == null)
+            {
+                return;
+            }
+
+            request.ForecastSpendingBudgetByMonth = SerializeBudgetMatrix(sections.ForecastSpendingBudgetByMonth);
+            request.ActualSpendingBudgetByMonth = SerializeBudgetMatrix(sections.ActualSpendingBudgetByMonth);
+            request.VarianceBudgetByMonth = SerializeBudgetMatrix(sections.VarianceBudgetByMonth);
+            request.Variance = SerializeVarianceMatrix(sections.Variance);
+            var cashDepositsBudget = sections.CashDepositsBudgetByMonth ?? sections.CashDeposits;
+            var cashDeposits = sections.CashDeposits ?? sections.CashDepositsBudgetByMonth;
+            request.CashDepositsBudgetByMonth = SerializeBudgetMatrix(cashDepositsBudget);
+            request.CashDeposits = SerializeBudgetMatrix(cashDeposits);
+            var commitmentsForecast = sections.CommitmentsForecastBudgetByMonth ?? sections.Commitments;
+            var commitments = sections.Commitments ?? sections.CommitmentsForecastBudgetByMonth;
+            request.CommitmentsForecastBudgetByMonth = SerializeBudgetMatrix(commitmentsForecast);
+            request.Commitments = SerializeBudgetMatrix(commitments);
+            var commitmentsActualBudget = sections.CommitmentsActualBudgetByMonth ?? sections.CommitmentActual;
+            var commitmentActual = sections.CommitmentActual ?? sections.CommitmentsActualBudgetByMonth;
+            request.CommitmentsActualBudgetByMonth = SerializeBudgetMatrix(commitmentsActualBudget);
+            request.CommitmentActual = SerializeBudgetMatrix(commitmentActual);
+        }
+
+        private static string SerializeBudgetMatrix(BudgetMatrixDto matrix)
+        {
+            if (matrix == null || matrix.Columns == null || !matrix.Columns.Any())
+            {
+                return null;
+            }
+
+            var payload = new BudgetMatrixPayload
+            {
+                Columns = matrix.Columns,
+                Rows = matrix.Rows ?? new Dictionary<string, List<decimal?>>()
+            };
+
+            return JsonConvert.SerializeObject(payload, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Include,
+                Formatting = Formatting.None
+            });
+        }
+
+        private static BudgetMatrixDto DeserializeBudgetMatrix(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                var payload = JsonConvert.DeserializeObject<BudgetMatrixPayload>(json);
+                if (payload == null)
+                {
+                    return null;
+                }
+
+                return new BudgetMatrixDto
+                {
+                    Columns = payload.Columns,
+                    Rows = payload.Rows
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static string SerializeVarianceMatrix(BudgetVarianceMatrixDto matrix)
+        {
+            if (matrix == null || matrix.Columns == null || !matrix.Columns.Any())
+            {
+                return null;
+            }
+
+            var payload = new BudgetVarianceMatrixPayload
+            {
+                Columns = matrix.Columns,
+                Rows = matrix.Rows ?? new Dictionary<string, Dictionary<string, decimal?>>()
+            };
+
+            return JsonConvert.SerializeObject(payload, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Include,
+                Formatting = Formatting.None
+            });
+        }
+
+        private static BudgetVarianceMatrixDto DeserializeVarianceMatrix(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                var payload = JsonConvert.DeserializeObject<BudgetVarianceMatrixPayload>(json);
+                if (payload == null)
+                {
+                    return null;
+                }
+
+                return new BudgetVarianceMatrixDto
+                {
+                    Columns = payload.Columns,
+                    Rows = payload.Rows
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static BudgetVarianceMatrixDto ConvertMatrixToVariance(BudgetMatrixDto matrix)
+        {
+            if (matrix?.Columns == null || matrix.Rows == null)
+            {
+                return null;
+            }
+
+            var convertedRows = new Dictionary<string, Dictionary<string, decimal?>>();
+
+            foreach (var row in matrix.Rows)
+            {
+                var values = row.Value ?? new List<decimal?>();
+                var labeledValues = new Dictionary<string, decimal?>();
+
+                for (var i = 0; i < matrix.Columns.Count; i++)
+                {
+                    var column = matrix.Columns[i];
+                    var value = i < values.Count ? values[i] : null;
+                    labeledValues[column] = value;
+                }
+
+                convertedRows[row.Key] = labeledValues;
+            }
+
+            return new BudgetVarianceMatrixDto
+            {
+                Columns = matrix.Columns,
+                Rows = convertedRows
+            };
+        }
+
+        private static BudgetMatrixDto ConvertVarianceToMatrix(BudgetVarianceMatrixDto variance)
+        {
+            if (variance?.Columns == null || variance.Rows == null)
+            {
+                return null;
+            }
+
+            var convertedRows = new Dictionary<string, List<decimal?>>();
+
+            foreach (var row in variance.Rows)
+            {
+                var list = new List<decimal?>();
+                foreach (var column in variance.Columns)
+                {
+                    decimal? value = null;
+
+                    if (row.Value != null && row.Value.TryGetValue(column, out var cellValue))
+                    {
+                        value = cellValue;
+                    }
+
+                    list.Add(value);
+                }
+
+                convertedRows[row.Key] = list;
+            }
+
+            return new BudgetMatrixDto
+            {
+                Columns = variance.Columns,
+                Rows = convertedRows
+            };
+        }
+
+        private static GRTKeyValue BuildKeyValue(string key, string name)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return null;
+            }
+
+            return new GRTKeyValue
+            {
+                Key = key,
+                Name = string.IsNullOrWhiteSpace(name) ? key : name
+            };
         }
         #endregion
     }

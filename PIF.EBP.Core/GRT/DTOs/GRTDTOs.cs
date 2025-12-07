@@ -1485,5 +1485,113 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("status")]
         public GRTStatus Status { get; set; }
     }
+
+    public class GRTBudgetRequest
+    {
+        [JsonProperty("budgetYear")]
+        public GRTKeyValue BudgetYear { get; set; }
+
+        [JsonProperty("budgetApprovedByCompanyBoDOrItsDelegation")]
+        public GRTKeyValue BudgetApprovedByCompanyBoDOrItsDelegation { get; set; }
+
+        [JsonProperty("r_projectToBudgetRelationship_c_grtProjectOverviewId")]
+        public long? ProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToBudgetRelationship_c_grtProjectOverviewERC")]
+        public string ProjectOverviewERC { get; set; }
+
+        [JsonProperty("forecastSpendingBudgetByMonth")]
+        public string ForecastSpendingBudgetByMonth { get; set; }
+
+        [JsonProperty("actualSpendingBudgetByMonth")]
+        public string ActualSpendingBudgetByMonth { get; set; }
+
+        [JsonProperty("varianceBudgetByMonth")]
+        public string VarianceBudgetByMonth { get; set; }
+
+        [JsonProperty("variance")]
+        public string Variance { get; set; }
+
+        [JsonProperty("cashDepositsBudgetByMonth")]
+        public string CashDepositsBudgetByMonth { get; set; }
+
+        [JsonProperty("cashDeposits")]
+        public string CashDeposits { get; set; }
+
+        [JsonProperty("commitmentsForecastBudgetByMonth")]
+        public string CommitmentsForecastBudgetByMonth { get; set; }
+
+        [JsonProperty("commitments")]
+        public string Commitments { get; set; }
+
+        [JsonProperty("commitmentsActualBudgetByMonth")]
+        public string CommitmentsActualBudgetByMonth { get; set; }
+
+        [JsonProperty("commitmentActual")]
+        public string CommitmentActual { get; set; }
+    }
+
+    public class GRTBudgetResponse
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+
+        [JsonProperty("status")]
+        public GRTStatus Status { get; set; }
+
+        [JsonProperty("budgetYear")]
+        public GRTKeyValue BudgetYear { get; set; }
+
+        [JsonProperty("budgetApprovedByCompanyBoDOrItsDelegation")]
+        public GRTKeyValue BudgetApprovedByCompanyBoDOrItsDelegation { get; set; }
+
+        [JsonProperty("r_projectToBudgetRelationship_c_grtProjectOverviewId")]
+        public long? ProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToBudgetRelationship_c_grtProjectOverviewERC")]
+        public string ProjectOverviewERC { get; set; }
+
+        [JsonProperty("projectToBudgetRelationshipERC")]
+        public string ProjectToBudgetRelationshipERC { get; set; }
+
+        [JsonProperty("forecastSpendingBudgetByMonth")]
+        public string ForecastSpendingBudgetByMonth { get; set; }
+
+        [JsonProperty("actualSpendingBudgetByMonth")]
+        public string ActualSpendingBudgetByMonth { get; set; }
+
+        [JsonProperty("varianceBudgetByMonth")]
+        public string VarianceBudgetByMonth { get; set; }
+
+        [JsonProperty("variance")]
+        public string Variance { get; set; }
+
+        [JsonProperty("cashDepositsBudgetByMonth")]
+        public string CashDepositsBudgetByMonth { get; set; }
+
+        [JsonProperty("cashDeposits")]
+        public string CashDeposits { get; set; }
+
+        [JsonProperty("commitmentsForecastBudgetByMonth")]
+        public string CommitmentsForecastBudgetByMonth { get; set; }
+
+        [JsonProperty("commitments")]
+        public string Commitments { get; set; }
+
+        [JsonProperty("commitmentsActualBudgetByMonth")]
+        public string CommitmentsActualBudgetByMonth { get; set; }
+
+        [JsonProperty("commitmentActual")]
+        public string CommitmentActual { get; set; }
+    }
     #endregion
 }

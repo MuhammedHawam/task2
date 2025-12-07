@@ -1,4 +1,5 @@
 using PIF.EBP.Application.GRT;
+using PIF.EBP.Application.GRT.DTOs;
 using PIF.EBP.Core.DependencyInjection;
 using PIF.EBP.WebAPI.Middleware.ActionFilter;
 using System;
@@ -819,6 +820,134 @@ namespace PIF.EBP.WebAPI.Controllers
                 }
 
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("budget")]
+        public async Task<IHttpActionResult> CreateBudget([FromBody] GRTBudgetCreateDto budget)
+        {
+            if (budget == null)
+            {
+                return BadRequest("Budget data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.CreateBudgetAsync(budget);
+
+                if (result?.Success == true)
+                {
+                    return Ok(result);
+                }
+
+                return BadRequest(result?.Message ?? "Failed to create budget");
+            }
+            catch (ArgumentException argEx)
+            {
+                return BadRequest(argEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPut]
+        [Route("budget/{id}")]
+        public async Task<IHttpActionResult> UpdateBudget(long id, [FromBody] GRTBudgetCreateDto budget)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Budget ID must be greater than zero");
+            }
+
+            if (budget == null)
+            {
+                return BadRequest("Budget data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.UpdateBudgetAsync(id, budget);
+
+                if (result?.Success == true)
+                {
+                    return Ok(result);
+                }
+
+                return BadRequest(result?.Message ?? "Failed to update budget");
+            }
+            catch (ArgumentException argEx)
+            {
+                return BadRequest(argEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpDelete]
+        [Route("budget/{id}")]
+        public async Task<IHttpActionResult> DeleteBudget(long id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Budget ID must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtAppService.DeleteBudgetAsync(id);
+
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Budget deleted successfully" });
+                }
+
+                return BadRequest("Failed to delete budget");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [AcceptVerbs("PATCH")]
+        [Route("budget/{externalReferenceCode}/sections")]
+        public async Task<IHttpActionResult> UpdateBudgetSections(
+            string externalReferenceCode,
+            [FromBody] GRTBudgetSectionsDto sections)
+        {
+            if (string.IsNullOrWhiteSpace(externalReferenceCode))
+            {
+                return BadRequest("External reference code is required");
+            }
+
+            if (sections == null)
+            {
+                return BadRequest("Budget sections data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.UpdateBudgetSectionsAsync(externalReferenceCode, sections);
+
+                if (result?.Success == true)
+                {
+                    return Ok(result);
+                }
+
+                return BadRequest(result?.Message ?? "Failed to update budget sections");
+            }
+            catch (ArgumentException argEx)
+            {
+                return BadRequest(argEx.Message);
             }
             catch (Exception ex)
             {

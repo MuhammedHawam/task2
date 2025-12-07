@@ -1339,8 +1339,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
         {
             try
             {
-                var url = $"o/c/grtbudgets/{id}";
-                var response = await _httpClient.GetAsync(url);
+                var url = $"/o/c/grtbudgets/{id}";
+                var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -1359,6 +1359,167 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError($"GRT API exception getting budget by id: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTBudgetResponse> CreateBudgetAsync(GRTBudgetRequest request, CancellationToken cancellationToken = default)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request), "Budget request cannot be null");
+            }
+
+            try
+            {
+                var url = "/o/c/grtbudgets/";
+
+                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.None
+                });
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(url, content, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<GRTBudgetResponse>(responseContent);
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Trace.TraceError(
+                    $"GRT API error creating budget: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                throw new Exception($"Failed to create budget: {response.StatusCode} - {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception creating budget: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTBudgetResponse> UpdateBudgetAsync(long id, GRTBudgetRequest request, CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget ID must be greater than zero", nameof(id));
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request), "Budget request cannot be null");
+            }
+
+            try
+            {
+                var url = $"/o/c/grtbudgets/{id}";
+
+                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.None
+                });
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(url, content, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<GRTBudgetResponse>(responseContent);
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Trace.TraceError(
+                    $"GRT API error updating budget: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                throw new Exception($"Failed to update budget: {response.StatusCode} - {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception updating budget: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteBudgetAsync(long id, CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var url = $"/o/c/grtbudgets/{id}";
+                var response = await _httpClient.DeleteAsync(url, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Trace.TraceError(
+                    $"GRT API error deleting budget: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception deleting budget: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTBudgetResponse> PatchBudgetByExternalReferenceAsync(
+            string externalReferenceCode,
+            GRTBudgetRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(externalReferenceCode))
+            {
+                throw new ArgumentNullException(nameof(externalReferenceCode), "External reference code cannot be null or empty");
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request), "Budget request cannot be null");
+            }
+
+            try
+            {
+                var url = $"/o/c/grtbudgets/by-external-reference-code/{externalReferenceCode}";
+
+                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.None
+                });
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var httpRequest = new HttpRequestMessage(new HttpMethod("PATCH"), url)
+                {
+                    Content = content
+                };
+
+                var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<GRTBudgetResponse>(responseContent);
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Trace.TraceError(
+                    $"GRT API error patching budget: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                throw new Exception($"Failed to patch budget: {response.StatusCode} - {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception patching budget: {ex.Message}");
                 throw;
             }
         }
