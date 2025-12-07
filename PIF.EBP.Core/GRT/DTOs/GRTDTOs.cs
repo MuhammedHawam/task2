@@ -1515,6 +1515,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("cashDepositsBudgetByMonth")]
         public string CashDepositsBudgetByMonth { get; set; }
 
+        [JsonProperty("cashDeposits")]
+        public string CashDeposits { get; set; }
+
         [JsonProperty("commitmentsForecastBudgetByMonth")]
         public string CommitmentsForecastBudgetByMonth { get; set; }
 
@@ -1568,6 +1571,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("cashDepositsBudgetByMonth")]
         public string CashDepositsBudgetByMonth { get; set; }
+
+        [JsonProperty("cashDeposits")]
+        public string CashDeposits { get; set; }
 
         [JsonProperty("commitmentsForecastBudgetByMonth")]
         public string CommitmentsForecastBudgetByMonth { get; set; }
