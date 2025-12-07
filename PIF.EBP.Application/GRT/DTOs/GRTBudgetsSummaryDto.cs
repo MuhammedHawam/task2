@@ -47,6 +47,7 @@ namespace PIF.EBP.Application.GRT.DTOs
         public BudgetMatrixDto CashDepositsBudgetByMonth { get; set; }
         public BudgetMatrixDto CashDeposits { get; set; }
         public BudgetMatrixDto CommitmentsForecastBudgetByMonth { get; set; }
+        public BudgetMatrixDto Commitments { get; set; }
         public BudgetMatrixDto CommitmentsActualBudgetByMonth { get; set; }
     }
 

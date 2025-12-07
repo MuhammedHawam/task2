@@ -1989,6 +1989,8 @@ namespace PIF.EBP.Application.GRT.Implementation
             var varianceBudgetMatrix = DeserializeBudgetMatrix(response.VarianceBudgetByMonth);
             var cashDepositsMatrix = DeserializeBudgetMatrix(response.CashDeposits);
             var cashDepositsBudgetMatrix = DeserializeBudgetMatrix(response.CashDepositsBudgetByMonth);
+            var commitmentsMatrix = DeserializeBudgetMatrix(response.Commitments);
+            var commitmentsForecastMatrix = DeserializeBudgetMatrix(response.CommitmentsForecastBudgetByMonth);
 
             // Keep both shapes populated for maximum compatibility
             if (varianceMatrix == null && varianceBudgetMatrix != null)
@@ -2011,6 +2013,16 @@ namespace PIF.EBP.Application.GRT.Implementation
                 cashDepositsBudgetMatrix = cashDepositsMatrix;
             }
 
+            if (commitmentsMatrix == null)
+            {
+                commitmentsMatrix = commitmentsForecastMatrix;
+            }
+
+            if (commitmentsForecastMatrix == null)
+            {
+                commitmentsForecastMatrix = commitmentsMatrix;
+            }
+
             var sections = new GRTBudgetSectionsDto
             {
                 ForecastSpendingBudgetByMonth = DeserializeBudgetMatrix(response.ForecastSpendingBudgetByMonth),
@@ -2019,7 +2031,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                 Variance = varianceMatrix,
                 CashDepositsBudgetByMonth = cashDepositsBudgetMatrix,
                 CashDeposits = cashDepositsMatrix,
-                CommitmentsForecastBudgetByMonth = DeserializeBudgetMatrix(response.CommitmentsForecastBudgetByMonth),
+                CommitmentsForecastBudgetByMonth = commitmentsForecastMatrix,
+                Commitments = commitmentsMatrix,
                 CommitmentsActualBudgetByMonth = DeserializeBudgetMatrix(response.CommitmentsActualBudgetByMonth)
             };
 
@@ -2058,7 +2071,10 @@ namespace PIF.EBP.Application.GRT.Implementation
             var cashDeposits = sections.CashDeposits ?? sections.CashDepositsBudgetByMonth;
             request.CashDepositsBudgetByMonth = SerializeBudgetMatrix(cashDepositsBudget);
             request.CashDeposits = SerializeBudgetMatrix(cashDeposits);
-            request.CommitmentsForecastBudgetByMonth = SerializeBudgetMatrix(sections.CommitmentsForecastBudgetByMonth);
+            var commitmentsForecast = sections.CommitmentsForecastBudgetByMonth ?? sections.Commitments;
+            var commitments = sections.Commitments ?? sections.CommitmentsForecastBudgetByMonth;
+            request.CommitmentsForecastBudgetByMonth = SerializeBudgetMatrix(commitmentsForecast);
+            request.Commitments = SerializeBudgetMatrix(commitments);
             request.CommitmentsActualBudgetByMonth = SerializeBudgetMatrix(sections.CommitmentsActualBudgetByMonth);
         }
 
