@@ -1808,6 +1808,13 @@ namespace PIF.EBP.Application.GRT.Implementation
         {
             ValidateBudgetPayload(budget);
 
+            if (!budget.ProjectOverviewId.HasValue || budget.ProjectOverviewId <= 0)
+            {
+                throw new ArgumentException(
+                    "ProjectOverviewId must be provided when creating a budget",
+                    nameof(budget.ProjectOverviewId));
+            }
+
             try
             {
                 var request = BuildBudgetRequest(budget);
