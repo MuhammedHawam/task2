@@ -836,6 +836,11 @@ namespace PIF.EBP.WebAPI.Controllers
                 return BadRequest("Budget data is required");
             }
 
+            if (!budget.ProjectOverviewId.HasValue || budget.ProjectOverviewId <= 0)
+            {
+                return BadRequest("ProjectOverviewId is required when creating a budget");
+            }
+
             try
             {
                 var result = await _grtAppService.CreateBudgetAsync(budget);
