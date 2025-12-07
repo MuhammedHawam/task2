@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using PIF.EBP.Application.GRT.DTOs;
 using PIF.EBP.Core.GRT;
 using System;
@@ -1800,6 +1801,294 @@ namespace PIF.EBP.Application.GRT.Implementation
                 System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetBudgetByIdAsync: {ex.Message}");
                 throw;
             }
+        }
+
+        public async Task<GRTBudgetResponseDto> CreateBudgetAsync(GRTBudgetCreateDto budget, CancellationToken cancellationToken = default)
+        {
+            ValidateBudgetPayload(budget);
+
+            try
+            {
+                var request = BuildBudgetRequest(budget);
+                var response = await _grtIntegrationService.CreateBudgetAsync(request, cancellationToken);
+                var result = MapBudgetResponse(response, "Budget created successfully");
+
+                return result ?? new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = "Budget creation returned no data"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateBudgetAsync: {ex.Message}");
+                return new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating budget: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTBudgetResponseDto> UpdateBudgetAsync(long id, GRTBudgetCreateDto budget, CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget ID must be greater than zero", nameof(id));
+            }
+
+            ValidateBudgetPayload(budget);
+
+            try
+            {
+                var request = BuildBudgetRequest(budget);
+                var response = await _grtIntegrationService.UpdateBudgetAsync(id, request, cancellationToken);
+                var result = MapBudgetResponse(response, "Budget updated successfully");
+
+                return result ?? new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = "Budget update returned no data"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateBudgetAsync: {ex.Message}");
+                return new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating budget: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<bool> DeleteBudgetAsync(long id, CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                return await _grtIntegrationService.DeleteBudgetAsync(id, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.DeleteBudgetAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTBudgetResponseDto> UpdateBudgetSectionsAsync(
+            string externalReferenceCode,
+            GRTBudgetSectionsDto sections,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(externalReferenceCode))
+            {
+                throw new ArgumentNullException(nameof(externalReferenceCode), "External reference code cannot be null or empty");
+            }
+
+            if (sections == null)
+            {
+                throw new ArgumentNullException(nameof(sections), "Budget sections cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTBudgetRequest();
+                ApplyBudgetSectionsDtoToRequest(sections, request);
+
+                var response = await _grtIntegrationService.PatchBudgetByExternalReferenceAsync(
+                    externalReferenceCode,
+                    request,
+                    cancellationToken);
+
+                var result = MapBudgetResponse(response, "Budget sections updated successfully");
+
+                return result ?? new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = "Budget sections update returned no data"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateBudgetSectionsAsync: {ex.Message}");
+                return new GRTBudgetResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating budget sections: {ex.Message}"
+                };
+            }
+        }
+
+        private static void ValidateBudgetPayload(GRTBudgetCreateDto budget)
+        {
+            if (budget == null)
+            {
+                throw new ArgumentNullException(nameof(budget), "Budget data cannot be null");
+            }
+
+            if (string.IsNullOrWhiteSpace(budget.BudgetYearKey))
+            {
+                throw new ArgumentException("Budget year key is required", nameof(budget.BudgetYearKey));
+            }
+
+            if (string.IsNullOrWhiteSpace(budget.BudgetApprovalStatusKey))
+            {
+                throw new ArgumentException("Budget approval status key is required", nameof(budget.BudgetApprovalStatusKey));
+            }
+
+            if (!budget.ProjectOverviewId.HasValue && string.IsNullOrWhiteSpace(budget.ProjectOverviewERC))
+            {
+                throw new ArgumentException("Either ProjectOverviewId or ProjectOverviewERC must be provided", nameof(budget.ProjectOverviewId));
+            }
+        }
+
+        private static GRTBudgetResponseDto MapBudgetResponse(GRTBudgetResponse response, string successMessage = null)
+        {
+            if (response == null)
+            {
+                return null;
+            }
+
+            return new GRTBudgetResponseDto
+            {
+                Id = response.Id,
+                ExternalReferenceCode = response.ExternalReferenceCode,
+                DateCreated = ParseNullableDate(response.DateCreated),
+                DateModified = ParseNullableDate(response.DateModified),
+                BudgetYearKey = response.BudgetYear?.Key,
+                BudgetYearName = response.BudgetYear?.Name,
+                BudgetApprovalStatusKey = response.BudgetApprovedByCompanyBoDOrItsDelegation?.Key,
+                BudgetApprovalStatusName = response.BudgetApprovedByCompanyBoDOrItsDelegation?.Name,
+                StatusLabel = response.Status?.Label,
+                ProjectOverviewId = response.ProjectOverviewId,
+                ProjectOverviewERC = response.ProjectOverviewERC,
+                Sections = MapSectionsFromResponse(response),
+                Success = true,
+                Message = successMessage
+            };
+        }
+
+        private static DateTime? ParseNullableDate(string value)
+        {
+            return DateTime.TryParse(value, out var parsed) ? parsed : (DateTime?)null;
+        }
+
+        private static GRTBudgetSectionsDto MapSectionsFromResponse(GRTBudgetResponse response)
+        {
+            if (response == null)
+            {
+                return null;
+            }
+
+            var sections = new GRTBudgetSectionsDto
+            {
+                ForecastSpendingBudgetByMonth = DeserializeBudgetMatrix(response.ForecastSpendingBudgetByMonth),
+                ActualSpendingBudgetByMonth = DeserializeBudgetMatrix(response.ActualSpendingBudgetByMonth),
+                VarianceBudgetByMonth = DeserializeBudgetMatrix(response.VarianceBudgetByMonth),
+                CashDepositsBudgetByMonth = DeserializeBudgetMatrix(response.CashDepositsBudgetByMonth),
+                CommitmentsForecastBudgetByMonth = DeserializeBudgetMatrix(response.CommitmentsForecastBudgetByMonth),
+                CommitmentsActualBudgetByMonth = DeserializeBudgetMatrix(response.CommitmentsActualBudgetByMonth)
+            };
+
+            return sections;
+        }
+
+        private static GRTBudgetRequest BuildBudgetRequest(GRTBudgetCreateDto budget)
+        {
+            var request = new GRTBudgetRequest
+            {
+                BudgetYear = BuildKeyValue(budget.BudgetYearKey, budget.BudgetYearName),
+                BudgetApprovedByCompanyBoDOrItsDelegation = BuildKeyValue(
+                    budget.BudgetApprovalStatusKey,
+                    budget.BudgetApprovalStatusName),
+                ProjectOverviewId = budget.ProjectOverviewId,
+                ProjectOverviewERC = budget.ProjectOverviewERC
+            };
+
+            ApplyBudgetSectionsDtoToRequest(budget.Sections, request);
+
+            return request;
+        }
+
+        private static void ApplyBudgetSectionsDtoToRequest(GRTBudgetSectionsDto sections, GRTBudgetRequest request)
+        {
+            if (sections == null || request == null)
+            {
+                return;
+            }
+
+            request.ForecastSpendingBudgetByMonth = SerializeBudgetMatrix(sections.ForecastSpendingBudgetByMonth);
+            request.ActualSpendingBudgetByMonth = SerializeBudgetMatrix(sections.ActualSpendingBudgetByMonth);
+            request.VarianceBudgetByMonth = SerializeBudgetMatrix(sections.VarianceBudgetByMonth);
+            request.CashDepositsBudgetByMonth = SerializeBudgetMatrix(sections.CashDepositsBudgetByMonth);
+            request.CommitmentsForecastBudgetByMonth = SerializeBudgetMatrix(sections.CommitmentsForecastBudgetByMonth);
+            request.CommitmentsActualBudgetByMonth = SerializeBudgetMatrix(sections.CommitmentsActualBudgetByMonth);
+        }
+
+        private static string SerializeBudgetMatrix(BudgetMatrixDto matrix)
+        {
+            if (matrix == null || matrix.Columns == null || !matrix.Columns.Any())
+            {
+                return null;
+            }
+
+            var payload = new BudgetMatrixPayload
+            {
+                Columns = matrix.Columns,
+                Rows = matrix.Rows ?? new Dictionary<string, List<decimal?>>()
+            };
+
+            return JsonConvert.SerializeObject(payload, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Include,
+                Formatting = Formatting.None
+            });
+        }
+
+        private static BudgetMatrixDto DeserializeBudgetMatrix(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                var payload = JsonConvert.DeserializeObject<BudgetMatrixPayload>(json);
+                if (payload == null)
+                {
+                    return null;
+                }
+
+                return new BudgetMatrixDto
+                {
+                    Columns = payload.Columns,
+                    Rows = payload.Rows
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static GRTKeyValue BuildKeyValue(string key, string name)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return null;
+            }
+
+            return new GRTKeyValue
+            {
+                Key = key,
+                Name = string.IsNullOrWhiteSpace(name) ? key : name
+            };
         }
         #endregion
     }

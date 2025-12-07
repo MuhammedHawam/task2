@@ -327,5 +327,35 @@ namespace PIF.EBP.Core.GRT
         /// <param name="id"></param>
         /// <returns></returns>
         Task<GRTBudgets> GetBudgetByIdAsync(long id, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Create a new budget record in GRT.
+        /// </summary>
+        Task<GRTBudgetResponse> CreateBudgetAsync(
+            GRTBudgetRequest request,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update an existing budget record in GRT.
+        /// </summary>
+        Task<GRTBudgetResponse> UpdateBudgetAsync(
+            long id,
+            GRTBudgetRequest request,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Delete budget by id.
+        /// </summary>
+        Task<bool> DeleteBudgetAsync(
+            long id,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Patch budget data (by external reference code) for large matrix sections.
+        /// </summary>
+        Task<GRTBudgetResponse> PatchBudgetByExternalReferenceAsync(
+            string externalReferenceCode,
+            GRTBudgetRequest request,
+            CancellationToken cancellationToken = default);
     }
 }
