@@ -1526,6 +1526,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("commitmentsActualBudgetByMonth")]
         public string CommitmentsActualBudgetByMonth { get; set; }
+
+        [JsonProperty("commitmentActual")]
+        public string CommitmentActual { get; set; }
     }
 
     public class GRTBudgetResponse
@@ -1586,6 +1589,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("commitmentsActualBudgetByMonth")]
         public string CommitmentsActualBudgetByMonth { get; set; }
+
+        [JsonProperty("commitmentActual")]
+        public string CommitmentActual { get; set; }
     }
     #endregion
 }

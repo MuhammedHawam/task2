@@ -49,6 +49,7 @@ namespace PIF.EBP.Application.GRT.DTOs
         public BudgetMatrixDto CommitmentsForecastBudgetByMonth { get; set; }
         public BudgetMatrixDto Commitments { get; set; }
         public BudgetMatrixDto CommitmentsActualBudgetByMonth { get; set; }
+        public BudgetMatrixDto CommitmentActual { get; set; }
     }
 
     /// <summary>
