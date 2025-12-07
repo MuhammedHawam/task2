@@ -1445,16 +1445,16 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             }
         }
 
-        public async Task<bool> DeleteBudgetAsync(long id, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteBudgetAsync(long budgetId, CancellationToken cancellationToken = default)
         {
-            if (id <= 0)
+            if (budgetId <= 0)
             {
-                throw new ArgumentException("Budget ID must be greater than zero", nameof(id));
+                throw new ArgumentException("Budget ID must be greater than zero", nameof(budgetId));
             }
 
             try
             {
-                var url = $"/o/c/grtbudgets/{id}";
+                var url = $"/o/c/grtbudgets/{budgetId}";
                 var response = await _httpClient.DeleteAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)

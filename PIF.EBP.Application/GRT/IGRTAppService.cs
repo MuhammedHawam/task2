@@ -306,7 +306,7 @@ namespace PIF.EBP.Application.GRT
         /// Delete budget by id.
         /// </summary>
         Task<bool> DeleteBudgetAsync(
-            long id,
+            long budgetId,
             CancellationToken cancellationToken = default);
 
         /// <summary>
