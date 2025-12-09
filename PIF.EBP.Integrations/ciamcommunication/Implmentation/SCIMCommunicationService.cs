@@ -2,6 +2,7 @@
 using PIF.EBP.Core.CIAMCommunication;
 using PIF.EBP.Core.CIAMCommunication.DTOs;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
@@ -14,6 +15,8 @@ namespace PIF.EBP.Integrations.CIAMCommunication.Implmentation
     {
         private readonly ScimOptions _options;
         private readonly HttpClient _client;
+        private string _accessToken;
+        private DateTime _tokenExpiry;
 
         public SCIMCommunicationService()
         {
@@ -119,9 +122,75 @@ namespace PIF.EBP.Integrations.CIAMCommunication.Implmentation
             return await SendScimListRequestAsync(relativeUrl).ConfigureAwait(false);
         }
 
+        public async Task<ScimOperationResponse> ResendInvitationAsync(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException(nameof(userId));
+
+            var patchRequest = new ScimPatchRequest
+            {
+                Schemas = new List<string> { "urn:ietf:params:scim:api:messages:2.0:PatchOp" },
+                Operations = new List<ScimPatchOperation>
+                {
+                    new ScimPatchOperation
+                    {
+                        Op = "add",
+                        Value = new Dictionary<string, object>
+                        {
+                            { "urn:scim:wso2:schema", new { forcePasswordReset = true } }
+                        }
+                    }
+                }
+            };
+
+            var url = $"Users/{WebUtility.UrlEncode(userId)}";
+            var patchMethod = new HttpMethod("PATCH");
+            return await SendScimRequestAsync(patchMethod, url, patchRequest).ConfigureAwait(false);
+        }
+
+        private async Task<string> GetAccessTokenAsync()
+        {
+            if (!string.IsNullOrEmpty(_accessToken) && DateTime.UtcNow < _tokenExpiry)
+            {
+                return _accessToken;
+            }
+
+            var tokenRequest = new Dictionary<string, string>
+            {
+                { "grant_type", "client_credentials" },
+                { "client_id", _options.ClientId },
+                { "client_secret", _options.ClientSecret },
+                { "scope", @"internal_oauth2_introspect internal_bulk_resource_create internal_group_mgt_view internal_group_mgt_create internal_group_mgt_update internal_user_mgt_create internal_user_mgt_list internal_user_mgt_update internal_user_mgt_view internal_user_code_mgt_create internal_user_code_mgt_update internal_user_code_mgt_view internal_user_code_mgt_delete internal_offline_invite" }
+            };
+
+            using (var tokenClient = new HttpClient())
+            {
+                var response = await tokenClient.PostAsync(
+                    _options.TokenUrl,
+                    new FormUrlEncodedContent(tokenRequest)).ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    throw new InvalidOperationException($"Failed to get access token: {error}");
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var tokenResponse = JsonConvert.DeserializeObject<OAuth2TokenResponse>(responseContent);
+
+                _accessToken = tokenResponse.AccessToken;
+                _tokenExpiry = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 60);
+
+                return _accessToken;
+            }
+        }
+
         private async Task<ScimOperationResponse> SendScimRequestAsync(HttpMethod method, string relativeUrl, object requestObject)
         {
-            AddAuthorizationHeader();
+            var token = await GetAccessTokenAsync().ConfigureAwait(false);
+
+            _client.DefaultRequestHeaders.Remove("Authorization");
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
             string payload = JsonConvert.SerializeObject(
                 requestObject,
@@ -171,7 +240,10 @@ namespace PIF.EBP.Integrations.CIAMCommunication.Implmentation
 
         private async Task<ScimListOperationResponse> SendScimListRequestAsync(string relativeUrl)
         {
-            AddAuthorizationHeader();
+            var token = await GetAccessTokenAsync().ConfigureAwait(false);
+
+            _client.DefaultRequestHeaders.Remove("Authorization");
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, relativeUrl);
             try
@@ -210,16 +282,16 @@ namespace PIF.EBP.Integrations.CIAMCommunication.Implmentation
             }
         }
 
-        private void AddAuthorizationHeader()
+        private class OAuth2TokenResponse
         {
-            string authHeader = System.Web.HttpContext.Current?.Request?.Headers["Authorization"];
-            _client.DefaultRequestHeaders.Remove("Authorization");
+            [JsonProperty("access_token")]
+            public string AccessToken { get; set; }
 
-            if (!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-                var token = authHeader.Substring("Bearer ".Length).Trim();
-                _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            }
+            [JsonProperty("expires_in")]
+            public int ExpiresIn { get; set; }
+
+            [JsonProperty("token_type")]
+            public string TokenType { get; set; }
         }
     }
 }

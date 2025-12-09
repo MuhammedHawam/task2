@@ -594,6 +594,7 @@ namespace PIF.EBP.Application.GRT.Implementation
         }
 
         public async Task<GRTDeliveryPlansPagedDto> GetDeliveryPlansPagedAsync(
+            long projectOverviewId,
             int page = 1,
             int pageSize = 20,
             string search = null,
@@ -602,6 +603,7 @@ namespace PIF.EBP.Application.GRT.Implementation
             try
             {
                 var response = await _grtIntegrationService.GetDeliveryPlansPagedAsync(
+                    projectOverviewId,
                     page,
                     pageSize,
                     search,
@@ -740,6 +742,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                     RevenueProceeds = response.RevenueProceeds,
                     UnleveredIRR = response.UnleveredIRR,
                     VerticalConstructionCostPerSqm = response.VerticalConstructionCostPerSqm,
+                    TotalDevelopmentCost = response.TotalDevelopmentCost,
+                    TotalDevelopmentCostPerSqm = response.TotalDevelopmentCostPerSqm,
                     
                     // ADDITIONAL NOTES
                     Comments = response.Comments,
@@ -871,6 +875,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                     RevenueProceeds = deliveryPlan.RevenueProceeds,
                     UnleveredIRR = deliveryPlan.UnleveredIRR,
                     VerticalConstructionCostPerSqm = deliveryPlan.VerticalConstructionCostPerSqm,
+                    TotalDevelopmentCost = deliveryPlan.TotalDevelopmentCost,
+                    TotalDevelopmentCostPerSqm = deliveryPlan.TotalDevelopmentCostPerSqm,
 
                     // ADDITIONAL NOTES
                     Comments = deliveryPlan.Comments,
@@ -1002,6 +1008,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                     RevenueProceeds = deliveryPlan.RevenueProceeds,
                     UnleveredIRR = deliveryPlan.UnleveredIRR,
                     VerticalConstructionCostPerSqm = deliveryPlan.VerticalConstructionCostPerSqm,
+                    TotalDevelopmentCost = deliveryPlan.TotalDevelopmentCost,
+                    TotalDevelopmentCostPerSqm = deliveryPlan.TotalDevelopmentCostPerSqm,
 
                     // ADDITIONAL NOTES
                     Comments = deliveryPlan.Comments,
@@ -1730,6 +1738,597 @@ namespace PIF.EBP.Application.GRT.Implementation
             }
         }
         #region Budgets
+
+        public async Task<GRTCashflowResponseDto> UpdateCashflowAsync(
+            long id,
+            GRTCashflowDto cashflow,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Cashflow ID must be greater than zero", nameof(id));
+            }
+
+            if (cashflow == null)
+            {
+                throw new ArgumentNullException(nameof(cashflow), "Cashflow cannot be null");
+            }
+
+            try
+            {
+                // Map application DTO to integration request DTO
+                var request = new GRTCashflowRequest
+                {
+                    ProjectToCashflowRelationshipProjectOverviewId = cashflow.ProjectOverviewId,
+                    ProjectToCashflowRelationshipProjectOverviewERC = cashflow.ProjectOverviewERC,
+                    Summary = cashflow.Summary,
+                    Education = cashflow.Education,
+                    PrivateSector = cashflow.PrivateSector,
+                    LaborAndStaffAccommodation = cashflow.LaborAndStaffAccommodation,
+                    Office = cashflow.Office,
+                    SocialInfrastructure = cashflow.SocialInfrastructure,
+                    SourcesOfFunds = cashflow.SourcesOfFunds,
+                    ProjectLevelIRR = cashflow.ProjectLevelIRR,
+                    Retail = cashflow.Retail,
+                    Healthcare = cashflow.Healthcare,
+                    TransportLogisticIndustrial = cashflow.TransportLogisticIndustrial,
+                    GeneralInfrastructure = cashflow.GeneralInfrastructure,
+                    OtherAssetClasses = cashflow.OtherAssetClasses,
+                    Hospitality = cashflow.Hospitality,
+                    EntertainmentAndSport = cashflow.EntertainmentAndSport,
+                    UsesOfFunds = cashflow.UsesOfFunds,
+                    DevcoFinancials = cashflow.DevcoFinancials
+                };
+
+                var response = await _grtIntegrationService.UpdateCashflowAsync(id, request, cancellationToken);
+
+                return new GRTCashflowResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Cashflow updated successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateCashflowAsync: {ex.Message}");
+                return new GRTCashflowResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating cashflow: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTLOIHMAsPagedDto> GetLOIHMAsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetLOIHMAsByProjectIdAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    cancellationToken);
+
+                if (response == null || response.Items == null)
+                {
+                    return new GRTLOIHMAsPagedDto
+                    {
+                        Items = new List<GRTLOIHMADto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+
+                var result = new GRTLOIHMAsPagedDto
+                {
+                    Page = response.Page,
+                    PageSize = response.PageSize,
+                    TotalCount = response.TotalCount,
+                    LastPage = response.LastPage,
+                    Items = response.Items.Select(loihma => new GRTLOIHMADto
+                    {
+                        Id = loihma.Id,
+                        ExternalReferenceCode = loihma.ExternalReferenceCode,
+                        DateCreated = DateTime.TryParse(loihma.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                        DateModified = DateTime.TryParse(loihma.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+                        ProjectOverviewId = loihma.ProjectToLOIHMARelationshipProjectOverviewId,
+                        ProjectOverviewERC = loihma.ProjectToLOIHMARelationshipProjectOverviewERC,
+                        AssetName = loihma.AssetName,
+                        Brand = loihma.Brand,
+                        City = loihma.City,
+                        HMASigned = loihma.HMASigned,
+                        HotelOperatorKey = loihma.HotelOperator?.Key,
+                        HotelOperatorName = loihma.HotelOperator?.Name,
+                        IfHMALOISignedContractDuration = loihma.IfHMALOISignedContractDuration,
+                        IfOtherHotelOperatorFillHere = loihma.IfOtherHotelOperatorFillHere,
+                        IfOtherOperatingModelFillHere = loihma.IfOtherOperatingModelFillHere,
+                        Item = loihma.Item,
+                        KeysPerHotel = loihma.KeysPerHotel,
+                        Latitude = loihma.Latitude,
+                        LOISigned = loihma.LOISigned,
+                        Longitude = loihma.Longitude,
+                        OperatingModelKey = loihma.OperatingModel?.Key,
+                        OperatingModelName = loihma.OperatingModel?.Name,
+                        OperatingModelNewKey = loihma.OperatingModelNew?.Key,
+                        OperatingModelNewName = loihma.OperatingModelNew?.Name,
+                        OperationalYear = loihma.OperationalYear,
+                        PositionscaleKey = loihma.Positionscale?.Key,
+                        PositionscaleName = loihma.Positionscale?.Name
+                    }).ToList()
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetLOIHMAsByProjectIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTLOIHMADto> GetLOIHMAByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("LOI & HMA ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var response = await _grtIntegrationService.GetLOIHMAByIdAsync(id, cancellationToken);
+
+                if (response == null)
+                {
+                    return null;
+                }
+
+                var result = new GRTLOIHMADto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+                    ProjectOverviewId = response.ProjectToLOIHMARelationshipProjectOverviewId,
+                    ProjectOverviewERC = response.ProjectToLOIHMARelationshipProjectOverviewERC,
+                    AssetName = response.AssetName,
+                    Brand = response.Brand,
+                    City = response.City,
+                    HMASigned = response.HMASigned,
+                    HotelOperatorKey = response.HotelOperator?.Key,
+                    HotelOperatorName = response.HotelOperator?.Name,
+                    IfHMALOISignedContractDuration = response.IfHMALOISignedContractDuration,
+                    IfOtherHotelOperatorFillHere = response.IfOtherHotelOperatorFillHere,
+                    IfOtherOperatingModelFillHere = response.IfOtherOperatingModelFillHere,
+                    Item = response.Item,
+                    KeysPerHotel = response.KeysPerHotel,
+                    Latitude = response.Latitude,
+                    LOISigned = response.LOISigned,
+                    Longitude = response.Longitude,
+                    OperatingModelKey = response.OperatingModel?.Key,
+                    OperatingModelName = response.OperatingModel?.Name,
+                    OperatingModelNewKey = response.OperatingModelNew?.Key,
+                    OperatingModelNewName = response.OperatingModelNew?.Name,
+                    OperationalYear = response.OperationalYear,
+                    PositionscaleKey = response.Positionscale?.Key,
+                    PositionscaleName = response.Positionscale?.Name
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetLOIHMAByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTLOIHMAResponseDto> CreateLOIHMAAsync(
+            GRTLOIHMADto loihma,
+            CancellationToken cancellationToken = default)
+        {
+            if (loihma == null)
+            {
+                throw new ArgumentNullException(nameof(loihma), "LOI & HMA cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTLOIHMARequest
+                {
+                    AssetName = loihma.AssetName,
+                    Brand = loihma.Brand,
+                    City = loihma.City,
+                    HMASigned = loihma.HMASigned,
+                    HotelOperator = !string.IsNullOrEmpty(loihma.HotelOperatorKey)
+                        ? new GRTKeyValue { Key = loihma.HotelOperatorKey.Replace(" ", "").Replace("-", ""), Name = loihma.HotelOperatorKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    IfHMALOISignedContractDuration = loihma.IfHMALOISignedContractDuration,
+                    IfOtherHotelOperatorFillHere = loihma.IfOtherHotelOperatorFillHere,
+                    IfOtherOperatingModelFillHere = loihma.IfOtherOperatingModelFillHere,
+                    Item = loihma.Item,
+                    KeysPerHotel = loihma.KeysPerHotel,
+                    Latitude = loihma.Latitude,
+                    LOISigned = loihma.LOISigned,
+                    Longitude = loihma.Longitude,
+                    OperatingModel = !string.IsNullOrEmpty(loihma.OperatingModelKey)
+                        ? new GRTKeyValue { Key = loihma.OperatingModelKey.Replace(" ", "").Replace("-", ""), Name = loihma.OperatingModelKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    OperatingModelNew = !string.IsNullOrEmpty(loihma.OperatingModelNewKey)
+                        ? new GRTKeyValue { Key = loihma.OperatingModelNewKey.Replace(" ", "").Replace("-", ""), Name = loihma.OperatingModelNewKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    OperationalYear = loihma.OperationalYear,
+                    Positionscale = !string.IsNullOrEmpty(loihma.PositionscaleKey)
+                        ? new GRTKeyValue { Key = loihma.PositionscaleKey.Replace(" ", "").Replace("-", ""), Name = loihma.PositionscaleKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    ProjectToLOIHMARelationshipProjectOverviewId = loihma.ProjectOverviewId,
+                    ProjectToLOIHMARelationshipProjectOverviewERC = loihma.ProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.CreateLOIHMAAsync(request, cancellationToken);
+
+                return new GRTLOIHMAResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "LOI & HMA created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateLOIHMAAsync: {ex.Message}");
+                return new GRTLOIHMAResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating LOI & HMA: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTLOIHMAResponseDto> UpdateLOIHMAAsync(
+            long projectOverviewId,
+            long id,
+            GRTLOIHMADto loihma,
+            CancellationToken cancellationToken = default)
+        {
+            if (projectOverviewId <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(projectOverviewId));
+            }
+
+            if (id <= 0)
+            {
+                throw new ArgumentException("LOI & HMA ID must be greater than zero", nameof(id));
+            }
+
+            if (loihma == null)
+            {
+                throw new ArgumentNullException(nameof(loihma), "LOI & HMA cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTLOIHMARequest
+                {
+                    AssetName = loihma.AssetName,
+                    Brand = loihma.Brand,
+                    City = loihma.City,
+                    HMASigned = loihma.HMASigned,
+
+                    HotelOperator = !string.IsNullOrEmpty(loihma.HotelOperatorKey)
+                        ? new GRTKeyValue { Key = loihma.HotelOperatorKey.Replace(" ", "").Replace("-", ""), Name = loihma.HotelOperatorKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    IfHMALOISignedContractDuration = loihma.IfHMALOISignedContractDuration,
+                    IfOtherHotelOperatorFillHere = loihma.IfOtherHotelOperatorFillHere,
+                    IfOtherOperatingModelFillHere = loihma.IfOtherOperatingModelFillHere,
+                    Item = loihma.Item,
+                    KeysPerHotel = loihma.KeysPerHotel,
+                    Latitude = loihma.Latitude,
+                    LOISigned = loihma.LOISigned,
+                    Longitude = loihma.Longitude,
+                    OperatingModel = !string.IsNullOrEmpty(loihma.OperatingModelKey)
+                        ? new GRTKeyValue { Key = loihma.OperatingModelKey.Replace(" ", "").Replace("-", ""), Name = loihma.OperatingModelKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+
+                    OperatingModelNew = !string.IsNullOrEmpty(loihma.OperatingModelNewKey)
+                        ? new GRTKeyValue { Key = loihma.OperatingModelNewKey.Replace(" ", "").Replace("-", ""), Name = loihma.OperatingModelNewKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+
+                    OperationalYear = loihma.OperationalYear,
+                    Positionscale = !string.IsNullOrEmpty(loihma.PositionscaleKey)
+                        ? new GRTKeyValue { Key = loihma.PositionscaleKey.Replace(" ", "").Replace("-", ""), Name = loihma.PositionscaleKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+
+                    ProjectToLOIHMARelationshipProjectOverviewId = loihma.ProjectOverviewId,
+                    ProjectToLOIHMARelationshipProjectOverviewERC = loihma.ProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.UpdateLOIHMAAsync(projectOverviewId, id, request, cancellationToken);
+
+                return new GRTLOIHMAResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "LOI & HMA updated successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateLOIHMAAsync: {ex.Message}");
+                return new GRTLOIHMAResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating LOI & HMA: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<bool> DeleteLOIHMAAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("LOI & HMA ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                return await _grtIntegrationService.DeleteLOIHMAAsync(id, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.DeleteLOIHMAAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTMultipleSandUsPagedDto> GetMultipleSandUsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetMultipleSandUsByProjectIdAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    cancellationToken);
+
+                if (response == null || response.Items == null)
+                {
+                    return new GRTMultipleSandUsPagedDto
+                    {
+                        Items = new List<GRTMultipleSandUListDto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+
+                var result = new GRTMultipleSandUsPagedDto
+                {
+                    Page = response.Page,
+                    PageSize = response.PageSize,
+                    TotalCount = response.TotalCount,
+                    LastPage = response.LastPage,
+                    Items = response.Items.Select(item => new GRTMultipleSandUListDto
+                    {
+                        Id = item.Id,
+                        ExternalReferenceCode = item.ExternalReferenceCode,
+                        Region = item.Regions?.Name,
+                        RegionKey = item.Regions?.Key,
+                        CapexTotal = ExtractTotalFromJson(item.CapexJSON),
+                        OpexTotal = ExtractTotalFromJson(item.OpexJSON),
+                        SourcesTotal = ExtractTotalFromJson(item.TotalSourcesJSON),
+                        FinancialsTotal = ExtractTotalFromJson(item.FinancialsSARJSON)
+                    }).ToList()
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetMultipleSandUsByProjectIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTMultipleSandUDetailDto> GetMultipleSandUByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Multiple S&U ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var response = await _grtIntegrationService.GetMultipleSandUByIdAsync(id, cancellationToken);
+
+                if (response == null)
+                {
+                    return null;
+                }
+
+                var result = new GRTMultipleSandUDetailDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+                    Region = response.Regions?.Name,
+                    RegionKey = response.Regions?.Key,
+                    CapexJSON = response.CapexJSON,
+                    OpexJSON = response.OpexJSON,
+                    TotalSourcesJSON = response.TotalSourcesJSON,
+                    FinancialsSARJSON = response.FinancialsSARJSON,
+                    ProjectToMultipleSandURelationshipProjectOverviewId = response.ProjectToMultipleSandURelationshipProjectOverviewId,
+                    ProjectToMultipleSandURelationshipProjectOverviewERC = response.ProjectToMultipleSandURelationshipProjectOverviewERC
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetMultipleSandUByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTMultipleSandUResponseDto> CreateMultipleSandUAsync(
+            GRTMultipleSandUDto multipleSandU,
+            CancellationToken cancellationToken = default)
+        {
+            if (multipleSandU == null)
+            {
+                throw new ArgumentNullException(nameof(multipleSandU), "Multiple S&U cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTMultipleSandURequest
+                {
+                    Regions = !string.IsNullOrEmpty(multipleSandU.RegionKey)
+                        ? new GRTKeyValue { Key = multipleSandU.RegionKey.Replace(" ", "").Replace("-", ""), Name = multipleSandU.RegionKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    CapexJSON = multipleSandU.CapexJSON,
+                    OpexJSON = multipleSandU.OpexJSON,
+                    TotalSourcesJSON = multipleSandU.TotalSourcesJSON,
+                    FinancialsSARJSON = multipleSandU.FinancialsSARJSON,
+                    ProjectToMultipleSandURelationshipProjectOverviewId = multipleSandU.ProjectToMultipleSandURelationshipProjectOverviewId,
+                    ProjectToMultipleSandURelationshipProjectOverviewERC = multipleSandU.ProjectToMultipleSandURelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.CreateMultipleSandUAsync(request, cancellationToken);
+
+                return new GRTMultipleSandUResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Multiple S&U created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateMultipleSandUAsync: {ex.Message}");
+                return new GRTMultipleSandUResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating Multiple S&U: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<GRTMultipleSandUResponseDto> UpdateMultipleSandUAsync(
+            long projectOverviewId,
+            long id,
+            GRTMultipleSandUDto multipleSandU,
+            CancellationToken cancellationToken = default)
+        {
+            if (projectOverviewId <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(projectOverviewId));
+            }
+
+            if (id <= 0)
+            {
+                throw new ArgumentException("Multiple S&U ID must be greater than zero", nameof(id));
+            }
+
+            if (multipleSandU == null)
+            {
+                throw new ArgumentNullException(nameof(multipleSandU), "Multiple S&U cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTMultipleSandURequest
+                {
+                    Regions = !string.IsNullOrEmpty(multipleSandU.RegionKey)
+                        ? new GRTKeyValue { Key = multipleSandU.RegionKey.Replace(" ", "").Replace("-", ""), Name = multipleSandU.RegionKey.Replace(" ", "").Replace("-", "") }
+                        : null,
+                    CapexJSON = multipleSandU.CapexJSON,
+                    OpexJSON = multipleSandU.OpexJSON,
+                    TotalSourcesJSON = multipleSandU.TotalSourcesJSON,
+                    FinancialsSARJSON = multipleSandU.FinancialsSARJSON,
+                    ProjectToMultipleSandURelationshipProjectOverviewId = multipleSandU.ProjectToMultipleSandURelationshipProjectOverviewId,
+                    ProjectToMultipleSandURelationshipProjectOverviewERC = multipleSandU.ProjectToMultipleSandURelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.UpdateMultipleSandUAsync(projectOverviewId, id, request, cancellationToken);
+
+                return new GRTMultipleSandUResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Multiple S&U updated successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateMultipleSandUAsync: {ex.Message}");
+                return new GRTMultipleSandUResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating Multiple S&U: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<bool> DeleteMultipleSandUAsync(
+            long projectOverviewId,
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (projectOverviewId <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(projectOverviewId));
+            }
+
+            if (id <= 0)
+            {
+                throw new ArgumentException("Multiple S&U ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                return await _grtIntegrationService.DeleteMultipleSandUAsync(projectOverviewId, id, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.DeleteMultipleSandUAsync: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task<GRTBudgetsPagedDto> GetGRTBudgetsPagedAsync(long poid, int page = 1, int pageSize = 20, string search = null, CancellationToken cancellationToken = default)
         {
             try
@@ -1807,7 +2406,12 @@ namespace PIF.EBP.Application.GRT.Implementation
         public async Task<GRTBudgetResponseDto> CreateBudgetAsync(GRTBudgetCreateDto budget, CancellationToken cancellationToken = default)
         {
             ValidateBudgetPayload(budget);
-
+            if (!budget.ProjectOverviewId.HasValue || budget.ProjectOverviewId <= 0)
+            {
+                throw new ArgumentException(
+                    "ProjectOverviewId must be provided when creating a budget",
+                    nameof(budget.ProjectOverviewId));
+            }
             try
             {
                 var request = BuildBudgetRequest(budget);
@@ -2267,6 +2871,214 @@ namespace PIF.EBP.Application.GRT.Implementation
                 Name = string.IsNullOrWhiteSpace(name) ? key : name
             };
         }
-        #endregion
+        #endregion           
+
+        /// <summary>
+        /// Helper method to extract total value from JSON string
+        /// </summary>
+        private double? ExtractTotalFromJson(string json)
+        {
+            if (string.IsNullOrEmpty(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                var data = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(json);
+                if (data?.rows != null)
+                {
+                    // Get the first row and its first value (Total)
+                    foreach (var row in data.rows)
+                    {
+                        var values = row.Value;
+                        if (values != null && values.Count > 0)
+                        {
+                            var firstValue = values[0];
+                            if (firstValue != null)
+                            {
+                                return (double?)firstValue;
+                            }
+                        }
+                        break; // Only check the first row
+                    }
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
+
+        public async Task<GRTProjectImpactDto> GetProjectImpactByIdAsync(
+                            long id,
+                            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Project impact ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var response = await _grtIntegrationService.GetProjectImpactByIdAsync(
+                    id,
+                    cancellationToken);
+
+                if (response == null)
+                {
+                    return null;
+                }
+
+                var result = new GRTProjectImpactDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+
+                    ProjectOverviewId = response.ProjectToProjectImpactRelationshipProjectOverviewId,
+                    ProjectOverviewERC = response.ProjectToProjectImpactRelationshipProjectOverviewERC,
+                    ProjectImpactRelationshipERC = response.ProjectToProjectImpactRelationshipERC,
+
+                    AveragePersonalDisposableIncome = response.AveragePersonalDisposableIncome,
+                    EntertainmentSpendHouseholdAnnumSAR = response.EntertainmentSpendHouseholdAnnumSAR,
+                    MacroeconomicImpactSection = response.MacroeconomicImpactSection,
+                    TotalDomesticOvernightVisits = response.TotalDomesticOvernightVisits,
+                    TotalHotelOvernightVisits = response.TotalHotelOvernightVisits,
+                    TotalInternationalOvernightVisits = response.TotalInternationalOvernightVisits,
+                    TotalNumberOfEmployees = response.TotalNumberOfEmployees,
+                    TotalNumberOfHospitalityStaffLabor = response.TotalNumberOfHospitalityStaffLabor,
+                    TotalPopulationOfTheProjectSection = response.TotalPopulationOfTheProjectSection
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetProjectImpactByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTProjectImpactResponseDto> UpdateProjectImpactAsync(
+            long id,
+            GRTProjectImpactDto projectImpact,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Project impact ID must be greater than zero", nameof(id));
+            }
+
+            if (projectImpact == null)
+            {
+                throw new ArgumentNullException(nameof(projectImpact), "Project impact cannot be null");
+            }
+
+            try
+            {
+                // Map application DTO to integration request DTO
+                var request = new GRTProjectImpactRequest
+                {
+                    ProjectToProjectImpactRelationshipProjectOverviewId = projectImpact.ProjectOverviewId,
+                    ProjectToProjectImpactRelationshipProjectOverviewERC = projectImpact.ProjectOverviewERC,
+                    ProjectToProjectImpactRelationshipERC = projectImpact.ProjectImpactRelationshipERC,
+
+                    AveragePersonalDisposableIncome = projectImpact.AveragePersonalDisposableIncome,
+                    EntertainmentSpendHouseholdAnnumSAR = projectImpact.EntertainmentSpendHouseholdAnnumSAR,
+                    MacroeconomicImpactSection = projectImpact.MacroeconomicImpactSection,
+                    TotalDomesticOvernightVisits = projectImpact.TotalDomesticOvernightVisits,
+                    TotalHotelOvernightVisits = projectImpact.TotalHotelOvernightVisits,
+                    TotalInternationalOvernightVisits = projectImpact.TotalInternationalOvernightVisits,
+                    TotalNumberOfEmployees = projectImpact.TotalNumberOfEmployees,
+                    TotalNumberOfHospitalityStaffLabor = projectImpact.TotalNumberOfHospitalityStaffLabor,
+                    TotalPopulationOfTheProjectSection = projectImpact.TotalPopulationOfTheProjectSection
+                };
+
+                var response = await _grtIntegrationService.UpdateProjectImpactAsync(
+                    id,
+                    request,
+                    cancellationToken);
+
+                return new GRTProjectImpactResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Project impact updated successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.UpdateProjectImpactAsync: {ex.Message}");
+                return new GRTProjectImpactResponseDto
+                {
+                    Success = false,
+                    Message = $"Error updating project impact: {ex.Message}"
+                };
+            }
+        }
+
+
+        public async Task<GRTProjectImpactResponseDto> CreateProjectImpactAsync(
+                          GRTProjectImpactDto projectImpact,
+                          CancellationToken cancellationToken = default)
+        {
+            if (projectImpact == null)
+            {
+                throw new ArgumentNullException(nameof(projectImpact), "Project impact cannot be null");
+            }
+
+            try
+            {
+                var request = new GRTProjectImpactRequest
+                {
+                    ProjectToProjectImpactRelationshipProjectOverviewId = projectImpact.ProjectOverviewId,
+                    ProjectToProjectImpactRelationshipProjectOverviewERC = projectImpact.ProjectOverviewERC,
+                    ProjectToProjectImpactRelationshipERC = projectImpact.ProjectImpactRelationshipERC,
+
+                    AveragePersonalDisposableIncome = projectImpact.AveragePersonalDisposableIncome,
+                    EntertainmentSpendHouseholdAnnumSAR = projectImpact.EntertainmentSpendHouseholdAnnumSAR,
+                    MacroeconomicImpactSection = projectImpact.MacroeconomicImpactSection,
+                    TotalDomesticOvernightVisits = projectImpact.TotalDomesticOvernightVisits,
+                    TotalHotelOvernightVisits = projectImpact.TotalHotelOvernightVisits,
+                    TotalInternationalOvernightVisits = projectImpact.TotalInternationalOvernightVisits,
+                    TotalNumberOfEmployees = projectImpact.TotalNumberOfEmployees,
+                    TotalNumberOfHospitalityStaffLabor = projectImpact.TotalNumberOfHospitalityStaffLabor,
+                    TotalPopulationOfTheProjectSection = projectImpact.TotalPopulationOfTheProjectSection
+                };
+
+                var response = await _grtIntegrationService.CreateProjectImpactAsync(
+                    request,
+                    cancellationToken);
+
+                return new GRTProjectImpactResponseDto
+                {
+                    Id = response.Id,
+                    ExternalReferenceCode = response.ExternalReferenceCode,
+                    DateCreated = DateTime.TryParse(response.DateCreated, out var dateCreated) ? dateCreated : DateTime.Now,
+                    DateModified = DateTime.TryParse(response.DateModified, out var dateModified) ? dateModified : DateTime.Now,
+                    Success = true,
+                    Message = "Project impact created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.CreateProjectImpactAsync: {ex.Message}");
+                return new GRTProjectImpactResponseDto
+                {
+                    Success = false,
+                    Message = $"Error creating project impact: {ex.Message}"
+                };
+            }
+        }
+
+
     }
 }

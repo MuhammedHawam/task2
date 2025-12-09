@@ -189,16 +189,22 @@ namespace PIF.EBP.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Get GRT Delivery Plans with pagination and optional search
+        /// Get GRT Delivery Plans by project overview ID with pagination and optional search
         /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview (e.g., 267703)</param>
         /// <param name="page">Page number (default: 1)</param>
         /// <param name="pageSize">Items per page (default: 20)</param>
         /// <param name="search">Optional search query to filter delivery plans</param>
         /// <returns>Paginated list of GRT Delivery Plans (simplified: Id, PlanNumber, ParcelID, AssetID, AssetName)</returns>
         [HttpGet]
-        [Route("delivery-plans")]
-        public async Task<IHttpActionResult> GetDeliveryPlans(int page = 1, int pageSize = 20, string search = null)
+        [Route("project-overview/{projectOverviewId}/delivery-plans")]
+        public async Task<IHttpActionResult> GetDeliveryPlans(long projectOverviewId, int page = 1, int pageSize = 20, string search = null)
         {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("Project overview ID must be greater than zero");
+            }
+
             if (page <= 0)
             {
                 return BadRequest("Page number must be greater than zero");
@@ -211,7 +217,7 @@ namespace PIF.EBP.WebAPI.Controllers
 
             try
             {
-                var result = await _grtAppService.GetDeliveryPlansPagedAsync(page, pageSize, search);
+                var result = await _grtAppService.GetDeliveryPlansPagedAsync(projectOverviewId, page, pageSize, search);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -835,7 +841,10 @@ namespace PIF.EBP.WebAPI.Controllers
             {
                 return BadRequest("Budget data is required");
             }
-
+            if (!budget.ProjectOverviewId.HasValue || budget.ProjectOverviewId <= 0)
+            {
+                return BadRequest("ProjectOverviewId is required when creating a budget");
+            }
             try
             {
                 var result = await _grtAppService.CreateBudgetAsync(budget);
@@ -895,13 +904,6 @@ namespace PIF.EBP.WebAPI.Controllers
         [HttpDelete]
         [Route("budget/{budgetId:long}")]
         public Task<IHttpActionResult> DeleteBudget(long budgetId)
-        {
-            return DeleteBudgetInternal(budgetId);
-        }
-
-        [HttpDelete]
-        [Route("budget")]
-        public Task<IHttpActionResult> DeleteBudgetByQuery(long budgetId)
         {
             return DeleteBudgetInternal(budgetId);
         }
@@ -967,5 +969,511 @@ namespace PIF.EBP.WebAPI.Controllers
             }
         }
         #endregion
+
+        /// <summary>
+        /// Update cashflow by ID
+        /// </summary>
+        /// <param name="id">The ID of the cashflow (e.g., 267707)</param>
+        /// <param name="cashflow">Cashflow data to update</param>
+        /// <returns>Updated cashflow details</returns>
+        [HttpPut]
+        [Route("cashflow/{id}")]
+        public async Task<IHttpActionResult> UpdateCashflow(long id, [FromBody] GRTCashflowDto cashflow)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Cashflow ID must be greater than zero");
+            }
+
+            if (cashflow == null)
+            {
+                return BadRequest("Cashflow data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.UpdateCashflowAsync(id, cashflow);
+                
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get LOI & HMA (Approved Business Plan) by project overview ID with pagination
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview (e.g., 267703)</param>
+        /// <param name="page">Page number (default: 1)</param>
+        /// <param name="pageSize">Items per page (default: 20)</param>
+        /// <returns>Paginated list of LOI & HMA entries</returns>
+        [HttpGet]
+        [Route("project-overview/{projectOverviewId}/loi-hma")]
+        public async Task<IHttpActionResult> GetLOIHMAsByProject(long projectOverviewId, int page = 1, int pageSize = 20)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("Project overview ID must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0 || pageSize > 100)
+            {
+                return BadRequest("Page size must be between 1 and 100");
+            }
+
+            try
+            {
+                var result = await _grtAppService.GetLOIHMAsByProjectIdAsync(projectOverviewId, page, pageSize);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get LOI & HMA by ID with all details
+        /// </summary>
+        /// <param name="id">The ID of the LOI & HMA</param>
+        /// <returns>LOI & HMA details</returns>
+        [HttpGet]
+        [Route("loi-hma/{id}")]
+        public async Task<IHttpActionResult> GetLOIHMA(long id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("LOI & HMA ID must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtAppService.GetLOIHMAByIdAsync(id);
+                
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Create a new LOI & HMA
+        /// </summary>
+        /// <param name="loihma">LOI & HMA data</param>
+        /// <returns>Created LOI & HMA details</returns>
+        [HttpPost]
+        [Route("loi-hma")]
+        public async Task<IHttpActionResult> CreateLOIHMA([FromBody] GRTLOIHMADto loihma)
+        {
+            if (loihma == null)
+            {
+                return BadRequest("LOI & HMA data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.CreateLOIHMAAsync(loihma);
+                
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Update LOI & HMA by project overview ID and LOI & HMA ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="id">The ID of the LOI & HMA</param>
+        /// <param name="loihma">LOI & HMA data to update</param>
+        /// <returns>Updated LOI & HMA details</returns>
+        [HttpPut]
+        [Route("project-overview/{projectOverviewId}/loi-hma/{id}")]
+        public async Task<IHttpActionResult> UpdateLOIHMA(long projectOverviewId, long id, [FromBody] GRTLOIHMADto loihma)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("Project overview ID must be greater than zero");
+            }
+
+            if (id <= 0)
+            {
+                return BadRequest("LOI & HMA ID must be greater than zero");
+            }
+
+            if (loihma == null)
+            {
+                return BadRequest("LOI & HMA data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.UpdateLOIHMAAsync(projectOverviewId, id, loihma);
+                
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Delete LOI & HMA by ID
+        /// </summary>
+        /// <param name="id">The ID of the LOI & HMA to delete</param>
+        /// <returns>Success status</returns>
+        [HttpDelete]
+        [Route("loi-hma/{id}")]
+        public async Task<IHttpActionResult> DeleteLOIHMA(long id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("LOI & HMA ID must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtAppService.DeleteLOIHMAAsync(id);
+                
+                if (result)
+                {
+                    return Ok(new { success = true, message = "LOI & HMA deleted successfully" });
+                }
+                else
+                {
+                    return BadRequest("Failed to delete LOI & HMA");
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Get project impact by ID with all details
+        /// </summary>
+        /// <param name="id">The ID of the project impact (e.g., 284542)</param>
+        /// <returns>Project impact details</returns>
+        [HttpGet]
+        [Route("projectImpact/{id}")]
+        public async Task<IHttpActionResult> GetProjectImpact(long id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Project impact ID must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtAppService.GetProjectImpactByIdAsync(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Update project impact by ID
+        /// </summary>
+        /// <param name="id">The ID of the project impact (e.g., 284542)</param>
+        /// <param name="projectImpact">Project impact data to update</param>
+        /// <returns>Update result and metadata</returns>
+        [HttpPut]
+        [Route("projectImpact/{id}")]
+        public async Task<IHttpActionResult> UpdateProjectImpact(
+            long id,
+            [FromBody] GRTProjectImpactDto projectImpact)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Project impact ID must be greater than zero");
+            }
+
+            if (projectImpact == null)
+            {
+                return BadRequest("Project impact data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.UpdateProjectImpactAsync(id, projectImpact);
+
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+
+                return BadRequest(result.Message);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+
+
+        [HttpPost]
+        [Route("projectImpact")]
+        public async Task<IHttpActionResult> CreateProjectImpact(
+                             [FromBody] GRTProjectImpactDto projectImpact)
+        {
+            if (projectImpact == null)
+            {
+                return BadRequest("Project impact data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.CreateProjectImpactAsync(projectImpact);
+
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+
+                return BadRequest(result.Message);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+
+        
+
+        /// <summary>
+        /// Get Multiple S&U (Sources & Uses) Financial Planning by project overview ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview (e.g., 280572)</param>
+        /// <param name="page">Page number (default: 1)</param>
+        /// <param name="pageSize">Items per page (default: 20)</param>
+        /// <returns>Paginated list of Multiple S&U entries with region and financial totals</returns>
+        [HttpGet]
+        [Route("project-overview/{projectOverviewId}/multiple-sandu")]
+        public async Task<IHttpActionResult> GetMultipleSandUsByProject(long projectOverviewId, int page = 1, int pageSize = 20)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("Project overview ID must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0 || pageSize > 100)
+            {
+                return BadRequest("Page size must be between 1 and 100");
+            }
+
+            try
+            {
+                var result = await _grtAppService.GetMultipleSandUsByProjectIdAsync(projectOverviewId, page, pageSize);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get Multiple S&U by ID with all details
+        /// </summary>
+        /// <param name="id">The ID of the Multiple S&U (e.g., 280599)</param>
+        /// <returns>Multiple S&U details including all JSON financial data</returns>
+        [HttpGet]
+        [Route("multiple-sandu/{id}")]
+        public async Task<IHttpActionResult> GetMultipleSandU(long id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Multiple S&U ID must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtAppService.GetMultipleSandUByIdAsync(id);
+                
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Create a new Multiple S&U (Sources & Uses) Financial Planning
+        /// </summary>
+        /// <param name="multipleSandU">Multiple S&U data including region and financial JSON data</param>
+        /// <returns>Created Multiple S&U details</returns>
+        [HttpPost]
+        [Route("multiple-sandu")]
+        public async Task<IHttpActionResult> CreateMultipleSandU([FromBody] GRTMultipleSandUDto multipleSandU)
+        {
+            if (multipleSandU == null)
+            {
+                return BadRequest("Multiple S&U data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.CreateMultipleSandUAsync(multipleSandU);
+                
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Update Multiple S&U by project overview ID and Multiple S&U ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview (e.g., 56466)</param>
+        /// <param name="id">The ID of the Multiple S&U (e.g., 666)</param>
+        /// <param name="multipleSandU">Multiple S&U data to update</param>
+        /// <returns>Updated Multiple S&U details</returns>
+        [HttpPut]
+        [Route("project-overview/{projectOverviewId}/multiple-sandu/{id}")]
+        public async Task<IHttpActionResult> UpdateMultipleSandU(long projectOverviewId, long id, [FromBody] GRTMultipleSandUDto multipleSandU)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("Project overview ID must be greater than zero");
+            }
+
+            if (id <= 0)
+            {
+                return BadRequest("Multiple S&U ID must be greater than zero");
+            }
+
+            if (multipleSandU == null)
+            {
+                return BadRequest("Multiple S&U data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.UpdateMultipleSandUAsync(projectOverviewId, id, multipleSandU);
+                
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Delete Multiple S&U by project overview ID and Multiple S&U ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview (e.g., 54554)</param>
+        /// <param name="id">The ID of the Multiple S&U to delete (e.g., 555)</param>
+        /// <returns>Success status</returns>
+        [HttpDelete]
+        [Route("project-overview/{projectOverviewId}/multiple-sandu/{id}")]
+        public async Task<IHttpActionResult> DeleteMultipleSandU(long projectOverviewId, long id)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("Project overview ID must be greater than zero");
+            }
+
+            if (id <= 0)
+            {
+                return BadRequest("Multiple S&U ID must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtAppService.DeleteMultipleSandUAsync(projectOverviewId, id);
+                
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Multiple S&U deleted successfully" });
+                }
+                else
+                {
+                    return BadRequest("Failed to delete Multiple S&U");
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
 }

@@ -227,7 +227,10 @@
     <Compile Include="GRT\DTOs\GRTDeliveryPlanDto.cs" />
     <Compile Include="GRT\DTOs\GRTInfraDeliveryPlanDto.cs" />
     <Compile Include="GRT\DTOs\GRTLandSaleDto.cs" />
+    <Compile Include="GRT\DTOs\GRTLOIHMADto.cs" />
     <Compile Include="GRT\DTOs\GRTLookupEntryDto.cs" />
+    <Compile Include="GRT\DTOs\GRTProjectImpactDto.cs" />
+    <Compile Include="GRT\DTOs\GRTMultipleSandUDto.cs" />
     <Compile Include="GRT\DTOs\GRTProjectOverviewDto.cs" />
     <Compile Include="GRT\DTOs\GRTUiCycleDto.cs" />
     <Compile Include="GRT\GRTLookupType.cs" />

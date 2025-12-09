@@ -75,6 +75,8 @@ namespace PIF.EBP.Application.GRT
         public double? RevenueProceeds { get; set; }
         public double? UnleveredIRR { get; set; }
         public double? VerticalConstructionCostPerSqm { get; set; }
+        public double? TotalDevelopmentCost { get; set; }
+        public double? TotalDevelopmentCostPerSqm { get; set; }
 
         // ADDITIONAL NOTES
         public string Comments { get; set; }
@@ -174,6 +176,8 @@ namespace PIF.EBP.Application.GRT
         public double? RevenueProceeds { get; set; }
         public double? UnleveredIRR { get; set; }
         public double? VerticalConstructionCostPerSqm { get; set; }
+        public double? TotalDevelopmentCost { get; set; }
+        public double? TotalDevelopmentCostPerSqm { get; set; }
 
         // ADDITIONAL NOTES
         public string Comments { get; set; }
