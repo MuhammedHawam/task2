@@ -113,21 +113,39 @@ namespace PIF.EBP.Integrations.Community
         }
         private static async Task<T> HandleResponse<T>(HttpResponseMessage response)
         {
+            // Ensure success status code first (this method should handle 4xx/5xx errors)
+            // NOTE: This assumes EnsureSuccessStatusCode correctly throws exceptions for 4xx/5xx
             await EnsureSuccessStatusCode(response).ConfigureAwait(false);
 
-            // 1. Read the raw content once.
+            // --- 1. HANDLE 204 NO CONTENT ---
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                // 204 means success with NO body. We return the default value for T.
+                // For a reference type (class), this will return null.
+                // For a value type (struct, int, bool), this will return the default value (0, false, etc.).
+                return default(T);
+            }
+
+            // 2. Read the raw content once. (Only executed if not 204)
             var payload = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            // --- OPTIONAL: Handle empty string payload for other status codes (like 200 or 201) ---
+            // If an endpoint returns 200 OK with an empty body (""), the logic below will still fail.
+            // If you expect 200/201 to sometimes have an empty body:
+            if (string.IsNullOrWhiteSpace(payload))
+            {
+                return default(T);
+            }
 
             try
             {
-                // 1. Create a JsonSerializer instance using your settings (JsonSettings)
-                //    This replaces the incorrect "JsonSettings.Serializer"
+                // 3. Proceed with standard JSON deserialization.
                 JsonSerializer serializer = JsonSerializer.Create(JsonSettings);
 
-                // 2. Parse the raw payload into a JToken
+                // Parse the raw payload into a JToken
                 JToken token = JToken.Parse(payload);
 
-                // 3. Convert the JToken to the target type T, applying the serializer
+                // Convert the JToken to the target type T, applying the serializer
                 var result = token.ToObject<T>(serializer);
 
                 return result;
@@ -135,14 +153,11 @@ namespace PIF.EBP.Integrations.Community
             catch (JsonException ex)
             {
                 // Catch Newtonsoft's base exception for parsing/deserialization issues.
-                // Log the failure details.
                 throw new InvalidOperationException(
                     $"Failed to deserialize payload to type {typeof(T).Name}. " +
                     $"Payload: {payload.Substring(0, Math.Min(500, payload.Length))}",
                     ex);
             }
-            // Note: The previous code was failing because the caller was passing T=string 
-            // but the complex JSON was being passed to JsonConvert.DeserializeObject<string>.
         }
 
         private static T TryDeserialize<T>(string json) where T : class

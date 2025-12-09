@@ -72,14 +72,16 @@ namespace PIF.EBP.Application.GRT
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Get GRT Delivery Plans with pagination and search
+        /// Get GRT Delivery Plans by project overview ID with pagination and search
         /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
         /// <param name="page">Page number (1-based)</param>
         /// <param name="pageSize">Number of items per page</param>
         /// <param name="search">Search query (optional)</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Paginated GRT Delivery Plans response</returns>
         Task<GRTDeliveryPlansPagedDto> GetDeliveryPlansPagedAsync(
+            long projectOverviewId,
             int page = 1,
             int pageSize = 20,
             string search = null,
@@ -316,5 +318,150 @@ namespace PIF.EBP.Application.GRT
             string externalReferenceCode,
             GRTBudgetSectionsDto sections,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update cashflow by ID
+        /// </summary>
+        /// <param name="id">The ID of the cashflow</param>
+        /// <param name="cashflow">Cashflow data to update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Updated cashflow response</returns>
+        Task<GRTCashflowResponseDto> UpdateCashflowAsync(
+            long id,
+            GRTCashflowDto cashflow,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Get LOI & HMA (Approved Business Plan) by project overview ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="page">Page number (1-based)</param>
+        /// <param name="pageSize">Number of items per page</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Paginated LOI & HMA response</returns>
+        Task<GRTLOIHMAsPagedDto> GetLOIHMAsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Get LOI & HMA by ID
+        /// </summary>
+        /// <param name="id">The ID of the LOI & HMA</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>LOI & HMA details</returns>
+        Task<GRTLOIHMADto> GetLOIHMAByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Create a new LOI & HMA
+        /// </summary>
+        /// <param name="loihma">LOI & HMA data</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Created LOI & HMA response</returns>
+        Task<GRTLOIHMAResponseDto> CreateLOIHMAAsync(
+            GRTLOIHMADto loihma,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update LOI & HMA by project overview ID and LOI & HMA ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="id">The ID of the LOI & HMA</param>
+        /// <param name="loihma">LOI & HMA data to update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Updated LOI & HMA response</returns>
+        Task<GRTLOIHMAResponseDto> UpdateLOIHMAAsync(
+            long projectOverviewId,
+            long id,
+            GRTLOIHMADto loihma,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Delete LOI & HMA by ID
+        /// </summary>
+        /// <param name="id">The ID of the LOI & HMA</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>True if deleted successfully</returns>
+        Task<bool> DeleteLOIHMAAsync(
+            long id,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Get Multiple S&U by project overview ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="page">Page number (1-based)</param>
+        /// <param name="pageSize">Number of items per page</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Paginated Multiple S&U response</returns>
+        Task<GRTMultipleSandUsPagedDto> GetMultipleSandUsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Get Multiple S&U by ID
+        /// </summary>
+        /// <param name="id">The ID of the Multiple S&U</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Multiple S&U details</returns>
+        Task<GRTMultipleSandUDetailDto> GetMultipleSandUByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Create a new Multiple S&U
+        /// </summary>
+        /// <param name="multipleSandU">Multiple S&U data</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Created Multiple S&U response</returns>
+        Task<GRTMultipleSandUResponseDto> CreateMultipleSandUAsync(
+            GRTMultipleSandUDto multipleSandU,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update Multiple S&U by project overview ID and Multiple S&U ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="id">The ID of the Multiple S&U</param>
+        /// <param name="multipleSandU">Multiple S&U data to update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Updated Multiple S&U response</returns>
+        Task<GRTMultipleSandUResponseDto> UpdateMultipleSandUAsync(
+            long projectOverviewId,
+            long id,
+            GRTMultipleSandUDto multipleSandU,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Delete Multiple S&U by project overview ID and Multiple S&U ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="id">The ID of the Multiple S&U</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>True if deleted successfully</returns>
+        Task<bool> DeleteMultipleSandUAsync(
+            long projectOverviewId,
+            long id,
+            CancellationToken cancellationToken = default);
+            
+
+
+        Task<GRTProjectImpactDto> GetProjectImpactByIdAsync(
+                               long id,
+                               CancellationToken cancellationToken = default);
+
+        Task<GRTProjectImpactResponseDto> UpdateProjectImpactAsync(
+            long id,
+            GRTProjectImpactDto projectImpact,
+            CancellationToken cancellationToken = default);
+
+        Task<GRTProjectImpactResponseDto> CreateProjectImpactAsync(
+                          GRTProjectImpactDto projectImpact,
+                          CancellationToken cancellationToken = default);
     }
 }

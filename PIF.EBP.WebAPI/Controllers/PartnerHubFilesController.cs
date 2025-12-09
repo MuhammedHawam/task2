@@ -1,4 +1,6 @@
 ﻿using PIF.EBP.Application.FileScanning;
+using PIF.EBP.Application.InfraBase;
+using PIF.EBP.Application.InfraBase.DTOs;
 using PIF.EBP.Application.Innovation;
 using PIF.EBP.Application.PartnersHub.DTOs;
 using PIF.EBP.Application.PortalConfiguration;
@@ -9,6 +11,7 @@ using PIF.EBP.Core.DependencyInjection;
 using PIF.EBP.Core.FileManagement.DTOs;
 using PIF.EBP.Core.Session;
 using PIF.EBP.WebAPI.Middleware.ActionFilter;
+using PIF.EBP.WebAPI.Middleware.Authorize;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -24,13 +27,15 @@ namespace PIF.EBP.WebAPI.Controllers
 {
     [ApiResponseWrapper]
     [RoutePrefix("PartnerHubFiles")]
-    public class PartnerHubFilesController : BaseController
+    [APIKEY]
+    public class PartnerHubFilesController : ApiController
     {
         private IPartnerHubFilesService _partnerHubFilesService;
         private readonly IPortalConfigAppService _portalConfigAppService;
         private readonly IFileScanningService _fileScanningService;
         private readonly ISessionService _sessionService;
         private readonly IUserProfileAppService _userProfileAppService;
+        private readonly IInfraBaseFileUploaderService _infraBaseFileUploaderService;
         public PartnerHubFilesController()
         {
             _partnerHubFilesService = WindsorContainerProvider.Container
@@ -39,12 +44,18 @@ namespace PIF.EBP.WebAPI.Controllers
             _fileScanningService = WindsorContainerProvider.Container.Resolve<IFileScanningService>();
             _sessionService = WindsorContainerProvider.Container.Resolve<ISessionService>();
             _userProfileAppService = WindsorContainerProvider.Container.Resolve<IUserProfileAppService>();
+            _infraBaseFileUploaderService = WindsorContainerProvider.Container.Resolve<IInfraBaseFileUploaderService>();
+
 
         }
 
+
+
+
         [HttpPost]
         [Route("upload-request-files")]
-        public async Task<IHttpActionResult> UploadRequestFiles()
+        public async Task<IHttpActionResult> UploadRequestFiles(
+            )
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
@@ -54,17 +65,24 @@ namespace PIF.EBP.WebAPI.Controllers
             var provider = new MultipartMemoryStreamProvider();
             await Request.Content.ReadAsMultipartAsync(provider);
 
-            string RequestId = ExtractContentByKeyName(provider.Contents, "RequestId");
+            //// Extract form data
+            //string referenceId = ReferenceId;
+            //string companyId = CompanyId;
+            //string contactId = ContactId;
+            //string description = Description;
+            // Extract form data
+            string referenceId = ExtractContentByKeyName(provider.Contents, "ReferenceId");
             string companyId = ExtractContentByKeyName(provider.Contents, "CompanyId");
             string contactId = ExtractContentByKeyName(provider.Contents, "ContactId");
             string description = ExtractContentByKeyName(provider.Contents, "Description");
-            string ModuleName = ExtractContentByKeyName(provider.Contents, "ModuleName");
 
-            if (string.IsNullOrEmpty(RequestId))
+            // Validate ReferenceId
+            if (string.IsNullOrEmpty(referenceId))
             {
-                RequestId = Guid.NewGuid().ToString();
+                referenceId = Guid.NewGuid().ToString();
             }
 
+            // Validate CompanyId
             if (string.IsNullOrEmpty(companyId))
             {
                 companyId = _sessionService.GetCompanyId();
@@ -80,11 +98,13 @@ namespace PIF.EBP.WebAPI.Controllers
                 return BadRequest("CompanyId must be a valid GUID");
             }
 
+            // Validate ContactId if provided
             if (!string.IsNullOrEmpty(contactId) && !Guid.TryParse(contactId, out _))
             {
                 return BadRequest("ContactId must be a valid GUID");
             }
 
+            // Extract files
             var documents = await ExtractFiles(provider.Contents);
 
             if (documents == null || !documents.Any())
@@ -92,30 +112,34 @@ namespace PIF.EBP.WebAPI.Controllers
                 return BadRequest("No files were uploaded");
             }
 
+            // Prepare file metadata
             var uploadDocumentsDto = new UploadDocumentsDto
             {
-                RequestId = RequestId,
+                ReferenceId = referenceId,
                 CompanyId = companyId,
                 ContactId = contactId,
                 Description = description,
                 Documents = documents
             };
 
-            bool enableFileScanningForSynergy = false;
-            bool.TryParse(ConfigurationManager.AppSettings["EnableFileScanningFor"+ ModuleName], out enableFileScanningForSynergy);
+            // For InfraBase: Bypass file scanning by default to enable immediate upload
+            // File scanning can be optionally enabled via Web.config setting
+            bool enableFileScanningForInfraBase = false;
+            bool.TryParse(ConfigurationManager.AppSettings["EnableFileScanningForInfraBase"], out enableFileScanningForInfraBase);
 
-            PartnersHubUploadResponseDto response = new PartnersHubUploadResponseDto
+            InfraBaseUploadResponseDto response = new InfraBaseUploadResponseDto
             {
-                UploadedFiles = new List<PartnersHubFileInfo>()
+                UploadedFiles = new List<InfraBaseFileInfo>()
             };
 
-            if (enableFileScanningForSynergy)
+            if (enableFileScanningForInfraBase)
             {
+                // File scanning path - async upload via callback
                 foreach (UploadedDocDetails uploadedDocDetails in documents)
                 {
                     var metaData = new
                     {
-                        RequestId = RequestId,
+                        ReferenceId = referenceId,
                         CompanyId = companyId,
                         ContactId = contactId,
                         Description = description,
@@ -128,7 +152,7 @@ namespace PIF.EBP.WebAPI.Controllers
                         uploadedDocDetails.DocumentName,
                         metaData);
 
-                    response.UploadedFiles.Add(new PartnersHubFileInfo
+                    response.UploadedFiles.Add(new InfraBaseFileInfo
                     {
                         FileName = uploadedDocDetails.DocumentName,
                         FileSize = uploadedDocDetails.DocumentSize,
@@ -143,17 +167,20 @@ namespace PIF.EBP.WebAPI.Controllers
             }
             else
             {
-                var uploadResults = await _partnerHubFilesService.RequestUpload(uploadDocumentsDto);
+                // Direct upload to SharePoint (default for InfraBase)
+                var uploadResults = await _infraBaseFileUploaderService.InfraBaseRequestUpload(uploadDocumentsDto);
 
                 var SPSiteCollectionUri = ConfigurationManager.AppSettings["SPSiteUri_ext"];
 
                 foreach (var result in uploadResults)
                 {
+                    // Get file size from original documents
                     var fileSize = documents.FirstOrDefault(d => d.DocumentName == result.DocumentName)?.DocumentSize ?? 0;
 
+                    // Construct proper SharePoint URL with filename
                     string sharePointUrl = $"{SPSiteCollectionUri}{result.DocumentPath}/{result.DocumentName}";
 
-                    response.UploadedFiles.Add(new PartnersHubFileInfo
+                    response.UploadedFiles.Add(new InfraBaseFileInfo
                     {
                         FileName = result.DocumentName,
                         FilePath = result.DocumentPath,

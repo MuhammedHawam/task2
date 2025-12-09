@@ -45,4 +45,17 @@ namespace PIF.EBP.Application.GRT
         public int TotalCount { get; set; }
         public int LastPage { get; set; }
     }
+
+    /// <summary>
+    /// Response DTO for GRT Cashflow create/update operations
+    /// </summary>
+    public class GRTCashflowResponseDto
+    {
+        public long Id { get; set; }
+        public string ExternalReferenceCode { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime DateModified { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; }
+    }
 }

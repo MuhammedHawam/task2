@@ -31,5 +31,6 @@ namespace PIF.EBP.Application.CIAMCommunication
         Task<ScimUserListDto> ListAllUsersAsync();
         Task<ScimUserDto> GetUserByUserNameAsync(string userName);   
         Task<IList<ScimUserDto>> GetUsersByEmailAsync(string email); 
+        Task<ScimOperationResponse> ResendInvitationAsync(string userId);
     }
 }

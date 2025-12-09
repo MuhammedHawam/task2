@@ -743,6 +743,12 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("verticalConstructionCostPerSqm")]
         public double? VerticalConstructionCostPerSqm { get; set; }
 
+        [JsonProperty("totalDevelopmentCost")]
+        public double? TotalDevelopmentCost { get; set; }
+
+        [JsonProperty("totalDevelopmentCostPerSqm")]
+        public double? TotalDevelopmentCostPerSqm { get; set; }
+
         [JsonProperty("comments")]
         public string Comments { get; set; }
 
@@ -907,6 +913,12 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("verticalConstructionCostPerSqm")]
         public double? VerticalConstructionCostPerSqm { get; set; }
+
+        [JsonProperty("totalDevelopmentCost")]
+        public double? TotalDevelopmentCost { get; set; }
+
+        [JsonProperty("totalDevelopmentCostPerSqm")]
+        public double? TotalDevelopmentCostPerSqm { get; set; }
 
         [JsonProperty("comments")]
         public string Comments { get; set; }
@@ -1584,4 +1596,460 @@ namespace PIF.EBP.Core.GRT
         public string CommitmentActual { get; set; }
     }
     #endregion
+
+    /// <summary>
+    /// Request for creating/updating GRT Cashflow
+    /// </summary>
+    public class GRTCashflowRequest
+    {
+        [JsonProperty("r_projectToCashflowRelationship_c_grtProjectOverviewId")]
+        public long? ProjectToCashflowRelationshipProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToCashflowRelationship_c_grtProjectOverviewERC")]
+        public string ProjectToCashflowRelationshipProjectOverviewERC { get; set; }
+
+        [JsonProperty("summary")]
+        public string Summary { get; set; }
+
+        [JsonProperty("education")]
+        public string Education { get; set; }
+
+        [JsonProperty("privateSector")]
+        public string PrivateSector { get; set; }
+
+        [JsonProperty("laborAndStaffAccommodation")]
+        public string LaborAndStaffAccommodation { get; set; }
+
+        [JsonProperty("office")]
+        public string Office { get; set; }
+
+        [JsonProperty("socialInfrastructure")]
+        public string SocialInfrastructure { get; set; }
+
+        [JsonProperty("sourcesOfFunds")]
+        public string SourcesOfFunds { get; set; }
+
+        [JsonProperty("projectLevelIRR")]
+        public string ProjectLevelIRR { get; set; }
+
+        [JsonProperty("retail")]
+        public string Retail { get; set; }
+
+        [JsonProperty("healthcare")]
+        public string Healthcare { get; set; }
+
+        [JsonProperty("transportLogisticIndustrial")]
+        public string TransportLogisticIndustrial { get; set; }
+
+        [JsonProperty("generalInfrastructure")]
+        public string GeneralInfrastructure { get; set; }
+
+        [JsonProperty("otherAssetClasses")]
+        public string OtherAssetClasses { get; set; }
+
+        [JsonProperty("hospitality")]
+        public string Hospitality { get; set; }
+
+        [JsonProperty("entertainmentAndSport")]
+        public string EntertainmentAndSport { get; set; }
+
+        [JsonProperty("usesOfFunds")]
+        public string UsesOfFunds { get; set; }
+
+        [JsonProperty("devcoFinancials")]
+        public string DevcoFinancials { get; set; }
+    }
+
+    /// <summary>
+    /// Response from creating/updating GRT Cashflow
+    /// </summary>
+    public class GRTCashflowResponse
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+    }
+
+    /// <summary>
+    /// GRT LOI & HMA (Approved Business Plan) item
+    /// </summary>
+    public class GRTLOIHMA
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+
+        [JsonProperty("creator")]
+        public GRTCreator Creator { get; set; }
+
+        [JsonProperty("status")]
+        public GRTStatus Status { get; set; }
+
+        [JsonProperty("assetName")]
+        public string AssetName { get; set; }
+
+        [JsonProperty("brand")]
+        public string Brand { get; set; }
+
+        [JsonProperty("city")]
+        public string City { get; set; }
+
+        [JsonProperty("hMASigned")]
+        public bool? HMASigned { get; set; }
+
+        [JsonProperty("hotelOperator")]
+        public GRTKeyValue HotelOperator { get; set; }
+
+        [JsonProperty("ifHMALOISignedContractDuration")]
+        public string IfHMALOISignedContractDuration { get; set; }
+
+        [JsonProperty("ifOtherHotelOperatorFillHere")]
+        public string IfOtherHotelOperatorFillHere { get; set; }
+
+        [JsonProperty("ifOtherOperatingModelFillHere")]
+        public string IfOtherOperatingModelFillHere { get; set; }
+
+        [JsonProperty("item")]
+        public string Item { get; set; }
+
+        [JsonProperty("keysPerHotel")]
+        public string KeysPerHotel { get; set; }
+
+        [JsonProperty("latitude")]
+        public string Latitude { get; set; }
+
+        [JsonProperty("lOISigned")]
+        public bool? LOISigned { get; set; }
+
+        [JsonProperty("longitude")]
+        public string Longitude { get; set; }
+
+        [JsonProperty("operatingModel")]
+        public GRTKeyValue OperatingModel { get; set; }
+
+        [JsonProperty("operatingModelNew")]
+        public GRTKeyValue OperatingModelNew { get; set; }
+
+        [JsonProperty("operationalYear")]
+        public string OperationalYear { get; set; }
+
+        [JsonProperty("positionscale")]
+        public GRTKeyValue Positionscale { get; set; }
+
+        [JsonProperty("r_projectToLOIHMARelationship_c_grtProjectOverviewId")]
+        public long? ProjectToLOIHMARelationshipProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToLOIHMARelationship_c_grtProjectOverviewERC")]
+        public string ProjectToLOIHMARelationshipProjectOverviewERC { get; set; }
+
+        [JsonProperty("projectToLOIHMARelationshipERC")]
+        public string ProjectToLOIHMARelationshipERC { get; set; }
+    }
+
+    /// <summary>
+    /// Paginated response for GRT LOI & HMA
+    /// </summary>
+    public class GRTLOIHMAsPagedResponse
+    {
+        [JsonProperty("items")]
+        public List<GRTLOIHMA> Items { get; set; }
+
+        [JsonProperty("page")]
+        public int Page { get; set; }
+
+        [JsonProperty("pageSize")]
+        public int PageSize { get; set; }
+
+        [JsonProperty("totalCount")]
+        public int TotalCount { get; set; }
+
+        [JsonProperty("lastPage")]
+        public int LastPage { get; set; }
+    }
+
+    /// <summary>
+    /// Request for creating/updating GRT LOI & HMA
+    /// </summary>
+    public class GRTLOIHMARequest
+    {
+        [JsonProperty("assetName")]
+        public string AssetName { get; set; }
+
+        [JsonProperty("brand")]
+        public string Brand { get; set; }
+
+        [JsonProperty("city")]
+        public string City { get; set; }
+
+        [JsonProperty("hMASigned")]
+        public bool? HMASigned { get; set; }
+
+        [JsonProperty("hotelOperator")]
+        public GRTKeyValue HotelOperator { get; set; }
+
+        [JsonProperty("ifHMALOISignedContractDuration")]
+        public string IfHMALOISignedContractDuration { get; set; }
+
+        [JsonProperty("ifOtherHotelOperatorFillHere")]
+        public string IfOtherHotelOperatorFillHere { get; set; }
+
+        [JsonProperty("ifOtherOperatingModelFillHere")]
+        public string IfOtherOperatingModelFillHere { get; set; }
+
+        [JsonProperty("item")]
+        public string Item { get; set; }
+
+        [JsonProperty("keysPerHotel")]
+        public string KeysPerHotel { get; set; }
+
+        [JsonProperty("latitude")]
+        public string Latitude { get; set; }
+
+        [JsonProperty("lOISigned")]
+        public bool? LOISigned { get; set; }
+
+        [JsonProperty("longitude")]
+        public string Longitude { get; set; }
+
+        [JsonProperty("operatingModel")]
+        public GRTKeyValue OperatingModel { get; set; }
+
+        [JsonProperty("operatingModelNew")]
+        public GRTKeyValue OperatingModelNew { get; set; }
+
+        [JsonProperty("operationalYear")]
+        public string OperationalYear { get; set; }
+
+        [JsonProperty("positionscale")]
+        public GRTKeyValue Positionscale { get; set; }
+
+        [JsonProperty("r_projectToLOIHMARelationship_c_grtProjectOverviewId")]
+        public long? ProjectToLOIHMARelationshipProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToLOIHMARelationship_c_grtProjectOverviewERC")]
+        public string ProjectToLOIHMARelationshipProjectOverviewERC { get; set; }
+    }
+
+    /// <summary>
+    /// Response from creating/updating GRT LOI & HMA
+    /// </summary>
+    public class GRTLOIHMAResponse
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+    }
+
+
+
+    public class GRTProjectImpact
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+        [JsonProperty("r_projectToProjectImpactRelationship_c_grtProjectOverviewId")]
+        public long? ProjectToProjectImpactRelationshipProjectOverviewId { get; set; }
+        [JsonProperty("pr_projectToProjectImpactRelationship_c_grtProjectOverviewERC")]
+        public string ProjectToProjectImpactRelationshipProjectOverviewERC { get; set; }
+        [JsonProperty("projectToProjectImpactRelationshipERC")]
+        public string ProjectToProjectImpactRelationshipERC { get; set; }
+        [JsonProperty("averagePersonalDisposableIncome")]
+        public string AveragePersonalDisposableIncome { get; set; }
+        [JsonProperty("entertainmentSpendHouseholdAnnumSAR")]
+        public string EntertainmentSpendHouseholdAnnumSAR { get; set; }
+        [JsonProperty("macroeconomicImpactSection")]
+        public string MacroeconomicImpactSection { get; set; }
+        [JsonProperty("totalDomesticOvernightVisits")]
+        public string TotalDomesticOvernightVisits { get; set; }
+        [JsonProperty("totalHotelOvernightVisits")]
+        public string TotalHotelOvernightVisits { get; set; }
+        [JsonProperty("totalInternationalOvernightVisits")]
+        public string TotalInternationalOvernightVisits { get; set; }
+        [JsonProperty("totalNumberOfEmployees")]
+        public string TotalNumberOfEmployees { get; set; }
+        [JsonProperty("totalNumberOfHospitalityStaffLabor")]
+        public string TotalNumberOfHospitalityStaffLabor { get; set; }
+        [JsonProperty("totalPopulationOfTheProjectSection")]
+        public string TotalPopulationOfTheProjectSection { get; set; }
+    }
+
+    public class GRTProjectImpactRequest
+    {
+        [JsonProperty("projectToProjectImpactRelationshipProjectOverviewId")]
+        public long? ProjectToProjectImpactRelationshipProjectOverviewId { get; set; }
+        [JsonProperty("projectToProjectImpactRelationshipProjectOverviewERC")]
+        public string ProjectToProjectImpactRelationshipProjectOverviewERC { get; set; }
+        [JsonProperty("projectToProjectImpactRelationshipERC")]
+        public string ProjectToProjectImpactRelationshipERC { get; set; }
+        [JsonProperty("averagePersonalDisposableIncome")]
+        public string AveragePersonalDisposableIncome { get; set; }
+        [JsonProperty("entertainmentSpendHouseholdAnnumSAR")]
+        public string EntertainmentSpendHouseholdAnnumSAR { get; set; }
+        [JsonProperty("macroeconomicImpactSection")]
+        public string MacroeconomicImpactSection { get; set; }
+        [JsonProperty("totalDomesticOvernightVisits")]
+        public string TotalDomesticOvernightVisits { get; set; }
+        [JsonProperty("totalHotelOvernightVisits")]
+        public string TotalHotelOvernightVisits { get; set; }
+        [JsonProperty("totalInternationalOvernightVisits")]
+        public string TotalInternationalOvernightVisits { get; set; }
+        [JsonProperty("totalNumberOfEmployees")]
+        public string TotalNumberOfEmployees { get; set; }
+        [JsonProperty("totalNumberOfHospitalityStaffLabor")]
+        public string TotalNumberOfHospitalityStaffLabor { get; set; }
+        [JsonProperty("totalPopulationOfTheProjectSection")]
+        public string TotalPopulationOfTheProjectSection { get; set; }
+    }
+
+    public class GRTProjectImpactResponse
+    {
+        public long Id { get; set; }
+        public string ExternalReferenceCode { get; set; }
+        public string DateCreated { get; set; }
+        public string DateModified { get; set; }
+    }
+
+
+    /// <summary>
+    /// GRT Multiple S&U (Sources & Uses) Financial Planning item
+    /// </summary>
+    public class GRTMultipleSandU
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+
+        [JsonProperty("creator")]
+        public GRTCreator Creator { get; set; }
+
+        [JsonProperty("status")]
+        public GRTStatus Status { get; set; }
+
+        [JsonProperty("regions")]
+        public GRTKeyValue Regions { get; set; }
+
+        [JsonProperty("capexJSON")]
+        public string CapexJSON { get; set; }
+
+        [JsonProperty("opexJSON")]
+        public string OpexJSON { get; set; }
+
+        [JsonProperty("totalSourcesJSON")]
+        public string TotalSourcesJSON { get; set; }
+
+        [JsonProperty("financialsSARJSON")]
+        public string FinancialsSARJSON { get; set; }
+
+        [JsonProperty("r_projectToMultipleSandURelationship_c_grtProjectOverviewId")]
+        public long? ProjectToMultipleSandURelationshipProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToMultipleSandURelationship_c_grtProjectOverviewERC")]
+        public string ProjectToMultipleSandURelationshipProjectOverviewERC { get; set; }
+
+        [JsonProperty("projectToMultipleSandURelationshipERC")]
+        public string ProjectToMultipleSandURelationshipERC { get; set; }
+    }
+
+    /// <summary>
+    /// Paginated response for GRT Multiple S&U
+    /// </summary>
+    public class GRTMultipleSandUsPagedResponse
+    {
+        [JsonProperty("items")]
+        public List<GRTMultipleSandU> Items { get; set; }
+
+        [JsonProperty("page")]
+        public int Page { get; set; }
+
+        [JsonProperty("pageSize")]
+        public int PageSize { get; set; }
+
+        [JsonProperty("totalCount")]
+        public int TotalCount { get; set; }
+
+        [JsonProperty("lastPage")]
+        public int LastPage { get; set; }
+    }
+
+    /// <summary>
+    /// Request for creating/updating GRT Multiple S&U
+    /// </summary>
+    public class GRTMultipleSandURequest
+    {
+        [JsonProperty("regions")]
+        public GRTKeyValue Regions { get; set; }
+
+        [JsonProperty("capexJSON")]
+        public string CapexJSON { get; set; }
+
+        [JsonProperty("opexJSON")]
+        public string OpexJSON { get; set; }
+
+        [JsonProperty("totalSourcesJSON")]
+        public string TotalSourcesJSON { get; set; }
+
+        [JsonProperty("financialsSARJSON")]
+        public string FinancialsSARJSON { get; set; }
+
+        [JsonProperty("r_projectToMultipleSandURelationship_c_grtProjectOverviewId")]
+        public long? ProjectToMultipleSandURelationshipProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToMultipleSandURelationship_c_grtProjectOverviewERC")]
+        public string ProjectToMultipleSandURelationshipProjectOverviewERC { get; set; }
+    }
+
+    /// <summary>
+    /// Response from creating/updating GRT Multiple S&U
+    /// </summary>
+    public class GRTMultipleSandUResponse
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+    }
 }

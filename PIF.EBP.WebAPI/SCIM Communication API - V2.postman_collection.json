@@ -1,0 +1,456 @@
+{
+	"info": {
+		"_postman_id": "76f8e99f-5c35-4f41-9102-1ca65ef004fa",
+		"name": "SCIM Communication API - V2",
+		"description": "Collection for SCIM Communication Controller endpoints - User management and authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48906323",
+		"_collection_link": "https://con-maboulnaga-2408017.postman.co/workspace/con-maboulnaga's-Workspace~38cd57d0-548e-4aba-85c4-1b2a6f42fe68/collection/48906323-76f8e99f-5c35-4f41-9102-1ca65ef004fa?action=share&source=collection_link&creator=48906323"
+	},
+	"item": [
+		{
+			"name": "User Management",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Ahmad\",\n  \"lastName\": \"Mohammed\",\n  \"firstNameAr\": \"????\",\n  \"lastNameAr\": \"????\",\n  \"email\": \"ahmad.mohammed@example.com\",\n  \"mobilePhone\": \"+966501234567\",\n  \"country\": \"Saudi Arabia\",\n  \"position\": \"Manager\",\n  \"department\": \"IT\",\n  \"nationality\": 1,\n  \"companyRoles\": [\n    {\n      \"companyId\": \"company-guid-here\",\n      \"roleID\": [\"role-guid-1\", \"role-guid-2\"]\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ciam/create-user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"create-user"
+							]
+						},
+						"description": "Creates a new user contact in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Create SCIM Invited User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Fatima\",\n  \"familyName\": \"Ali\",\n  \"userName\": \"fatima.ali\",\n  \"displayName\": \"Fatima Ali\",\n  \"email\": \"fatima.ali@example.com\",\n  \"mobileNumber\": \"+966501234568\",\n  \"companyId\": \"company-guid-here\",\n  \"contactID\": \"contact-guid-here\",\n  \"isInvited\": true,\n  \"password\": \"SecurePassword123!\",\n  \"rolesID\": [\"role-guid-1\", \"role-guid-2\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ciam/create-scim-user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"create-scim-user"
+							]
+						},
+						"description": "Creates a SCIM invited user in the identity system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ciam/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"users"
+							]
+						},
+						"description": "Retrieves list of all users from SCIM"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by Username",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ciam/users/by-username/:userName",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"users",
+								"by-username",
+								":userName"
+							],
+							"variable": [
+								{
+									"key": "userName",
+									"value": "ahmad.mohammed",
+									"description": "Username to search for"
+								}
+							]
+						},
+						"description": "Get user details by username"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users by Email",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ciam/users/by-email?email=ahmad.mohammed@example.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"users",
+								"by-email"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "ahmad.mohammed@example.com",
+									"description": "Email address to search for"
+								}
+							]
+						},
+						"description": "Get users by email address"
+					},
+					"response": []
+				},
+				{
+					"name": "Resend Invitation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ciam/users/:userId/resend-invitation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"users",
+								":userId",
+								"resend-invitation"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "66d3cc31-f811-43f9-8f3e-9c15d8ab1642",
+									"description": "SCIM User ID to resend invitation"
+								}
+							]
+						},
+						"description": "Resends invitation email to user by forcing password reset"
+					},
+					"response": []
+				}
+			],
+			"description": "User creation and retrieval endpoints"
+		},
+		{
+			"name": "User Account Control",
+			"item": [
+				{
+					"name": "Lock User Account",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ciam/users/:userId/:userName/lock",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"users",
+								":userId",
+								":userName",
+								"lock"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "user-guid-here",
+									"description": "User ID to lock"
+								},
+								{
+									"key": "userName",
+									"value": "ahmad.mohammed",
+									"description": "Username to lock"
+								}
+							]
+						},
+						"description": "Lock a user account (temporary suspension)"
+					},
+					"response": []
+				},
+				{
+					"name": "Unlock User Account",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ciam/users/:userId/:userName/unlock",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"users",
+								":userId",
+								":userName",
+								"unlock"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "user-guid-here",
+									"description": "User ID to unlock"
+								},
+								{
+									"key": "userName",
+									"value": "ahmad.mohammed",
+									"description": "Username to unlock"
+								}
+							]
+						},
+						"description": "Unlock a previously locked user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Disable User Account",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ciam/users/:userId/:userName/disable",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"users",
+								":userId",
+								":userName",
+								"disable"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "user-guid-here",
+									"description": "User ID to disable"
+								},
+								{
+									"key": "userName",
+									"value": "ahmad.mohammed",
+									"description": "Username to disable"
+								}
+							]
+						},
+						"description": "Disable a user account (prevents login)"
+					},
+					"response": []
+				},
+				{
+					"name": "Enable User Account",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ciam/users/:userId/:userName/enable",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"users",
+								":userId",
+								":userName",
+								"enable"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "user-guid-here",
+									"description": "User ID to enable"
+								},
+								{
+									"key": "userName",
+									"value": "ahmad.mohammed",
+									"description": "Username to enable"
+								}
+							]
+						},
+						"description": "Enable a previously disabled user account"
+					},
+					"response": []
+				}
+			],
+			"description": "User account control operations (lock/unlock, enable/disable)"
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{apiKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"ahmad.mohammed@example.com\",\n  \"password\": \"YourPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ciam/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciam",
+								"login"
+							]
+						},
+						"description": "Login with username (email) and password. Returns language preference and OTP status if 2FA is enabled."
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints"
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{apiKey}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "X-API-KEY",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-add API Key header to all requests",
+					"pm.request.headers.add({",
+					"    key: 'X-API-KEY',",
+					"    value: pm.collectionVariables.get('apiKey')",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://partners-api-sit.pif.gov.sa",
+			"type": "string"
+		},
+		{
+			"key": "apiKey",
+			"value": "a265d085-1603-41b2-a8e9-5b55ade8968f",
+			"type": "string"
+		}
+	]
+}

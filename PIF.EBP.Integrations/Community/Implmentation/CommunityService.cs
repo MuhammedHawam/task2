@@ -36,7 +36,7 @@ namespace PIF.EBP.Integrations.Community.Implmentation
         // Unfollow a community (public)
         // -------------------------------------------------------
         public Task UnfollowCommunityAsync(long communityId) =>
-            PostAsync<object>($"communities/{communityId}/unfollow"); // object -> we ignore the body
+            PostAsync<object>($"user/communities/{communityId}/unfollow"); // object -> we ignore the body
 
         // -------------------------------------------------------
         // Suggestions (max 4)

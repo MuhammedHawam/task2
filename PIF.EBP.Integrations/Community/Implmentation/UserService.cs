@@ -92,6 +92,6 @@ namespace PIF.EBP.Integrations.Community.Implmentation
         }
 
         public Task<object> GetProfileMemberAsync(string userId) =>
-           GetAsync<object>($"/user/member-profile?userId ={userId}");
+           GetAsync<object>($"user/member-profile?userId ={userId}");
     }
 }

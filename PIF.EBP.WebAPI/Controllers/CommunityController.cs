@@ -272,12 +272,12 @@ public class CommunityController : ApiController
     /// <summary>
     /// DELETE /api/community/public/{communityId}/unfollow - Unfollows a community (Public read-only action).
     /// </summary>
-    [HttpDelete]
+    [HttpPost]
     [Route("user/communities/{communityId:long}/unfollow")]
     public async Task<IHttpActionResult> UnfollowCommunity(long communityId)
     {
         await _cmService.UnfollowCommunityAsync(communityId);
-        return StatusCode(HttpStatusCode.NoContent);
+        return Ok(HttpStatusCode.NoContent);
     }
 
     /// <summary>

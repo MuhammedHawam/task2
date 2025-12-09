@@ -8,6 +8,7 @@ using PIF.EBP.Core.CIAMCommunication.DTOs;
 using PIF.EBP.Core.DependencyInjection;
 using PIF.EBP.Core.Exceptions;
 using PIF.EBP.WebAPI.Controllers.Requests.Account;
+using PIF.EBP.WebAPI.Middleware.Authorize;
 using System;
 using System.Configuration;
 using System.Net;
@@ -16,7 +17,9 @@ using System.Web.Http;
 
 namespace PIF.EBP.WebAPI.Controllers
 {
-    public class SCIMCommunicationController : BaseController
+    [RoutePrefix("ciam")]
+    [APIKEY]
+    public class SCIMCommunicationController : ApiController
     {
         private readonly ICIAMUserService _ciamUserService;
         private readonly IAccountAppService _accountService;
@@ -32,7 +35,7 @@ namespace PIF.EBP.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Create-user")]
+        [Route("create-user")]
         public async Task<IHttpActionResult> CreateUser(SCIMContactCreateDto request)
         {
             var result = await _ciamUserService.CreateContact(request);
@@ -77,7 +80,7 @@ namespace PIF.EBP.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Create-SCIM-user")]
+        [Route("create-scim-user")]
         public async Task<IHttpActionResult> CreateSCIMInvitedUser(CreateSCIMUserRequest request)
         {
             var result = await _ciamUserService.CreateInvitedUserAsync(request);
@@ -189,6 +192,26 @@ namespace PIF.EBP.WebAPI.Controllers
         {
             var users = await _ciamUserService.GetUsersByEmailAsync(email);
             return Ok(users);
+        }
+
+        [HttpPost]
+        [Route("users/{userId}/resend-invitation")]
+        public async Task<IHttpActionResult> ResendInvitation([FromUri] string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                return BadRequest("UserId is required.");
+
+            try
+            {
+                var resp = await _ciamUserService.ResendInvitationAsync(userId);
+                return resp.IsSuccess
+                    ? (IHttpActionResult)Ok(new { Success = true, Message = "Invitation resent successfully" })
+                    : BadRequest(resp.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

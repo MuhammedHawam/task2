@@ -1252,6 +1252,11 @@ namespace PIF.EBP.Application.Hexa.Implementation
             Entity["hexa_customer"] = new EntityReference(EntityNames.Account, new Guid(_sessionService.GetCompanyId()));
             Entity["hexa_portalcontact"] = new EntityReference(EntityNames.Contact, new Guid(_sessionService.GetContactId()));
 
+            foreach (var entityField in formDto.FormEntities[0].Fields)
+            {
+                Entity[entityField.AttributeName] = GetAttributeValue(entityField, formDto.FormEntities[0].EntityName, entityField.RefEntityName);
+            }
+
             return _crmService.Create(Entity, EntityNames.Request);
         }
 

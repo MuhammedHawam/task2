@@ -80,4 +80,12 @@ namespace PIF.EBP.Core.FileManagement.DTOs
         public string Status { get; set; }
         public bool SentForScanning { get; set; }
     }
+
+    public class UploadFileRequestDto
+    {
+        public string ReferenceId { get; set; }
+        public string CompanyId { get; set; }
+        public string ContactId { get; set; }
+        public string Description { get; set; }
+    }
 }

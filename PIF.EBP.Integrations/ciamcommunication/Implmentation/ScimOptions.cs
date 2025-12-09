@@ -10,5 +10,8 @@ namespace PIF.EBP.Integrations.CIAMCommunication.Implmentation
     {
         public string BaseUrl { get; set; }          // e.g. https://ciam-uat.pif.gov.sa/scim2
         public int TimeoutSeconds { get; set; } = 30;
+        public string TokenUrl { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
     }
 }

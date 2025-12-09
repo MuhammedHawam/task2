@@ -307,6 +307,26 @@ namespace PIF.EBP.Application.CIAMCommunication.Implmentation
                 .ToList();
         }
 
+        public async Task<ScimOperationResponse> ResendInvitationAsync(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException(nameof(userId));
+
+            try
+            {
+                return await _scimUserService.ResendInvitationAsync(userId).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new ScimOperationResponse
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Exception in ResendInvitationAsync: {ex.Message}",
+                    RawResponse = JsonConvert.SerializeObject(ex)
+                };
+            }
+        }
+
         private static ScimPatchRequest ToScimPatchRequest(ContactUpdateDto dto)
         {
             var patch = new ScimPatchRequest();
