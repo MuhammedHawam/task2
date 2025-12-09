@@ -301,6 +301,7 @@
     <Compile Include="Controllers\AttendeeEventController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\AccessManagementController.cs" />
+    <Compile Include="Controllers\Comments\ProjectOverviewCommentsController.cs" />
     <Compile Include="Controllers\AttendeeEventController.cs" />
     <Compile Include="Controllers\GRTController.cs" />
     <Compile Include="Controllers\CommunityController.cs" />

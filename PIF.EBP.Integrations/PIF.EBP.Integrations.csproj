@@ -273,6 +273,7 @@
   <ItemGroup>
     <Compile Include="ciamcommunication\Implmentation\SCIMCommunicationService.cs" />
     <Compile Include="ciamcommunication\Implmentation\ScimOptions.cs" />
+    <Compile Include="Comments\Implementation\ProjectOverviewCommentsIntegrationService.cs" />
     <Compile Include="Community\ApiClient.cs" />
     <Compile Include="Community\Implmentation\AdminService.cs" />
     <Compile Include="Community\Implmentation\CommunityService.cs" />
