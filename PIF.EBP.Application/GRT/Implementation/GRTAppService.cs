@@ -1,10 +1,13 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PIF.EBP.Application.GRT.DTOs;
 using PIF.EBP.Core.GRT;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,6 +51,7 @@ namespace PIF.EBP.Application.GRT.Implementation
                 {
                     ExternalReferenceCode = entry.ExternalReferenceCode,
                     Id = entry.Id,
+                    Key = entry.Key,
                     Name = entry.Name,
                     ArSA = entry.Name_i18n?.ArSA ?? string.Empty,
                     EnUS = entry.Name_i18n?.EnUS ?? string.Empty
@@ -690,23 +694,23 @@ namespace PIF.EBP.Application.GRT.Implementation
                     // LOCATION DETAILS
                     City = response.City,
                     Region = response.Region?.Name,
-                    RegionKey = response.Region?.Name,
+                    RegionKey = response.Region?.Key,
                     ProgramAssetPackage = response.ProgramAssetPackage,
                     
                     // DEVELOPMENT PROFILE
                     TypeOfDevelopment = response.TypeOfDevelopment?.Name,
-                    TypeOfDevelopmentKey = response.TypeOfDevelopment?.Name,
+                    TypeOfDevelopmentKey = response.TypeOfDevelopment?.Key,
                     PrimarySecondaryHomesForResidential = response.PrimarySecondaryHomesForResidential?.Name,
-                    PrimarySecondaryHomesForResidentialKey = response.PrimarySecondaryHomesForResidential?.Name,
+                    PrimarySecondaryHomesForResidentialKey = response.PrimarySecondaryHomesForResidential?.Key,
                     BrandedNonBranded = response.BrandedNonBranded?.Name,
-                    BrandedNonBrandedKey = response.BrandedNonBranded?.Name,
+                    BrandedNonBrandedKey = response.BrandedNonBranded?.Key,
                     RetailType = response.RetailType?.Name,
-                    RetailTypeKey = response.RetailType?.Name,
+                    RetailTypeKey = response.RetailType?.Key,
                     Phase = response.Phase,
                     ConstructionStart = response.ConstructionStart?.Name,
-                    ConstructionStartKey = response.ConstructionStart?.Name,
+                    ConstructionStartKey = response.ConstructionStart?.Key,
                     AssetStartOperatingDeliveryDate = response.AssetStartOperatingDeliveryDate?.Name,
-                    AssetStartOperatingDeliveryDateKey = response.AssetStartOperatingDeliveryDate?.Name,
+                    AssetStartOperatingDeliveryDateKey = response.AssetStartOperatingDeliveryDate?.Key,
                     
                     // ASSET SPECIFICATION
                     ParkingBaysLinkedToAsset = response.ParkingBaysLinkedToAsset,
@@ -719,18 +723,18 @@ namespace PIF.EBP.Application.GRT.Implementation
                     
                     // FINANCIAL INPUTS
                     DevelopmentIsFundedBy = response.DevelopmentIsFundedBy?.Name,
-                    DevelopmentIsFundedByKey = response.DevelopmentIsFundedBy?.Name,
+                    DevelopmentIsFundedByKey = response.DevelopmentIsFundedBy?.Key,
                     RevenueDriver = response.RevenueDriver?.Name,
-                    RevenueDriverKey = response.RevenueDriver?.Name,
+                    RevenueDriverKey = response.RevenueDriver?.Key,
                     SaleForecastYear = response.SaleForecastYear?.Name,
-                    SaleForecastYearKey = response.SaleForecastYear?.Name,
+                    SaleForecastYearKey = response.SaleForecastYear?.Key,
                     SaleStrategy = response.SaleStrategy?.Name,
-                    SaleStrategyKey = response.SaleStrategy?.Name,
+                    SaleStrategyKey = response.SaleStrategy?.Key,
                     AvgSaleRate = response.AvgSaleRate,
                     LeaseRateOrADRForKeys = response.LeaseRateOrADRForKeys,
                     OccupancyInFirstYearOfOperation = response.OccupancyInFirstYearOfOperation,
                     YearOfStabilization = response.YearOfStabilization?.Name,
-                    YearOfStabilizationKey = response.YearOfStabilization?.Name,
+                    YearOfStabilizationKey = response.YearOfStabilization?.Key,
                     StableLeaseADR = response.StableLeaseADR,
                     StableOccupancy = response.StableOccupancy,
                     
@@ -810,31 +814,17 @@ namespace PIF.EBP.Application.GRT.Implementation
 
                     // LOCATION DETAILS
                     City = deliveryPlan.City,
-                    Region = !string.IsNullOrEmpty(deliveryPlan.RegionKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.RegionKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RegionKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    Region = BuildKeyValue(deliveryPlan.RegionKey, deliveryPlan.RegionKey),
                     ProgramAssetPackage = deliveryPlan.ProgramAssetPackage,
 
                     // DEVELOPMENT PROFILE
-                    TypeOfDevelopment = !string.IsNullOrEmpty(deliveryPlan.TypeOfDevelopmentKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.TypeOfDevelopmentKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.TypeOfDevelopmentKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    PrimarySecondaryHomesForResidential = !string.IsNullOrEmpty(deliveryPlan.PrimarySecondaryHomesForResidentialKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.PrimarySecondaryHomesForResidentialKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.PrimarySecondaryHomesForResidentialKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    BrandedNonBranded = !string.IsNullOrEmpty(deliveryPlan.BrandedNonBrandedKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.BrandedNonBrandedKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.BrandedNonBrandedKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    RetailType = !string.IsNullOrEmpty(deliveryPlan.RetailTypeKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.RetailTypeKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RetailTypeKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    TypeOfDevelopment = BuildKeyValue(deliveryPlan.TypeOfDevelopmentKey, deliveryPlan.TypeOfDevelopmentKey),
+                    PrimarySecondaryHomesForResidential = BuildKeyValue(deliveryPlan.PrimarySecondaryHomesForResidentialKey, deliveryPlan.PrimarySecondaryHomesForResidentialKey),
+                    BrandedNonBranded = BuildKeyValue(deliveryPlan.BrandedNonBrandedKey, deliveryPlan.BrandedNonBrandedKey),
+                    RetailType = BuildKeyValue(deliveryPlan.RetailTypeKey, deliveryPlan.RetailTypeKey),
                     Phase = deliveryPlan.Phase,
-                    ConstructionStart = !string.IsNullOrEmpty(deliveryPlan.ConstructionStartKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.ConstructionStartKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.ConstructionStartKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    AssetStartOperatingDeliveryDate = !string.IsNullOrEmpty(deliveryPlan.AssetStartOperatingDeliveryDateKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.AssetStartOperatingDeliveryDateKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.AssetStartOperatingDeliveryDateKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    ConstructionStart = BuildKeyValue(deliveryPlan.ConstructionStartKey, deliveryPlan.ConstructionStartKey),
+                    AssetStartOperatingDeliveryDate = BuildKeyValue(deliveryPlan.AssetStartOperatingDeliveryDateKey, deliveryPlan.AssetStartOperatingDeliveryDateKey),
 
                     // ASSET SPECIFICATION
                     ParkingBaysLinkedToAsset = deliveryPlan.ParkingBaysLinkedToAsset,
@@ -846,24 +836,14 @@ namespace PIF.EBP.Application.GRT.Implementation
                     ResidentialHospitalityKeysLaborStaffRooms = deliveryPlan.ResidentialHospitalityKeysLaborStaffRooms,
 
                     // FINANCIAL INPUTS
-                    DevelopmentIsFundedBy = !string.IsNullOrEmpty(deliveryPlan.DevelopmentIsFundedByKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.DevelopmentIsFundedByKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.DevelopmentIsFundedByKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    RevenueDriver = !string.IsNullOrEmpty(deliveryPlan.RevenueDriverKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.RevenueDriverKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RevenueDriverKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    SaleForecastYear = !string.IsNullOrEmpty(deliveryPlan.SaleForecastYearKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.SaleForecastYearKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.SaleForecastYearKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    SaleStrategy = !string.IsNullOrEmpty(deliveryPlan.SaleStrategyKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.SaleStrategyKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.SaleStrategyKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    DevelopmentIsFundedBy = BuildKeyValue(deliveryPlan.DevelopmentIsFundedByKey, deliveryPlan.DevelopmentIsFundedByKey),
+                    RevenueDriver = BuildKeyValue(deliveryPlan.RevenueDriverKey, deliveryPlan.RevenueDriverKey),
+                    SaleForecastYear = BuildKeyValue(deliveryPlan.SaleForecastYearKey, deliveryPlan.SaleForecastYearKey),
+                    SaleStrategy = BuildKeyValue(deliveryPlan.SaleStrategyKey, deliveryPlan.SaleStrategyKey),
                     AvgSaleRate = deliveryPlan.AvgSaleRate,
                     LeaseRateOrADRForKeys = deliveryPlan.LeaseRateOrADRForKeys,
                     OccupancyInFirstYearOfOperation = deliveryPlan.OccupancyInFirstYearOfOperation,
-                    YearOfStabilization = !string.IsNullOrEmpty(deliveryPlan.YearOfStabilizationKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.YearOfStabilizationKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.YearOfStabilizationKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    YearOfStabilization = BuildKeyValue(deliveryPlan.YearOfStabilizationKey, deliveryPlan.YearOfStabilizationKey),
                     StableLeaseADR = deliveryPlan.StableLeaseADR,
                     StableOccupancy = deliveryPlan.StableOccupancy,
 
@@ -943,31 +923,17 @@ namespace PIF.EBP.Application.GRT.Implementation
 
                     // LOCATION DETAILS
                     City = deliveryPlan.City,
-                    Region = !string.IsNullOrEmpty(deliveryPlan.RegionKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.RegionKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RegionKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    Region = BuildKeyValue(deliveryPlan.RegionKey, deliveryPlan.RegionKey),
                     ProgramAssetPackage = deliveryPlan.ProgramAssetPackage,
 
                     // DEVELOPMENT PROFILE
-                    TypeOfDevelopment = !string.IsNullOrEmpty(deliveryPlan.TypeOfDevelopmentKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.TypeOfDevelopmentKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.TypeOfDevelopmentKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    PrimarySecondaryHomesForResidential = !string.IsNullOrEmpty(deliveryPlan.PrimarySecondaryHomesForResidentialKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.PrimarySecondaryHomesForResidentialKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.PrimarySecondaryHomesForResidentialKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    BrandedNonBranded = !string.IsNullOrEmpty(deliveryPlan.BrandedNonBrandedKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.BrandedNonBrandedKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.BrandedNonBrandedKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    RetailType = !string.IsNullOrEmpty(deliveryPlan.RetailTypeKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.RetailTypeKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RetailTypeKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    TypeOfDevelopment = BuildKeyValue(deliveryPlan.TypeOfDevelopmentKey, deliveryPlan.TypeOfDevelopmentKey),
+                    PrimarySecondaryHomesForResidential = BuildKeyValue(deliveryPlan.PrimarySecondaryHomesForResidentialKey, deliveryPlan.PrimarySecondaryHomesForResidentialKey),
+                    BrandedNonBranded = BuildKeyValue(deliveryPlan.BrandedNonBrandedKey, deliveryPlan.BrandedNonBrandedKey),
+                    RetailType = BuildKeyValue(deliveryPlan.RetailTypeKey, deliveryPlan.RetailTypeKey),
                     Phase = deliveryPlan.Phase,
-                    ConstructionStart = !string.IsNullOrEmpty(deliveryPlan.ConstructionStartKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.ConstructionStartKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.ConstructionStartKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    AssetStartOperatingDeliveryDate = !string.IsNullOrEmpty(deliveryPlan.AssetStartOperatingDeliveryDateKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.AssetStartOperatingDeliveryDateKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.AssetStartOperatingDeliveryDateKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    ConstructionStart = BuildKeyValue(deliveryPlan.ConstructionStartKey, deliveryPlan.ConstructionStartKey),
+                    AssetStartOperatingDeliveryDate = BuildKeyValue(deliveryPlan.AssetStartOperatingDeliveryDateKey, deliveryPlan.AssetStartOperatingDeliveryDateKey),
 
                     // ASSET SPECIFICATION
                     ParkingBaysLinkedToAsset = deliveryPlan.ParkingBaysLinkedToAsset,
@@ -979,24 +945,14 @@ namespace PIF.EBP.Application.GRT.Implementation
                     ResidentialHospitalityKeysLaborStaffRooms = deliveryPlan.ResidentialHospitalityKeysLaborStaffRooms,
 
                     // FINANCIAL INPUTS
-                    DevelopmentIsFundedBy = !string.IsNullOrEmpty(deliveryPlan.DevelopmentIsFundedByKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.DevelopmentIsFundedByKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.DevelopmentIsFundedByKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    RevenueDriver = !string.IsNullOrEmpty(deliveryPlan.RevenueDriverKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.RevenueDriverKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.RevenueDriverKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    SaleForecastYear = !string.IsNullOrEmpty(deliveryPlan.SaleForecastYearKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.SaleForecastYearKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.SaleForecastYearKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
-                    SaleStrategy = !string.IsNullOrEmpty(deliveryPlan.SaleStrategyKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.SaleStrategyKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.SaleStrategyKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    DevelopmentIsFundedBy = BuildKeyValue(deliveryPlan.DevelopmentIsFundedByKey, deliveryPlan.DevelopmentIsFundedByKey),
+                    RevenueDriver = BuildKeyValue(deliveryPlan.RevenueDriverKey, deliveryPlan.RevenueDriverKey),
+                    SaleForecastYear = BuildKeyValue(deliveryPlan.SaleForecastYearKey, deliveryPlan.SaleForecastYearKey),
+                    SaleStrategy = BuildKeyValue(deliveryPlan.SaleStrategyKey, deliveryPlan.SaleStrategyKey),
                     AvgSaleRate = deliveryPlan.AvgSaleRate,
                     LeaseRateOrADRForKeys = deliveryPlan.LeaseRateOrADRForKeys,
                     OccupancyInFirstYearOfOperation = deliveryPlan.OccupancyInFirstYearOfOperation,
-                    YearOfStabilization = !string.IsNullOrEmpty(deliveryPlan.YearOfStabilizationKey) 
-                        ? new GRTKeyValue { Key = deliveryPlan.YearOfStabilizationKey.Replace(" ", "").Replace("-", ""), Name = deliveryPlan.YearOfStabilizationKey.Replace(" ", "").Replace("-", "") } 
-                        : null,
+                    YearOfStabilization = BuildKeyValue(deliveryPlan.YearOfStabilizationKey, deliveryPlan.YearOfStabilizationKey),
                     StableLeaseADR = deliveryPlan.StableLeaseADR,
                     StableOccupancy = deliveryPlan.StableOccupancy,
 
@@ -1169,12 +1125,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                 var request = new GRTInfraDeliveryPlanRequest
                 {
 
-                    InfrastructureType = !string.IsNullOrEmpty(infraDeliveryPlan.InfrastructureTypeKey)
-                        ? new GRTKeyValue { Key = infraDeliveryPlan.InfrastructureTypeKey.Replace(" ", "").Replace("-", ""), Name = infraDeliveryPlan.InfrastructureTypeKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    InfrastructureSector = !string.IsNullOrEmpty(infraDeliveryPlan.InfrastructureSectorKey)
-                        ? new GRTKeyValue { Key = infraDeliveryPlan.InfrastructureSectorKey.Replace(" ", "").Replace("-", ""), Name = infraDeliveryPlan.InfrastructureSectorKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    InfrastructureType = BuildKeyValue(infraDeliveryPlan.InfrastructureTypeKey, infraDeliveryPlan.InfrastructureTypeKey),
+                    InfrastructureSector = BuildKeyValue(infraDeliveryPlan.InfrastructureSectorKey, infraDeliveryPlan.InfrastructureSectorKey),
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
                 };
@@ -1188,12 +1140,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                     {
                         var yearRequest = new GRTInfraDeliveryPlanYearRequest
                         {
-                            ActualPlanned = !string.IsNullOrEmpty(year.ActualPlannedKey)
-                        ? new GRTKeyValue { Key = year.ActualPlannedKey.Replace(" ", "").Replace("-", ""), Name = year.ActualPlannedKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                            Year = !string.IsNullOrEmpty(year.YearKey)
-                        ? new GRTKeyValue { Key = year.YearKey.Replace(" ", "").Replace("-", ""), Name = year.YearKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                            ActualPlanned = BuildKeyValue(year.ActualPlannedKey, year.ActualPlannedKey),
+                            Year = BuildKeyValue(year.YearKey, year.YearKey),
 
                             Amount = year.Amount,
                             InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanId = response.Id,
@@ -1245,12 +1193,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                 // Update the infrastructure delivery plan
                 var request = new GRTInfraDeliveryPlanRequest
                 {
-                    InfrastructureType = !string.IsNullOrEmpty(infraDeliveryPlan.InfrastructureTypeKey)
-                        ? new GRTKeyValue { Key = infraDeliveryPlan.InfrastructureTypeKey.Replace(" ", "").Replace("-", ""), Name = infraDeliveryPlan.InfrastructureTypeKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    InfrastructureSector = !string.IsNullOrEmpty(infraDeliveryPlan.InfrastructureSectorKey)
-                        ? new GRTKeyValue { Key = infraDeliveryPlan.InfrastructureSectorKey.Replace(" ", "").Replace("-", ""), Name = infraDeliveryPlan.InfrastructureSectorKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    InfrastructureType = BuildKeyValue(infraDeliveryPlan.InfrastructureTypeKey, infraDeliveryPlan.InfrastructureTypeKey),
+                    InfrastructureSector = BuildKeyValue(infraDeliveryPlan.InfrastructureSectorKey, infraDeliveryPlan.InfrastructureSectorKey),
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
                 };
@@ -1267,12 +1211,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                     {
                         var yearRequest = new GRTInfraDeliveryPlanYearRequest
                         {
-                            ActualPlanned = !string.IsNullOrEmpty(year.ActualPlannedKey)
-                        ? new GRTKeyValue { Key = year.ActualPlannedKey.Replace(" ", "").Replace("-", ""), Name = year.ActualPlannedKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                            Year = !string.IsNullOrEmpty(year.YearKey)
-                        ? new GRTKeyValue { Key = year.YearKey.Replace(" ", "").Replace("-", ""), Name = year.YearKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                            ActualPlanned = BuildKeyValue(year.ActualPlannedKey, year.ActualPlannedKey),
+                            Year = BuildKeyValue(year.YearKey, year.YearKey),
                             Amount = year.Amount,
                             InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanId = id,
                             InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanERC = response.ExternalReferenceCode
@@ -1480,28 +1420,16 @@ namespace PIF.EBP.Application.GRT.Implementation
                 var request = new GRTLandSaleRequest
                 {
                     PlotName = landSale.PlotName,
-                    LandUse = !string.IsNullOrEmpty(landSale.LandUseKey)
-                        ? new GRTKeyValue { Key = landSale.LandUseKey.Replace(" ", "").Replace("-", ""), Name = landSale.LandUseKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    LandType = !string.IsNullOrEmpty(landSale.LandTypeKey)
-                        ? new GRTKeyValue { Key = landSale.LandTypeKey.Replace(" ", "").Replace("-", ""), Name = landSale.LandTypeKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    LandUse = BuildKeyValue(landSale.LandUseKey, landSale.LandUseKey),
+                    LandType = BuildKeyValue(landSale.LandTypeKey, landSale.LandTypeKey),
                     City = landSale.City,
-                    Region = !string.IsNullOrEmpty(landSale.RegionKey)
-                        ? new GRTKeyValue { Key = landSale.RegionKey.Replace(" ", "").Replace("-", ""), Name = landSale.RegionKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    RestrictedDevelopmentToSpecificCriteria = !string.IsNullOrEmpty(landSale.RestrictedDevelopmentToSpecificCriteriaKey)
-                        ? new GRTKeyValue { Key = landSale.RestrictedDevelopmentToSpecificCriteriaKey.Replace(" ", "").Replace("-", ""), Name = landSale.RestrictedDevelopmentToSpecificCriteriaKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    SaleLease = !string.IsNullOrEmpty(landSale.SaleLeaseKey)
-                        ? new GRTKeyValue { Key = landSale.SaleLeaseKey.Replace(" ", "").Replace("-", ""), Name = landSale.SaleLeaseKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    Region = BuildKeyValue(landSale.RegionKey, landSale.RegionKey),
+                    RestrictedDevelopmentToSpecificCriteria = BuildKeyValue(landSale.RestrictedDevelopmentToSpecificCriteriaKey, landSale.RestrictedDevelopmentToSpecificCriteriaKey),
+                    SaleLease = BuildKeyValue(landSale.SaleLeaseKey, landSale.SaleLeaseKey),
                     NumberOfPlots = landSale.NumberOfPlots,
                     TotalLandArea = landSale.TotalLandArea,
                     AvgSaleLeaseRate = landSale.AvgSaleLeaseRate,
-                    YearOfSaleLeaseStart = !string.IsNullOrEmpty(landSale.YearOfSaleLeaseStartKey)
-                        ? new GRTKeyValue { Key = landSale.YearOfSaleLeaseStartKey.Replace(" ", "").Replace("-", ""), Name = landSale.YearOfSaleLeaseStartKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    YearOfSaleLeaseStart = BuildKeyValue(landSale.YearOfSaleLeaseStartKey, landSale.YearOfSaleLeaseStartKey),
                     ValueOfInfrastructureAllocatedToLand = landSale.ValueOfInfrastructureAllocatedToLand,
                     ProjectToLandSaleRelationshipProjectOverviewId = landSale.ProjectToLandSaleRelationshipProjectOverviewId,
                     ProjectToLandSaleRelationshipProjectOverviewERC = landSale.ProjectToLandSaleRelationshipProjectOverviewERC
@@ -1550,28 +1478,16 @@ namespace PIF.EBP.Application.GRT.Implementation
                 var request = new GRTLandSaleRequest
                 {
                     PlotName = landSale.PlotName,
-                    LandUse = !string.IsNullOrEmpty(landSale.LandUseKey)
-                        ? new GRTKeyValue { Key = landSale.LandUseKey.Replace(" ", "").Replace("-", ""), Name = landSale.LandUseKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    LandType = !string.IsNullOrEmpty(landSale.LandTypeKey)
-                        ? new GRTKeyValue { Key = landSale.LandTypeKey.Replace(" ", "").Replace("-", ""), Name = landSale.LandTypeKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    LandUse = BuildKeyValue(landSale.LandUseKey, landSale.LandUseKey),
+                    LandType = BuildKeyValue(landSale.LandTypeKey, landSale.LandTypeKey),
                     City = landSale.City,
-                    Region = !string.IsNullOrEmpty(landSale.RegionKey)
-                        ? new GRTKeyValue { Key = landSale.RegionKey.Replace(" ", "").Replace("-", ""), Name = landSale.RegionKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    RestrictedDevelopmentToSpecificCriteria = !string.IsNullOrEmpty(landSale.RestrictedDevelopmentToSpecificCriteriaKey)
-                        ? new GRTKeyValue { Key = landSale.RestrictedDevelopmentToSpecificCriteriaKey.Replace(" ", "").Replace("-", ""), Name = landSale.RestrictedDevelopmentToSpecificCriteriaKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    SaleLease = !string.IsNullOrEmpty(landSale.SaleLeaseKey)
-                        ? new GRTKeyValue { Key = landSale.SaleLeaseKey.Replace(" ", "").Replace("-", ""), Name = landSale.SaleLeaseKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    Region = BuildKeyValue(landSale.RegionKey, landSale.RegionKey),
+                    RestrictedDevelopmentToSpecificCriteria = BuildKeyValue(landSale.RestrictedDevelopmentToSpecificCriteriaKey, landSale.RestrictedDevelopmentToSpecificCriteriaKey),
+                    SaleLease = BuildKeyValue(landSale.SaleLeaseKey, landSale.SaleLeaseKey),
                     NumberOfPlots = landSale.NumberOfPlots,
                     TotalLandArea = landSale.TotalLandArea,
                     AvgSaleLeaseRate = landSale.AvgSaleLeaseRate,
-                    YearOfSaleLeaseStart = !string.IsNullOrEmpty(landSale.YearOfSaleLeaseStartKey)
-                        ? new GRTKeyValue { Key = landSale.YearOfSaleLeaseStartKey.Replace(" ", "").Replace("-", ""), Name = landSale.YearOfSaleLeaseStartKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    YearOfSaleLeaseStart = BuildKeyValue(landSale.YearOfSaleLeaseStartKey, landSale.YearOfSaleLeaseStartKey),
                     ValueOfInfrastructureAllocatedToLand = landSale.ValueOfInfrastructureAllocatedToLand,
                     ProjectToLandSaleRelationshipProjectOverviewId = landSale.ProjectToLandSaleRelationshipProjectOverviewId,
                     ProjectToLandSaleRelationshipProjectOverviewERC = landSale.ProjectToLandSaleRelationshipProjectOverviewERC
@@ -1963,9 +1879,7 @@ namespace PIF.EBP.Application.GRT.Implementation
                     Brand = loihma.Brand,
                     City = loihma.City,
                     HMASigned = loihma.HMASigned,
-                    HotelOperator = !string.IsNullOrEmpty(loihma.HotelOperatorKey)
-                        ? new GRTKeyValue { Key = loihma.HotelOperatorKey.Replace(" ", "").Replace("-", ""), Name = loihma.HotelOperatorKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    HotelOperator = BuildKeyValue(loihma.HotelOperatorKey, loihma.HotelOperatorKey),
                     IfHMALOISignedContractDuration = loihma.IfHMALOISignedContractDuration,
                     IfOtherHotelOperatorFillHere = loihma.IfOtherHotelOperatorFillHere,
                     IfOtherOperatingModelFillHere = loihma.IfOtherOperatingModelFillHere,
@@ -1974,16 +1888,10 @@ namespace PIF.EBP.Application.GRT.Implementation
                     Latitude = loihma.Latitude,
                     LOISigned = loihma.LOISigned,
                     Longitude = loihma.Longitude,
-                    OperatingModel = !string.IsNullOrEmpty(loihma.OperatingModelKey)
-                        ? new GRTKeyValue { Key = loihma.OperatingModelKey.Replace(" ", "").Replace("-", ""), Name = loihma.OperatingModelKey.Replace(" ", "").Replace("-", "") }
-                        : null,
-                    OperatingModelNew = !string.IsNullOrEmpty(loihma.OperatingModelNewKey)
-                        ? new GRTKeyValue { Key = loihma.OperatingModelNewKey.Replace(" ", "").Replace("-", ""), Name = loihma.OperatingModelNewKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    OperatingModel = BuildKeyValue(loihma.OperatingModelKey, loihma.OperatingModelKey),
+                    OperatingModelNew = BuildKeyValue(loihma.OperatingModelNewKey, loihma.OperatingModelNewKey),
                     OperationalYear = loihma.OperationalYear,
-                    Positionscale = !string.IsNullOrEmpty(loihma.PositionscaleKey)
-                        ? new GRTKeyValue { Key = loihma.PositionscaleKey.Replace(" ", "").Replace("-", ""), Name = loihma.PositionscaleKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    Positionscale = BuildKeyValue(loihma.PositionscaleKey, loihma.PositionscaleKey),
                     ProjectToLOIHMARelationshipProjectOverviewId = loihma.ProjectOverviewId,
                     ProjectToLOIHMARelationshipProjectOverviewERC = loihma.ProjectOverviewERC
                 };
@@ -2041,9 +1949,7 @@ namespace PIF.EBP.Application.GRT.Implementation
                     City = loihma.City,
                     HMASigned = loihma.HMASigned,
 
-                    HotelOperator = !string.IsNullOrEmpty(loihma.HotelOperatorKey)
-                        ? new GRTKeyValue { Key = loihma.HotelOperatorKey.Replace(" ", "").Replace("-", ""), Name = loihma.HotelOperatorKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    HotelOperator = BuildKeyValue(loihma.HotelOperatorKey, loihma.HotelOperatorKey),
                     IfHMALOISignedContractDuration = loihma.IfHMALOISignedContractDuration,
                     IfOtherHotelOperatorFillHere = loihma.IfOtherHotelOperatorFillHere,
                     IfOtherOperatingModelFillHere = loihma.IfOtherOperatingModelFillHere,
@@ -2052,18 +1958,12 @@ namespace PIF.EBP.Application.GRT.Implementation
                     Latitude = loihma.Latitude,
                     LOISigned = loihma.LOISigned,
                     Longitude = loihma.Longitude,
-                    OperatingModel = !string.IsNullOrEmpty(loihma.OperatingModelKey)
-                        ? new GRTKeyValue { Key = loihma.OperatingModelKey.Replace(" ", "").Replace("-", ""), Name = loihma.OperatingModelKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    OperatingModel = BuildKeyValue(loihma.OperatingModelKey, loihma.OperatingModelKey),
 
-                    OperatingModelNew = !string.IsNullOrEmpty(loihma.OperatingModelNewKey)
-                        ? new GRTKeyValue { Key = loihma.OperatingModelNewKey.Replace(" ", "").Replace("-", ""), Name = loihma.OperatingModelNewKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    OperatingModelNew = BuildKeyValue(loihma.OperatingModelNewKey, loihma.OperatingModelNewKey),
 
                     OperationalYear = loihma.OperationalYear,
-                    Positionscale = !string.IsNullOrEmpty(loihma.PositionscaleKey)
-                        ? new GRTKeyValue { Key = loihma.PositionscaleKey.Replace(" ", "").Replace("-", ""), Name = loihma.PositionscaleKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    Positionscale = BuildKeyValue(loihma.PositionscaleKey, loihma.PositionscaleKey),
 
                     ProjectToLOIHMARelationshipProjectOverviewId = loihma.ProjectOverviewId,
                     ProjectToLOIHMARelationshipProjectOverviewERC = loihma.ProjectOverviewERC
@@ -2224,9 +2124,7 @@ namespace PIF.EBP.Application.GRT.Implementation
             {
                 var request = new GRTMultipleSandURequest
                 {
-                    Regions = !string.IsNullOrEmpty(multipleSandU.RegionKey)
-                        ? new GRTKeyValue { Key = multipleSandU.RegionKey.Replace(" ", "").Replace("-", ""), Name = multipleSandU.RegionKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    Regions = BuildKeyValue(multipleSandU.RegionKey, multipleSandU.RegionKey),
                     CapexJSON = multipleSandU.CapexJSON,
                     OpexJSON = multipleSandU.OpexJSON,
                     TotalSourcesJSON = multipleSandU.TotalSourcesJSON,
@@ -2283,9 +2181,7 @@ namespace PIF.EBP.Application.GRT.Implementation
             {
                 var request = new GRTMultipleSandURequest
                 {
-                    Regions = !string.IsNullOrEmpty(multipleSandU.RegionKey)
-                        ? new GRTKeyValue { Key = multipleSandU.RegionKey.Replace(" ", "").Replace("-", ""), Name = multipleSandU.RegionKey.Replace(" ", "").Replace("-", "") }
-                        : null,
+                    Regions = BuildKeyValue(multipleSandU.RegionKey, multipleSandU.RegionKey),
                     CapexJSON = multipleSandU.CapexJSON,
                     OpexJSON = multipleSandU.OpexJSON,
                     TotalSourcesJSON = multipleSandU.TotalSourcesJSON,
@@ -2893,37 +2789,178 @@ namespace PIF.EBP.Application.GRT.Implementation
         /// </summary>
         private double? ExtractTotalFromJson(string json)
         {
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrWhiteSpace(json))
             {
                 return null;
             }
 
             try
             {
-                var data = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(json);
-                if (data?.rows != null)
+                var root = JObject.Parse(json);
+                var rowsToken = root["rows"];
+                if (rowsToken == null)
                 {
-                    // Get the first row and its first value (Total)
-                    foreach (var row in data.rows)
+                    return null;
+                }
+
+                JToken totalRowToken = null;
+
+                if (rowsToken.Type == JTokenType.Object)
+                {
+                    var rowsObj = (JObject)rowsToken;
+
+                    // Prefer an explicit "Total" (or equivalent) row if present.
+                    var totalProp = rowsObj.Properties().FirstOrDefault(p => IsTotalRowKey(p.Name));
+                    if (totalProp != null)
                     {
-                        var values = row.Value;
-                        if (values != null && values.Count > 0)
-                        {
-                            var firstValue = values[0];
-                            if (firstValue != null)
-                            {
-                                return (double?)firstValue;
-                            }
-                        }
-                        break; // Only check the first row
+                        totalRowToken = totalProp.Value;
+                    }
+                    else
+                    {
+                        // Otherwise fall back to the last row (many matrices append totals at the end).
+                        totalRowToken = rowsObj.Properties().LastOrDefault()?.Value
+                                        ?? rowsObj.Properties().FirstOrDefault()?.Value;
                     }
                 }
-                return null;
+                else if (rowsToken.Type == JTokenType.Array)
+                {
+                    // Some payloads model rows as an array of objects.
+                    foreach (var row in rowsToken.Children())
+                    {
+                        if (row.Type != JTokenType.Object)
+                        {
+                            continue;
+                        }
+
+                        var rowName = (string)row["name"] ?? (string)row["key"] ?? (string)row["label"];
+                        if (IsTotalRowKey(rowName))
+                        {
+                            totalRowToken = row["values"] ?? row["value"] ?? row["cells"] ?? row;
+                            break;
+                        }
+                    }
+
+                    totalRowToken ??= rowsToken.Children().LastOrDefault() ?? rowsToken.Children().FirstOrDefault();
+                }
+
+                if (totalRowToken == null)
+                {
+                    return null;
+                }
+
+                // If the row is an object, try common "values" containers.
+                if (totalRowToken.Type == JTokenType.Object)
+                {
+                    totalRowToken = totalRowToken["values"] ?? totalRowToken["value"] ?? totalRowToken["cells"] ?? totalRowToken;
+                }
+
+                // If row values are an array, return the first numeric cell (commonly the "Total" column).
+                if (totalRowToken.Type == JTokenType.Array)
+                {
+                    foreach (var cell in totalRowToken.Children())
+                    {
+                        if (TryReadNumber(cell, out var cellNumber))
+                        {
+                            return cellNumber;
+                        }
+
+                        if (cell?.Type == JTokenType.Object && TryReadNumber(cell["value"], out cellNumber))
+                        {
+                            return cellNumber;
+                        }
+                    }
+
+                    return null;
+                }
+
+                return TryReadNumber(totalRowToken, out var number) ? number : (double?)null;
             }
             catch
             {
                 return null;
             }
+        }
+
+        private static bool IsTotalRowKey(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return false;
+            }
+
+            var k = key.Trim();
+
+            // English variants
+            if (k.Equals("total", StringComparison.OrdinalIgnoreCase) ||
+                k.Equals("grand total", StringComparison.OrdinalIgnoreCase) ||
+                k.Equals("grandtotal", StringComparison.OrdinalIgnoreCase) ||
+                k.Equals("totals", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            // Common Arabic variants (normalized)
+            var normalizedArabic = NormalizeArabic(k);
+            return normalizedArabic == "الاجمالي" || normalizedArabic == "اجمالي";
+        }
+
+        private static bool TryReadNumber(JToken token, out double value)
+        {
+            value = 0d;
+            if (token == null || token.Type == JTokenType.Null || token.Type == JTokenType.Undefined)
+            {
+                return false;
+            }
+
+            if (token.Type == JTokenType.Integer || token.Type == JTokenType.Float)
+            {
+                value = token.Value<double>();
+                return true;
+            }
+
+            if (token.Type == JTokenType.String)
+            {
+                var s = token.Value<string>();
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    return false;
+                }
+
+                // Remove thousand separators and normalize spaces.
+                s = s.Trim().Replace(",", string.Empty);
+
+                return double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out value)
+                       || double.TryParse(s, NumberStyles.Any, CultureInfo.CurrentCulture, out value);
+            }
+
+            return false;
+        }
+
+        private static string NormalizeArabic(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return string.Empty;
+            }
+
+            // Strip whitespace and tatweel, and normalize common Alef forms.
+            var sb = new StringBuilder(input.Length);
+            foreach (var ch in input)
+            {
+                if (char.IsWhiteSpace(ch) || ch == 'ـ')
+                {
+                    continue;
+                }
+
+                sb.Append(ch);
+            }
+
+            return sb.ToString()
+                .Replace('أ', 'ا')
+                .Replace('إ', 'ا')
+                .Replace('آ', 'ا')
+                .Replace("ى", "ي")
+                .ToLowerInvariant();
         }
         #endregion
 
