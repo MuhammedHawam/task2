@@ -2826,104 +2826,163 @@ namespace PIF.EBP.Application.GRT.Implementation
             try
             {
                 var root = JObject.Parse(json);
-                var totalColumnIndex = TryGetTotalColumnIndex(root["columns"]);
-                var rowsToken = root["rows"];
+                // Different payloads use different property names (e.g., "cols" vs "columns").
+                var columnsToken = root["cols"] ?? root["columns"] ?? root["Cols"] ?? root["Columns"];
+                var totalColumnIndex = TryGetTotalColumnIndex(columnsToken);
+
+                var rowsToken = root["rows"] ?? root["Rows"];
                 if (rowsToken == null)
                 {
                     return null;
                 }
 
-                JToken totalRowToken = null;
-
+                // Prefer an explicit "Total" row (grand total) if present to avoid double-counting.
                 if (rowsToken.Type == JTokenType.Object)
                 {
                     var rowsObj = (JObject)rowsToken;
-
-                    // Prefer an explicit "Total" (or equivalent) row if present.
                     var totalProp = rowsObj.Properties().FirstOrDefault(p => IsTotalRowKey(p.Name));
-                    if (totalProp != null)
+                    if (totalProp != null && TryExtractRowTotal(totalProp.Value, totalColumnIndex, out var grandTotal))
                     {
-                        totalRowToken = totalProp.Value;
+                        return grandTotal;
                     }
-                    else
+
+                    // Otherwise, sum the "Total" cell (usually index 0) of each row.
+                    double sum = 0d;
+                    var foundAny = false;
+                    foreach (var prop in rowsObj.Properties())
                     {
-                        // Otherwise fall back to the last row (many matrices append totals at the end).
-                        totalRowToken = rowsObj.Properties().LastOrDefault()?.Value
-                                        ?? rowsObj.Properties().FirstOrDefault()?.Value;
+                        if (IsTotalRowKey(prop.Name))
+                        {
+                            continue;
+                        }
+
+                        if (TryExtractRowTotal(prop.Value, totalColumnIndex, out var rowTotal))
+                        {
+                            sum += rowTotal;
+                            foundAny = true;
+                        }
                     }
+
+                    return foundAny ? sum : (double?)null;
                 }
-                else if (rowsToken.Type == JTokenType.Array)
+
+                if (rowsToken.Type == JTokenType.Array)
                 {
                     // Some payloads model rows as an array of objects.
-                    foreach (var row in rowsToken.Children())
+                    var rowsArray = (JArray)rowsToken;
+
+                    foreach (var row in rowsArray)
                     {
-                        if (row.Type != JTokenType.Object)
+                        if (row?.Type != JTokenType.Object)
                         {
                             continue;
                         }
 
                         var rowName = (string)row["name"] ?? (string)row["key"] ?? (string)row["label"];
-                        if (IsTotalRowKey(rowName))
+                        if (IsTotalRowKey(rowName) &&
+                            TryExtractRowTotal(row["values"] ?? row["value"] ?? row["cells"] ?? row, totalColumnIndex, out var grandTotal))
                         {
-                            totalRowToken = row["values"] ?? row["value"] ?? row["cells"] ?? row;
-                            break;
+                            return grandTotal;
                         }
                     }
 
-                    totalRowToken ??= rowsToken.Children().LastOrDefault() ?? rowsToken.Children().FirstOrDefault();
-                }
-
-                if (totalRowToken == null)
-                {
-                    return null;
-                }
-
-                // If the row is an object, try common "values" containers.
-                if (totalRowToken.Type == JTokenType.Object)
-                {
-                    totalRowToken = totalRowToken["values"] ?? totalRowToken["value"] ?? totalRowToken["cells"] ?? totalRowToken;
-                }
-
-                // If row values are an array, return the first numeric cell (commonly the "Total" column).
-                if (totalRowToken.Type == JTokenType.Array)
-                {
-                    // Best effort: use the "Total" column index if we can infer it from the payload.
-                    if (totalColumnIndex.HasValue)
+                    double sum = 0d;
+                    var foundAny = false;
+                    foreach (var row in rowsArray)
                     {
-                        var cell = totalRowToken.ElementAtOrDefault(totalColumnIndex.Value);
-                        if (TryReadNumber(cell, out var indexedValue))
+                        if (row == null)
                         {
-                            return indexedValue;
+                            continue;
                         }
 
-                        if (cell?.Type == JTokenType.Object && TryReadNumber(cell["value"], out indexedValue))
+                        if (row.Type == JTokenType.Object)
                         {
-                            return indexedValue;
+                            var rowName = (string)row["name"] ?? (string)row["key"] ?? (string)row["label"];
+                            if (IsTotalRowKey(rowName))
+                            {
+                                continue;
+                            }
+
+                            if (TryExtractRowTotal(row["values"] ?? row["value"] ?? row["cells"] ?? row, totalColumnIndex, out var rowTotal))
+                            {
+                                sum += rowTotal;
+                                foundAny = true;
+                            }
+                        }
+                        else
+                        {
+                            // If it's a raw array row (rare), treat it as the values array.
+                            if (TryExtractRowTotal(row, totalColumnIndex, out var rowTotal))
+                            {
+                                sum += rowTotal;
+                                foundAny = true;
+                            }
                         }
                     }
 
-                    foreach (var cell in totalRowToken.Children())
-                    {
-                        if (TryReadNumber(cell, out var cellNumber))
-                        {
-                            return cellNumber;
-                        }
-
-                        if (cell?.Type == JTokenType.Object && TryReadNumber(cell["value"], out cellNumber))
-                        {
-                            return cellNumber;
-                        }
-                    }
-
-                    return null;
+                    return foundAny ? sum : (double?)null;
                 }
 
-                return TryReadNumber(totalRowToken, out var number) ? number : (double?)null;
+                return null;
             }
             catch
             {
                 return null;
             }
+        }
+
+        private static bool TryExtractRowTotal(JToken rowToken, int? totalColumnIndex, out double value)
+        {
+            value = 0d;
+            if (rowToken == null || rowToken.Type == JTokenType.Null || rowToken.Type == JTokenType.Undefined)
+            {
+                return false;
+            }
+
+            // If the row is an object, try common "values" containers.
+            if (rowToken.Type == JTokenType.Object)
+            {
+                rowToken = rowToken["values"] ?? rowToken["value"] ?? rowToken["cells"] ?? rowToken;
+            }
+
+            // Most matrices encode a row as an array where index 0 is the "Total" column.
+            if (rowToken.Type == JTokenType.Array)
+            {
+                var rowArray = (JArray)rowToken;
+                var idx = totalColumnIndex ?? 0;
+
+                if (idx >= 0 && idx < rowArray.Count)
+                {
+                    var cell = rowArray.ElementAtOrDefault(idx);
+                    if (TryReadNumber(cell, out value))
+                    {
+                        return true;
+                    }
+
+                    if (cell?.Type == JTokenType.Object && TryReadNumber(cell["value"], out value))
+                    {
+                        return true;
+                    }
+                }
+
+                // Fallback: first numeric cell in the row.
+                foreach (var cell in rowArray.Children())
+                {
+                    if (TryReadNumber(cell, out value))
+                    {
+                        return true;
+                    }
+
+                    if (cell?.Type == JTokenType.Object && TryReadNumber(cell["value"], out value))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            return TryReadNumber(rowToken, out value);
         }
 
         private static int? TryGetTotalColumnIndex(JToken columnsToken)
