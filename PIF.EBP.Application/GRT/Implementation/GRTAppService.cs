@@ -22,6 +22,7 @@ namespace PIF.EBP.Application.GRT.Implementation
             _grtIntegrationService = grtIntegrationService;
         }
 
+        #region Lookup And Cycles And Project Overview
         public async Task<List<GRTLookupEntryDto>> GetLookupByExternalReferenceCodeAsync(
             string externalReferenceCode,
             CancellationToken cancellationToken = default)
@@ -592,7 +593,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 throw;
             }
         }
+        #endregion
 
+        #region Delivery Plans
         public async Task<GRTDeliveryPlansPagedDto> GetDeliveryPlansPagedAsync(
             long projectOverviewId,
             int page = 1,
@@ -1041,7 +1044,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 };
             }
         }
+        #endregion
 
+        #region Infra Delivery Plans
         public async Task<GRTInfraDeliveryPlansPagedDto> GetInfraDeliveryPlansByProjectIdAsync(
             long projectOverviewId,
             int page = 1,
@@ -1349,7 +1354,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 throw;
             }
         }
+        #endregion
 
+        #region Land Sales
         public async Task<GRTLandSalesPagedDto> GetLandSalesByProjectIdAsync(
             long projectOverviewId,
             int page = 1,
@@ -1612,7 +1619,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 throw;
             }
         }
+        #endregion
 
+        #region Cashflows
         public async Task<GRTCashflowsPagedDto> GetCashflowsByProjectIdAsync(
             long projectOverviewId,
             int page = 1,
@@ -1737,8 +1746,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 throw;
             }
         }
-        #region Budgets
+        #endregion
 
+        #region Budgets
         public async Task<GRTCashflowResponseDto> UpdateCashflowAsync(
             long id,
             GRTCashflowDto cashflow,
@@ -1802,7 +1812,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 };
             }
         }
+        #endregion
 
+        #region LOI & HMA
         public async Task<GRTLOIHMAsPagedDto> GetLOIHMAsByProjectIdAsync(
             long projectOverviewId,
             int page = 1,
@@ -2099,7 +2111,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 throw;
             }
         }
+        #endregion
 
+        #region Multiple S&U
         public async Task<GRTMultipleSandUsPagedDto> GetMultipleSandUsByProjectIdAsync(
             long projectOverviewId,
             int page = 1,
@@ -2328,7 +2342,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 throw;
             }
         }
+        #endregion
 
+        #region Budget Operations
         public async Task<GRTBudgetsPagedDto> GetGRTBudgetsPagedAsync(long poid, int page = 1, int pageSize = 20, string search = null, CancellationToken cancellationToken = default)
         {
             try
@@ -2871,7 +2887,6 @@ namespace PIF.EBP.Application.GRT.Implementation
                 Name = string.IsNullOrWhiteSpace(name) ? key : name
             };
         }
-        #endregion           
 
         /// <summary>
         /// Helper method to extract total value from JSON string
@@ -2910,9 +2925,9 @@ namespace PIF.EBP.Application.GRT.Implementation
                 return null;
             }
         }
+        #endregion
 
-
-
+        #region Project Impact
         public async Task<GRTProjectImpactDto> GetProjectImpactByIdAsync(
                             long id,
                             CancellationToken cancellationToken = default)
@@ -2964,8 +2979,73 @@ namespace PIF.EBP.Application.GRT.Implementation
             }
         }
 
+        public async Task<GRTProjectImpactsPagedDto> GetProjectImpactByProjectIdAsync(
+          long projectOverviewId,
+          int page = 1,
+          int pageSize = 20,
+          CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _grtIntegrationService.GetProjectImpactByProjectIdAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    cancellationToken);
+
+                if (response == null || response.Items == null)
+                {
+                    return new GRTProjectImpactsPagedDto
+                    {
+                        Items = new List<GRTProjectImpactDto>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+
+                var result = new GRTProjectImpactsPagedDto
+                {
+                    Page = response.Page,
+                    PageSize = response.PageSize,
+                    TotalCount = response.TotalCount,
+                    LastPage = response.LastPage,
+                    Items = response.Items.Select(impact => new GRTProjectImpactDto
+                    {
+                        Id = impact.Id,
+                        ExternalReferenceCode = impact.ExternalReferenceCode,
+                        DateCreated = DateTime.TryParse(impact.DateCreated, out var dateCreated) ? dateCreated : (DateTime?)null,
+                        DateModified = DateTime.TryParse(impact.DateModified, out var dateModified) ? dateModified : (DateTime?)null,
+
+                        ProjectOverviewId = impact.ProjectToProjectImpactRelationshipProjectOverviewId,
+                        ProjectOverviewERC = impact.ProjectToProjectImpactRelationshipProjectOverviewERC,
+                        ProjectImpactRelationshipERC = impact.ProjectToProjectImpactRelationshipERC,
+
+                        AveragePersonalDisposableIncome = impact.AveragePersonalDisposableIncome,
+                        EntertainmentSpendHouseholdAnnumSAR = impact.EntertainmentSpendHouseholdAnnumSAR,
+                        MacroeconomicImpactSection = impact.MacroeconomicImpactSection,
+                        TotalDomesticOvernightVisits = impact.TotalDomesticOvernightVisits,
+                        TotalHotelOvernightVisits = impact.TotalHotelOvernightVisits,
+                        TotalInternationalOvernightVisits = impact.TotalInternationalOvernightVisits,
+                        TotalNumberOfEmployees = impact.TotalNumberOfEmployees,
+                        TotalNumberOfHospitalityStaffLabor = impact.TotalNumberOfHospitalityStaffLabor,
+                        TotalPopulationOfTheProjectSection = impact.TotalPopulationOfTheProjectSection
+                    }).ToList()
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetProjectImpactByProjectIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task<GRTProjectImpactResponseDto> UpdateProjectImpactAsync(
             long id,
+            long projectOverviewId,
             GRTProjectImpactDto projectImpact,
             CancellationToken cancellationToken = default)
         {
@@ -3001,6 +3081,7 @@ namespace PIF.EBP.Application.GRT.Implementation
 
                 var response = await _grtIntegrationService.UpdateProjectImpactAsync(
                     id,
+                    projectOverviewId,
                     request,
                     cancellationToken);
 
@@ -3078,7 +3159,249 @@ namespace PIF.EBP.Application.GRT.Implementation
                 };
             }
         }
+        #endregion
 
+        #region Approved BP
+        public async Task<GRTApprovedBPsPagedDto> GetApprovedBPsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default)
+        {
+            if (projectOverviewId <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(projectOverviewId));
+            }
 
+            var response = await _grtIntegrationService.GetApprovedBPsByProjectIdAsync(projectOverviewId, page, pageSize, cancellationToken);
+
+            return new GRTApprovedBPsPagedDto
+            {
+                Items = response.Items?.Select(item => new GRTApprovedBPListDto
+                {
+                    Id = item.Id,
+                    ExternalReferenceCode = item.ExternalReferenceCode,
+                    FirstInfrastructureStartDate = item.FirstInfrastructureStartDate?.Name ?? item.FirstInfrastructureStartSate?.Name,
+                    OperationsStartDate = item.OperationsStartDate?.Name,
+                    LastYearOfFundingRequired = string.IsNullOrEmpty(item.LastYearOfFundingRequired?.Key) ? null : (int?)int.Parse(item.LastYearOfFundingRequired.Key),
+                    PIFDateOfApproval = ParseNullableDate(item.PIFDateOfApproval)
+                }).ToList() ?? new List<GRTApprovedBPListDto>(),
+                Page = response.Page,
+                PageSize = response.PageSize,
+                TotalCount = response.TotalCount,
+                LastPage = response.LastPage
+            };
+        }
+
+        public async Task<GRTApprovedBPDetailDto> GetApprovedBPByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Approved BP ID must be greater than zero", nameof(id));
+            }
+
+            var response = await _grtIntegrationService.GetApprovedBPByIdAsync(id, cancellationToken);
+
+            if (response == null)
+            {
+                return null;
+            }
+
+            return new GRTApprovedBPDetailDto
+            {
+                Id = response.Id,
+                ExternalReferenceCode = response.ExternalReferenceCode,
+                DateCreated = ParseNullableDate(response.DateCreated),
+                DateModified = ParseNullableDate(response.DateModified),
+
+                // Overview As Per Approved BP
+                FirstInfrastructureStartDate = response.FirstInfrastructureStartDate?.Name ?? response.FirstInfrastructureStartSate?.Name,
+                FirstInfrastructureStartDateKey = response.FirstInfrastructureStartDate?.Key ?? response.FirstInfrastructureStartSate?.Key,
+                LastInfrastructureCompleteDate = response.LastInfrastructureCompleteDate?.Name,
+                LastInfrastructureCompleteDateKey = response.LastInfrastructureCompleteDate?.Key,
+                FirstVerticalConstructionStartDate = response.FirstVerticalConstructionStartDate?.Name,
+                FirstVerticalConstructionStartDateKey = response.FirstVerticalConstructionStartDate?.Key,
+                LastVerticalConstructionCompleteDate = response.LastVerticalConstructionCompleteDate?.Name,
+                LastVerticalConstructionCompleteDateKey = response.LastVerticalConstructionCompleteDate?.Key,
+                OperationsStartDate = response.OperationsStartDate?.Name,
+                OperationsStartDateKey = response.OperationsStartDate?.Key,
+                LastYearOfFundingRequired = response.LastYearOfFundingRequired?.Name,
+                LastYearOfFundingRequiredId = string.IsNullOrEmpty(response.LastYearOfFundingRequired?.Key) ? null : (int?)int.Parse(response.LastYearOfFundingRequired.Key),
+                PIFDateOfApproval = ParseNullableDate(response.PIFDateOfApproval),
+
+                // IRR approved by PIF
+                ProjectIRR = response.ProjectIRR,
+                IRRAfterGovernmentSubsidies = response.IRRAfterGovernmentSubsidies,
+                EquityIRR = response.EquityIRR,
+
+                DoesApprovedIRRIncludeLand = response.DoesApprovedIRRIncludeLand?.Name,
+                DoesApprovedIRRIncludeLandKey = response.DoesApprovedIRRIncludeLand?.Key,
+                DoesApprovedIRRIncludeInfrastructureCost = response.DoesApprovedIRRIncludeInfrastructureCost?.Name,
+                DoesApprovedIRRIncludeInfrastructureCostKey = response.DoesApprovedIRRIncludeInfrastructureCost?.Key,
+                DoesApprovedIRRIncludeGovernmentSubsidies = response.DoesApprovedIRRIncludeGovernmentSubsidies?.Name,
+                DoesApprovedIRRIncludeGovernmentSubsidiesKey = response.DoesApprovedIRRIncludeGovernmentSubsidies?.Key,
+
+                ProjectPaybackYear = response.ProjectPaybackYear?.Name,
+                ProjectPaybackYearKey = response.ProjectPaybackYear?.Key,
+                ProjectPaybackPeriod = response.ProjectPaybackPeriod,
+
+                // Development Plans
+                DevelopmentPlanBy2030 = response.DevelopmentPlanBy2030,
+                DevelopmentPlanFullDevelopment = response.DevelopmentPlanFullDevelopment,
+
+                // Sources of Funds
+                SourcesOfFunds = response.SourcesOfFunds,
+
+                // Financials
+                Financials = response.Financials,
+
+                // Relationship
+                ProjectToApprovedBPRelationshipProjectOverviewId = response.ProjectToApprovedBPRelationshipProjectOverviewId,
+                ProjectToApprovedBPRelationshipProjectOverviewERC = response.ProjectToApprovedBPRelationshipProjectOverviewERC
+            };
+        }
+
+        public async Task<GRTApprovedBPResponseDto> CreateApprovedBPAsync(
+            GRTApprovedBPDto approvedBP,
+            CancellationToken cancellationToken = default)
+        {
+            if (approvedBP == null)
+            {
+                throw new ArgumentNullException(nameof(approvedBP), "Approved BP data cannot be null");
+            }
+
+            var request = new GRTApprovedBPRequest
+            {
+                // Overview As Per Approved BP
+                FirstInfrastructureStartDate = BuildKeyValue(approvedBP.FirstInfrastructureStartDateKey, null),
+                FirstInfrastructureStartSate = BuildKeyValue(approvedBP.FirstInfrastructureStartDateKey, null), // Note: API has both fields
+                LastInfrastructureCompleteDate = BuildKeyValue(approvedBP.LastInfrastructureCompleteDateKey, null),
+                FirstVerticalConstructionStartDate = BuildKeyValue(approvedBP.FirstVerticalConstructionStartDateKey, null),
+                LastVerticalConstructionCompleteDate = BuildKeyValue(approvedBP.LastVerticalConstructionCompleteDateKey, null),
+                OperationsStartDate = BuildKeyValue(approvedBP.OperationsStartDateKey, null),
+                LastYearOfFundingRequired = approvedBP.LastYearOfFundingRequiredId.HasValue ? BuildKeyValue(approvedBP.LastYearOfFundingRequiredId.Value.ToString(), null) : null,
+                PIFDateOfApproval = approvedBP.PIFDateOfApproval?.ToString("yyyy-MM-dd"),
+
+                // IRR approved by PIF
+                ProjectIRR = approvedBP.ProjectIRR,
+                IRRAfterGovernmentSubsidies = approvedBP.IRRAfterGovernmentSubsidies,
+                EquityIRR = approvedBP.EquityIRR,
+
+                DoesApprovedIRRIncludeLand = BuildKeyValue(approvedBP.DoesApprovedIRRIncludeLandKey, null),
+                DoesApprovedIRRIncludeInfrastructureCost = BuildKeyValue(approvedBP.DoesApprovedIRRIncludeInfrastructureCostKey, null),
+                DoesApprovedIRRIncludeGovernmentSubsidies = BuildKeyValue(approvedBP.DoesApprovedIRRIncludeGovernmentSubsidiesKey, null),
+
+                ProjectPaybackYear = BuildKeyValue(approvedBP.ProjectPaybackYearKey, null),
+                ProjectPaybackPeriod = approvedBP.ProjectPaybackPeriod,
+
+                // Development Plans
+                DevelopmentPlanBy2030 = approvedBP.DevelopmentPlanBy2030,
+                DevelopmentPlanFullDevelopment = approvedBP.DevelopmentPlanFullDevelopment,
+
+                // Sources of Funds
+                SourcesOfFunds = approvedBP.SourcesOfFunds,
+
+                // Financials
+                Financials = approvedBP.Financials,
+
+                // Relationship
+                ProjectToApprovedBPRelationshipProjectOverviewId = approvedBP.ProjectToApprovedBPRelationshipProjectOverviewId,
+                ProjectToApprovedBPRelationshipProjectOverviewERC = approvedBP.ProjectToApprovedBPRelationshipProjectOverviewERC
+            };
+
+            var response = await _grtIntegrationService.CreateApprovedBPAsync(request, cancellationToken);
+
+            return new GRTApprovedBPResponseDto
+            {
+                Id = response.Id,
+                ExternalReferenceCode = response.ExternalReferenceCode,
+                DateCreated = ParseNullableDate(response.DateCreated) ?? DateTime.UtcNow,
+                DateModified = ParseNullableDate(response.DateModified) ?? DateTime.UtcNow,
+                Success = true,
+                Message = "Approved BP created successfully"
+            };
+        }
+
+        public async Task<GRTApprovedBPResponseDto> UpdateApprovedBPAsync(
+            long id,
+            GRTApprovedBPDto approvedBP,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Approved BP ID must be greater than zero", nameof(id));
+            }
+
+            if (approvedBP == null)
+            {
+                throw new ArgumentNullException(nameof(approvedBP), "Approved BP data cannot be null");
+            }
+
+            var request = new GRTApprovedBPRequest
+            {
+                // Overview As Per Approved BP
+                FirstInfrastructureStartDate = BuildKeyValue(approvedBP.FirstInfrastructureStartDateKey, null),
+                FirstInfrastructureStartSate = BuildKeyValue(approvedBP.FirstInfrastructureStartDateKey, null),
+                LastInfrastructureCompleteDate = BuildKeyValue(approvedBP.LastInfrastructureCompleteDateKey, null),
+                FirstVerticalConstructionStartDate = BuildKeyValue(approvedBP.FirstVerticalConstructionStartDateKey, null),
+                LastVerticalConstructionCompleteDate = BuildKeyValue(approvedBP.LastVerticalConstructionCompleteDateKey, null),
+                OperationsStartDate = BuildKeyValue(approvedBP.OperationsStartDateKey, null),
+                LastYearOfFundingRequired = approvedBP.LastYearOfFundingRequiredId.HasValue ? BuildKeyValue(approvedBP.LastYearOfFundingRequiredId.Value.ToString(), null) : null,
+                PIFDateOfApproval = approvedBP.PIFDateOfApproval?.ToString("yyyy-MM-dd"),
+
+                // IRR approved by PIF
+                ProjectIRR = approvedBP.ProjectIRR,
+                IRRAfterGovernmentSubsidies = approvedBP.IRRAfterGovernmentSubsidies,
+                EquityIRR = approvedBP.EquityIRR,
+
+                DoesApprovedIRRIncludeLand = BuildKeyValue(approvedBP.DoesApprovedIRRIncludeLandKey, null),
+                DoesApprovedIRRIncludeInfrastructureCost = BuildKeyValue(approvedBP.DoesApprovedIRRIncludeInfrastructureCostKey, null),
+                DoesApprovedIRRIncludeGovernmentSubsidies = BuildKeyValue(approvedBP.DoesApprovedIRRIncludeGovernmentSubsidiesKey, null),
+
+                ProjectPaybackYear = BuildKeyValue(approvedBP.ProjectPaybackYearKey, null),
+                ProjectPaybackPeriod = approvedBP.ProjectPaybackPeriod,
+
+                // Development Plans
+                DevelopmentPlanBy2030 = approvedBP.DevelopmentPlanBy2030,
+                DevelopmentPlanFullDevelopment = approvedBP.DevelopmentPlanFullDevelopment,
+
+                // Sources of Funds
+                SourcesOfFunds = approvedBP.SourcesOfFunds,
+
+                // Financials
+                Financials = approvedBP.Financials,
+
+                // Relationship
+                ProjectToApprovedBPRelationshipProjectOverviewId = approvedBP.ProjectToApprovedBPRelationshipProjectOverviewId,
+                ProjectToApprovedBPRelationshipProjectOverviewERC = approvedBP.ProjectToApprovedBPRelationshipProjectOverviewERC
+            };
+
+            var response = await _grtIntegrationService.UpdateApprovedBPAsync(id, request, cancellationToken);
+
+            return new GRTApprovedBPResponseDto
+            {
+                Id = response.Id,
+                ExternalReferenceCode = response.ExternalReferenceCode,
+                DateCreated = ParseNullableDate(response.DateCreated) ?? DateTime.UtcNow,
+                DateModified = ParseNullableDate(response.DateModified) ?? DateTime.UtcNow,
+                Success = true,
+                Message = "Approved BP updated successfully"
+            };
+        }
+
+        public async Task<bool> DeleteApprovedBPAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Approved BP ID must be greater than zero", nameof(id));
+            }
+
+            return await _grtIntegrationService.DeleteApprovedBPAsync(id, cancellationToken);
+        }
+        #endregion
     }
 }

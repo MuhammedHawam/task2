@@ -36,6 +36,15 @@ namespace PIF.EBP.Core.Community
         /// Approves a pending community.
         /// </summary>
         Task<object> ApproveCommunityAsync(long communityId);
+        /// <summary>
+        /// Archive a community.
+        /// </summary>
+        Task<object> ArchiveCommunityAsync(long communityId);
+        /// <summary>
+        /// UnArchive a community.
+        /// </summary>
+        Task<object> UnArchiveCommunityAsync(long communityId);
+
 
         /// <summary>
         /// Rejects a pending community.
@@ -95,6 +104,18 @@ namespace PIF.EBP.Core.Community
             string filter = null,
             string sort = null,
             string search = null);
+
+
+        /// <summary>
+        /// Archive a post.
+        /// </summary>
+        Task<object> ArchivePostsAsync(long postId);
+
+
+        /// <summary>
+        /// UnArchive a post.
+        /// </summary>
+        Task<object> UnArchivePostsAsync(long postId);
 
         /// <summary>
         /// Updates the status of a post (e.g., approve, reject, publish, etc.).

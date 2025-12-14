@@ -14,7 +14,7 @@ namespace PIF.EBP.Integrations.Community.Implmentation
                                                         int pageSize = 20)
         {
             var qs = $"?search={WebUtility.UrlEncode(search)}&page={page}&pageSize={pageSize}";
-            return GetAsync<object>($"/search{qs}");
+            return GetAsync<object>($"search{qs}");
         }
     }
 }

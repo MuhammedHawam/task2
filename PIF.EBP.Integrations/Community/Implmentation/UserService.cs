@@ -91,7 +91,7 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             return "?" + string.Join("&", q);
         }
 
-        public Task<object> GetProfileMemberAsync(string userId) =>
-           GetAsync<object>($"user/member-profile?userId ={userId}");
+        public Task<object> GetProfileMemberAsync(string userId, string companyId) =>
+           GetAsync<object>($"user/member-profile?userId ={userId}&companyId={companyId}");
     }
 }

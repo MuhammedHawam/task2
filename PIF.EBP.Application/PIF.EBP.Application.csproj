@@ -221,6 +221,7 @@
     <Compile Include="Commercialization\Implementation\CommercializationAppService.cs" />
     <Compile Include="Commercialization\Interfaces\ICommercializationCacheManager.cs" />
     <Compile Include="Commercialization\Interfaces\IESMService.cs" />
+    <Compile Include="GRT\DTOs\GRTApprovedBPDto.cs" />
     <Compile Include="GRT\DTOs\GRTBudgetsSummaryDto.cs" />
     <Compile Include="GRT\DTOs\GRTCashflowDto.cs" />
     <Compile Include="GRT\DTOs\GRTCycleDto.cs" />

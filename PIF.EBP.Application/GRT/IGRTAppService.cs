@@ -13,6 +13,7 @@ namespace PIF.EBP.Application.GRT
     /// </summary>
     public interface IGRTAppService : ITransientDependency
     {
+        #region Lookup And Cycles And Project Overview
         /// <summary>
         /// Get lookup entries by external reference code
         /// </summary>
@@ -70,7 +71,9 @@ namespace PIF.EBP.Application.GRT
             int pageSize = 20,
             string search = null,
             CancellationToken cancellationToken = default);
+        #endregion
 
+        #region Delivery Plans
         /// <summary>
         /// Get GRT Delivery Plans by project overview ID with pagination and search
         /// </summary>
@@ -128,7 +131,9 @@ namespace PIF.EBP.Application.GRT
             long id,
             GRTDeliveryPlanDto deliveryPlan,
             CancellationToken cancellationToken = default);
+        #endregion
 
+        #region Infra Delivery Plans
         /// <summary>
         /// Get infrastructure delivery plans by project overview ID
         /// </summary>
@@ -184,7 +189,9 @@ namespace PIF.EBP.Application.GRT
         Task<bool> DeleteInfraDeliveryPlanAsync(
             long id,
             CancellationToken cancellationToken = default);
+        #endregion
 
+        #region Land Sales
         /// <summary>
         /// Get land sales by project overview ID
         /// </summary>
@@ -240,7 +247,9 @@ namespace PIF.EBP.Application.GRT
         Task<bool> DeleteLandSaleAsync(
             long id,
             CancellationToken cancellationToken = default);
+        #endregion
 
+        #region Cashflows
         /// <summary>
         /// Get cashflows by project overview ID
         /// </summary>
@@ -264,7 +273,9 @@ namespace PIF.EBP.Application.GRT
         Task<GRTCashflowDto> GetCashflowByIdAsync(
             long id,
             CancellationToken cancellationToken = default);
+        #endregion
 
+        #region Budgets
         /// <summary>
         /// Get GRT Budgets
         /// </summary>
@@ -318,7 +329,9 @@ namespace PIF.EBP.Application.GRT
             string externalReferenceCode,
             GRTBudgetSectionsDto sections,
             CancellationToken cancellationToken = default);
+        #endregion
 
+        #region Cashflow Updates
         /// <summary>
         /// Update cashflow by ID
         /// </summary>
@@ -330,7 +343,9 @@ namespace PIF.EBP.Application.GRT
             long id,
             GRTCashflowDto cashflow,
             CancellationToken cancellationToken = default);
+        #endregion
 
+        #region LOI & HMA
         /// <summary>
         /// Get LOI & HMA (Approved Business Plan) by project overview ID
         /// </summary>
@@ -388,7 +403,9 @@ namespace PIF.EBP.Application.GRT
         Task<bool> DeleteLOIHMAAsync(
             long id,
             CancellationToken cancellationToken = default);
+        #endregion
 
+        #region Multiple S&U
         /// <summary>
         /// Get Multiple S&U by project overview ID
         /// </summary>
@@ -448,20 +465,105 @@ namespace PIF.EBP.Application.GRT
             long projectOverviewId,
             long id,
             CancellationToken cancellationToken = default);
-            
+        #endregion
 
+        #region Approved BP
+        /// <summary>
+        /// Get Approved BPs by project overview ID with pagination
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="page">Page number (1-based)</param>
+        /// <param name="pageSize">Number of items per page</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Paginated Approved BPs response</returns>
+        Task<GRTApprovedBPsPagedDto> GetApprovedBPsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Get Approved BP by ID
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Approved BP details</returns>
+        Task<GRTApprovedBPDetailDto> GetApprovedBPByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Create a new Approved BP
+        /// </summary>
+        /// <param name="approvedBP">Approved BP data</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Created Approved BP response</returns>
+        Task<GRTApprovedBPResponseDto> CreateApprovedBPAsync(
+            GRTApprovedBPDto approvedBP,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update Approved BP by ID
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP</param>
+        /// <param name="approvedBP">Approved BP data to update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Updated Approved BP response</returns>
+        Task<GRTApprovedBPResponseDto> UpdateApprovedBPAsync(
+            long id,
+            GRTApprovedBPDto approvedBP,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Delete Approved BP by ID
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>True if deleted successfully</returns>
+        Task<bool> DeleteApprovedBPAsync(
+            long id,
+            CancellationToken cancellationToken = default);
+        #endregion
+
+        #region Project Impact
+        /// <summary>
+        /// Get project impact by ID
+        /// </summary>
+        /// <param name="id">The ID of the project impact</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Project impact details</returns>
         Task<GRTProjectImpactDto> GetProjectImpactByIdAsync(
-                               long id,
-                               CancellationToken cancellationToken = default);
+            long id,
+            CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Update project impact by ID
+        /// </summary>
+        /// <param name="id">The ID of the project impact</param>
+        /// <param name="projectImpact">Project impact data to update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Updated project impact response</returns>
         Task<GRTProjectImpactResponseDto> UpdateProjectImpactAsync(
             long id,
+            long projectOverviewId,
             GRTProjectImpactDto projectImpact,
             CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Create a new project impact
+        /// </summary>
+        /// <param name="projectImpact">Project impact data</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Created project impact response</returns>
         Task<GRTProjectImpactResponseDto> CreateProjectImpactAsync(
-                          GRTProjectImpactDto projectImpact,
-                          CancellationToken cancellationToken = default);
+            GRTProjectImpactDto projectImpact,
+            CancellationToken cancellationToken = default);
+
+        Task<GRTProjectImpactsPagedDto> GetProjectImpactByProjectIdAsync(
+        long projectOverviewId,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default);
+        #endregion
     }
 }

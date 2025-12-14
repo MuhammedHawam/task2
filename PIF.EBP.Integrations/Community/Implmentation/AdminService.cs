@@ -28,6 +28,12 @@ namespace PIF.EBP.Integrations.Community.Implmentation
         public Task<object> ApproveCommunityAsync(long communityId) =>
             PutAsync<object>($"admin/communities/{communityId}/approve");
 
+        public Task<object> ArchiveCommunityAsync(long communityId) =>
+            PutAsync<object>($"admin/communities/{communityId}/archive");
+
+        public Task<object> UnArchiveCommunityAsync(long communityId) =>
+            PutAsync<object>($"admin/communities/{communityId}/unarchive");
+
         public Task<object> RejectCommunityAsync(long communityId, CommunityRejectRequest request) =>
             PutAsync<object>($"admin/communities/{communityId}/reject", request);
 
@@ -67,6 +73,13 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             var qs = BuildQuery(page, pageSize, filter, sort, search);
             return GetAsync<object>($"admin/posts/pending{qs}");
         }
+
+        public Task<object> ArchivePostsAsync(long postId) =>
+            PutAsync<object>($"admin/posts/{postId}/archive");
+
+        public Task<object> UnArchivePostsAsync(long postId) =>
+            PutAsync<object>($"admin/posts/{postId}/unarchive");
+
 
         public Task<object> UpdatePostStatusAsync(long postId, PostStatusUpdateRequest request) =>
             PutAsync<object>($"admin/posts/{postId}/status", request);

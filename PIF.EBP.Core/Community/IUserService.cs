@@ -49,6 +49,6 @@ namespace PIF.EBP.Core.Community
 
         #endregion
 
-        Task<object> GetProfileMemberAsync(string userId);
+        Task<object> GetProfileMemberAsync(string userId, string companyId);
     }
 }

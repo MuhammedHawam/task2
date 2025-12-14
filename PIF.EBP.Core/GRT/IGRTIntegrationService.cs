@@ -9,6 +9,7 @@ namespace PIF.EBP.Core.GRT
     /// </summary>
     public interface IGRTIntegrationService : ITransientDependency
     {
+        #region Lookup And Cycles
         /// <summary>
         /// Get list type definition by external reference code
         /// </summary>
@@ -66,6 +67,8 @@ namespace PIF.EBP.Core.GRT
             int pageSize = 20,
             string search = null,
             CancellationToken cancellationToken = default);
+        #endregion
+        #region Delivery Plans 
 
         /// <summary>
         /// Get GRT Delivery Plans by project overview ID with pagination and search
@@ -124,7 +127,8 @@ namespace PIF.EBP.Core.GRT
             long id,
             GRTDeliveryPlanRequest request,
             CancellationToken cancellationToken = default);
-
+        #endregion
+        #region infrastructure delivery plans
         /// <summary>
         /// Get infrastructure delivery plans by project overview ID
         /// </summary>
@@ -226,7 +230,8 @@ namespace PIF.EBP.Core.GRT
         Task<bool> DeleteInfraDeliveryPlanYearAsync(
             long id,
             CancellationToken cancellationToken = default);
-
+        #endregion
+        #region land sales
         /// <summary>
         /// Get land sales by project overview ID
         /// </summary>
@@ -282,31 +287,8 @@ namespace PIF.EBP.Core.GRT
         Task<bool> DeleteLandSaleAsync(
             long id,
             CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Get cashflows by project overview ID
-        /// </summary>
-        /// <param name="projectOverviewId">The ID of the project overview</param>
-        /// <param name="page">Page number (1-based)</param>
-        /// <param name="pageSize">Number of items per page</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>Paginated cashflows response</returns>
-        Task<GRTCashflowsPagedResponse> GetCashflowsByProjectIdAsync(
-            long projectOverviewId,
-            int page = 1,
-            int pageSize = 20,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Get cashflow by ID
-        /// </summary>
-        /// <param name="id">The ID of the cashflow</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>Cashflow data</returns>
-        Task<GRTCashflow> GetCashflowByIdAsync(
-            long id,
-            CancellationToken cancellationToken = default);
-
+        #endregion
+        #region budgets
         /// <summary>
         /// Get GRT budgets paged
         /// </summary>
@@ -359,6 +341,31 @@ namespace PIF.EBP.Core.GRT
             string externalReferenceCode,
             GRTBudgetRequest request,
             CancellationToken cancellationToken = default);
+        #endregion
+        #region cashflow
+        /// <summary>
+        /// Get cashflows by project overview ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="page">Page number (1-based)</param>
+        /// <param name="pageSize">Number of items per page</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Paginated cashflows response</returns>
+        Task<GRTCashflowsPagedResponse> GetCashflowsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Get cashflow by ID
+        /// </summary>
+        /// <param name="id">The ID of the cashflow</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Cashflow data</returns>
+        Task<GRTCashflow> GetCashflowByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create a new cashflow in GRT
@@ -381,7 +388,8 @@ namespace PIF.EBP.Core.GRT
             long id,
             GRTCashflowRequest request,
             CancellationToken cancellationToken = default);
-
+        #endregion
+        #region  LOI & HMA
         /// <summary>
         /// Get LOI & HMA (Approved Business Plan) by project overview ID
         /// </summary>
@@ -439,7 +447,8 @@ namespace PIF.EBP.Core.GRT
         Task<bool> DeleteLOIHMAAsync(
             long id,
             CancellationToken cancellationToken = default);
-
+        #endregion
+        #region Multiple S&U
         /// <summary>
         /// Get Multiple S&U by project overview ID
         /// </summary>
@@ -500,18 +509,84 @@ namespace PIF.EBP.Core.GRT
             long id,
             CancellationToken cancellationToken = default);
 
+        #endregion
+        #region Approved BP
+        /// <summary>
+        /// Get Approved BPs by project overview ID
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="page">Page number (1-based)</param>
+        /// <param name="pageSize">Number of items per page</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Paginated Approved BP response</returns>
+        Task<GRTApprovedBPsPagedResponse> GetApprovedBPsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Get Approved BP by ID
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Approved BP data</returns>
+        Task<GRTApprovedBP> GetApprovedBPByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Create a new Approved BP in GRT
+        /// </summary>
+        /// <param name="request">Approved BP data</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Created Approved BP response</returns>
+        Task<GRTApprovedBPResponse> CreateApprovedBPAsync(
+            GRTApprovedBPRequest request,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update Approved BP by ID
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP</param>
+        /// <param name="request">Approved BP data to update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Updated Approved BP response</returns>
+        Task<GRTApprovedBPResponse> UpdateApprovedBPAsync(
+            long id,
+            GRTApprovedBPRequest request,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Delete Approved BP by ID
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>True if deleted successfully</returns>
+        Task<bool> DeleteApprovedBPAsync(
+            long id,
+            CancellationToken cancellationToken = default);
+        #endregion
+        #region Project Impact
         Task<GRTProjectImpact> GetProjectImpactByIdAsync(
               long id,
               CancellationToken cancellationToken = default);
 
         Task<GRTProjectImpactResponse> UpdateProjectImpactAsync(
             long id,
+            long projectOverviewId,
             GRTProjectImpactRequest request,
             CancellationToken cancellationToken = default);
 
         Task<GRTProjectImpactResponse> CreateProjectImpactAsync(
                          GRTProjectImpactRequest request,
                          CancellationToken cancellationToken = default);
+        Task<GRTProjectImpactPagedResponse> GetProjectImpactByProjectIdAsync(
+                     long projectOverviewId,
+                      int page = 1,
+                      int pageSize = 20,
+                     CancellationToken cancellationToken = default);
+        #endregion
+
     }
 }
