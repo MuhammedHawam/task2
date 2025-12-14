@@ -25,12 +25,6 @@ namespace PIF.EBP.Application.GRT
         public string InfrastructureSectorKey { get; set; }
         public long? ProjectToInfraDeliveryPlanRelationshipProjectOverviewId { get; set; }
         public string ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC { get; set; }
-
-        /// <summary>
-        /// Total amount for the plan (used by grid/list view).
-        /// If not provided, the API will compute it from <see cref="Years"/> amounts when available.
-        /// </summary>
-        public double? Total { get; set; }
         
         // Year entries
         public List<GRTInfraDeliveryPlanYearDto> Years { get; set; }
