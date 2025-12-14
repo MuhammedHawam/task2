@@ -592,16 +592,12 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 throw new ArgumentNullException(nameof(request), "Delivery plan request cannot be null");
             }
 
-            if (!request.ProjectToDeliveryPlanRelationshipProjectOverviewId.HasValue ||
-                request.ProjectToDeliveryPlanRelationshipProjectOverviewId.Value <= 0)
-            {
-                throw new ArgumentException("Project overview ID must be provided in the request", nameof(request));
-            }
-
             try
             {
-                var projectOverviewId = request.ProjectToDeliveryPlanRelationshipProjectOverviewId.Value;
-                var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToDeliveryPlanRelationship/{id}";
+                // Update the object entry directly by its ID.
+                // Using the relationship endpoint here can lead to no-op updates if the provided id
+                // is the delivery plan id (object entry id), not the relationship entry id.
+                var url = $"/o/c/grtdeliveryplans/{id}";
 
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {
