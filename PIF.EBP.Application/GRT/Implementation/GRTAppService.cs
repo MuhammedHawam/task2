@@ -1127,7 +1127,8 @@ namespace PIF.EBP.Application.GRT.Implementation
 
                     InfrastructureType = BuildKeyValue(infraDeliveryPlan.InfrastructureTypeKey, infraDeliveryPlan.InfrastructureTypeKey),
                     InfrastructureSector = BuildKeyValue(infraDeliveryPlan.InfrastructureSectorKey, infraDeliveryPlan.InfrastructureSectorKey),
-                    Total = infraDeliveryPlan.Years?.Where(y => y?.Amount != null).Sum(y => y.Amount.Value),
+                    Total = infraDeliveryPlan.Total
+                        ?? infraDeliveryPlan.Years?.Where(y => y?.Amount != null).Sum(y => y.Amount.Value),
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
                 };
@@ -1246,7 +1247,8 @@ namespace PIF.EBP.Application.GRT.Implementation
                 {
                     InfrastructureType = BuildKeyValue(infraDeliveryPlan.InfrastructureTypeKey, infraDeliveryPlan.InfrastructureTypeKey),
                     InfrastructureSector = BuildKeyValue(infraDeliveryPlan.InfrastructureSectorKey, infraDeliveryPlan.InfrastructureSectorKey),
-                    Total = infraDeliveryPlan.Years?.Where(y => y?.Amount != null).Sum(y => y.Amount.Value),
+                    Total = infraDeliveryPlan.Total
+                        ?? infraDeliveryPlan.Years?.Where(y => y?.Amount != null).Sum(y => y.Amount.Value),
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
                 };
