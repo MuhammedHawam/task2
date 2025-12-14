@@ -2870,7 +2870,10 @@ namespace PIF.EBP.Application.GRT.Implementation
                         }
                     }
 
-                    totalRowToken ??= rowsToken.Children().LastOrDefault() ?? rowsToken.Children().FirstOrDefault();
+                    if (totalRowToken == null)
+                    {
+                        totalRowToken = rowsToken.Children().LastOrDefault() ?? rowsToken.Children().FirstOrDefault();
+                    }
                 }
 
                 if (totalRowToken == null)
