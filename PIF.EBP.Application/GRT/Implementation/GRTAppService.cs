@@ -1879,7 +1879,7 @@ namespace PIF.EBP.Application.GRT.Implementation
                     Brand = loihma.Brand,
                     City = loihma.City,
                     HMASigned = loihma.HMASigned,
-                    HotelOperator = BuildKeyValue(loihma.HotelOperatorKey, loihma.HotelOperatorKey),
+                    HotelOperator = BuildKeyValue(NormalizeListTypeKey(loihma.HotelOperatorKey), loihma.HotelOperatorName ?? loihma.HotelOperatorKey),
                     IfHMALOISignedContractDuration = loihma.IfHMALOISignedContractDuration,
                     IfOtherHotelOperatorFillHere = loihma.IfOtherHotelOperatorFillHere,
                     IfOtherOperatingModelFillHere = loihma.IfOtherOperatingModelFillHere,
@@ -1888,10 +1888,10 @@ namespace PIF.EBP.Application.GRT.Implementation
                     Latitude = loihma.Latitude,
                     LOISigned = loihma.LOISigned,
                     Longitude = loihma.Longitude,
-                    OperatingModel = BuildKeyValue(loihma.OperatingModelKey, loihma.OperatingModelKey),
-                    OperatingModelNew = BuildKeyValue(loihma.OperatingModelNewKey, loihma.OperatingModelNewKey),
+                    OperatingModel = BuildKeyValue(NormalizeListTypeKey(loihma.OperatingModelKey), loihma.OperatingModelName ?? loihma.OperatingModelKey),
+                    OperatingModelNew = BuildKeyValue(NormalizeListTypeKey(loihma.OperatingModelNewKey), loihma.OperatingModelNewName ?? loihma.OperatingModelNewKey),
                     OperationalYear = loihma.OperationalYear,
-                    Positionscale = BuildKeyValue(loihma.PositionscaleKey, loihma.PositionscaleKey),
+                    Positionscale = BuildKeyValue(NormalizeListTypeKey(loihma.PositionscaleKey), loihma.PositionscaleName ?? loihma.PositionscaleKey),
                     ProjectToLOIHMARelationshipProjectOverviewId = loihma.ProjectOverviewId,
                     ProjectToLOIHMARelationshipProjectOverviewERC = loihma.ProjectOverviewERC
                 };
@@ -1949,7 +1949,7 @@ namespace PIF.EBP.Application.GRT.Implementation
                     City = loihma.City,
                     HMASigned = loihma.HMASigned,
 
-                    HotelOperator = BuildKeyValue(loihma.HotelOperatorKey, loihma.HotelOperatorKey),
+                    HotelOperator = BuildKeyValue(NormalizeListTypeKey(loihma.HotelOperatorKey), loihma.HotelOperatorName ?? loihma.HotelOperatorKey),
                     IfHMALOISignedContractDuration = loihma.IfHMALOISignedContractDuration,
                     IfOtherHotelOperatorFillHere = loihma.IfOtherHotelOperatorFillHere,
                     IfOtherOperatingModelFillHere = loihma.IfOtherOperatingModelFillHere,
@@ -1958,12 +1958,12 @@ namespace PIF.EBP.Application.GRT.Implementation
                     Latitude = loihma.Latitude,
                     LOISigned = loihma.LOISigned,
                     Longitude = loihma.Longitude,
-                    OperatingModel = BuildKeyValue(loihma.OperatingModelKey, loihma.OperatingModelKey),
+                    OperatingModel = BuildKeyValue(NormalizeListTypeKey(loihma.OperatingModelKey), loihma.OperatingModelName ?? loihma.OperatingModelKey),
 
-                    OperatingModelNew = BuildKeyValue(loihma.OperatingModelNewKey, loihma.OperatingModelNewKey),
+                    OperatingModelNew = BuildKeyValue(NormalizeListTypeKey(loihma.OperatingModelNewKey), loihma.OperatingModelNewName ?? loihma.OperatingModelNewKey),
 
                     OperationalYear = loihma.OperationalYear,
-                    Positionscale = BuildKeyValue(loihma.PositionscaleKey, loihma.PositionscaleKey),
+                    Positionscale = BuildKeyValue(NormalizeListTypeKey(loihma.PositionscaleKey), loihma.PositionscaleName ?? loihma.PositionscaleKey),
 
                     ProjectToLOIHMARelationshipProjectOverviewId = loihma.ProjectOverviewId,
                     ProjectToLOIHMARelationshipProjectOverviewERC = loihma.ProjectOverviewERC
@@ -2782,6 +2782,25 @@ namespace PIF.EBP.Application.GRT.Implementation
                 Key = key,
                 Name = string.IsNullOrWhiteSpace(name) ? key : name
             };
+        }
+
+        /// <summary>
+        /// Normalizes list-type keys when callers accidentally send labels (e.g., "HMA") instead of keys.
+        /// Liferay list type entry keys are typically lowercase and without spaces/dashes.
+        /// </summary>
+        private static string NormalizeListTypeKey(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return value
+                .Trim()
+                .Replace(" ", string.Empty)
+                .Replace("-", string.Empty)
+                .Replace("_", string.Empty)
+                .ToLowerInvariant();
         }
 
         /// <summary>
