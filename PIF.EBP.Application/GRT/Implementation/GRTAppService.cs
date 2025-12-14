@@ -2797,6 +2797,7 @@ namespace PIF.EBP.Application.GRT.Implementation
             try
             {
                 var root = JObject.Parse(json);
+                var totalColumnIndex = TryGetTotalColumnIndex(root["columns"]);
                 var rowsToken = root["rows"];
                 if (rowsToken == null)
                 {
@@ -2857,6 +2858,21 @@ namespace PIF.EBP.Application.GRT.Implementation
                 // If row values are an array, return the first numeric cell (commonly the "Total" column).
                 if (totalRowToken.Type == JTokenType.Array)
                 {
+                    // Best effort: use the "Total" column index if we can infer it from the payload.
+                    if (totalColumnIndex.HasValue)
+                    {
+                        var cell = totalRowToken.ElementAtOrDefault(totalColumnIndex.Value);
+                        if (TryReadNumber(cell, out var indexedValue))
+                        {
+                            return indexedValue;
+                        }
+
+                        if (cell?.Type == JTokenType.Object && TryReadNumber(cell["value"], out indexedValue))
+                        {
+                            return indexedValue;
+                        }
+                    }
+
                     foreach (var cell in totalRowToken.Children())
                     {
                         if (TryReadNumber(cell, out var cellNumber))
@@ -2879,6 +2895,39 @@ namespace PIF.EBP.Application.GRT.Implementation
             {
                 return null;
             }
+        }
+
+        private static int? TryGetTotalColumnIndex(JToken columnsToken)
+        {
+            if (columnsToken == null || columnsToken.Type != JTokenType.Array)
+            {
+                return null;
+            }
+
+            var idx = 0;
+            foreach (var col in columnsToken.Children())
+            {
+                string name = null;
+                if (col.Type == JTokenType.String)
+                {
+                    name = col.Value<string>();
+                }
+                else if (col.Type == JTokenType.Object)
+                {
+                    name = (string)col["name"] ?? (string)col["key"] ?? (string)col["label"] ?? (string)col["title"];
+                }
+
+                if (IsTotalRowKey(name))
+                {
+                    return idx;
+                }
+
+                idx++;
+            }
+
+            // Common convention: last column is Total.
+            var count = columnsToken.Children().Count();
+            return count > 0 ? count - 1 : (int?)null;
         }
 
         private static bool IsTotalRowKey(string key)
