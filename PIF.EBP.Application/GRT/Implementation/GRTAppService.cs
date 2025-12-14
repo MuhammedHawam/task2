@@ -1127,6 +1127,7 @@ namespace PIF.EBP.Application.GRT.Implementation
 
                     InfrastructureType = BuildKeyValue(infraDeliveryPlan.InfrastructureTypeKey, infraDeliveryPlan.InfrastructureTypeKey),
                     InfrastructureSector = BuildKeyValue(infraDeliveryPlan.InfrastructureSectorKey, infraDeliveryPlan.InfrastructureSectorKey),
+                    Total = infraDeliveryPlan.Years?.Where(y => y?.Amount != null).Sum(y => y.Amount.Value),
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
                     ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
                 };
@@ -1190,16 +1191,13 @@ namespace PIF.EBP.Application.GRT.Implementation
 
             try
             {
-                // Update the infrastructure delivery plan
-                var request = new GRTInfraDeliveryPlanRequest
+                // Fetch current plan to get a stable ERC for year relationship writes.
+                var currentPlan = await _grtIntegrationService.GetInfraDeliveryPlanByIdAsync(id, cancellationToken);
+                var planErc = currentPlan?.ExternalReferenceCode;
+                if (string.IsNullOrWhiteSpace(planErc))
                 {
-                    InfrastructureType = BuildKeyValue(infraDeliveryPlan.InfrastructureTypeKey, infraDeliveryPlan.InfrastructureTypeKey),
-                    InfrastructureSector = BuildKeyValue(infraDeliveryPlan.InfrastructureSectorKey, infraDeliveryPlan.InfrastructureSectorKey),
-                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
-                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
-                };
-
-                var response = await _grtIntegrationService.UpdateInfraDeliveryPlanAsync(id, request, cancellationToken);
+                    throw new Exception("Unable to resolve Infrastructure Delivery Plan external reference code.");
+                }
 
                 // Get existing years
                 var existingYears = await _grtIntegrationService.GetInfraDeliveryPlanYearsByPlanIdAsync(id, 1, 100, cancellationToken);
@@ -1215,7 +1213,7 @@ namespace PIF.EBP.Application.GRT.Implementation
                             Year = BuildKeyValue(year.YearKey, year.YearKey),
                             Amount = year.Amount,
                             InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanId = id,
-                            InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanERC = response.ExternalReferenceCode
+                            InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanERC = planErc
                         };
 
                         if (year.Id.HasValue && year.Id.Value > 0)
@@ -1242,6 +1240,18 @@ namespace PIF.EBP.Application.GRT.Implementation
                         await _grtIntegrationService.DeleteInfraDeliveryPlanYearAsync(yearToDelete.Id, cancellationToken);
                     }
                 }
+
+                // Recalculate and persist total (grid reads this field).
+                var request = new GRTInfraDeliveryPlanRequest
+                {
+                    InfrastructureType = BuildKeyValue(infraDeliveryPlan.InfrastructureTypeKey, infraDeliveryPlan.InfrastructureTypeKey),
+                    InfrastructureSector = BuildKeyValue(infraDeliveryPlan.InfrastructureSectorKey, infraDeliveryPlan.InfrastructureSectorKey),
+                    Total = infraDeliveryPlan.Years?.Where(y => y?.Amount != null).Sum(y => y.Amount.Value),
+                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewId = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewId,
+                    ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC = infraDeliveryPlan.ProjectToInfraDeliveryPlanRelationshipProjectOverviewERC
+                };
+
+                var response = await _grtIntegrationService.UpdateInfraDeliveryPlanAsync(id, request, cancellationToken);
 
                 return new GRTInfraDeliveryPlanResponseDto
                 {
