@@ -1108,6 +1108,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("infrastructureSector")]
         public GRTKeyValue InfrastructureSector { get; set; }
 
+        [JsonProperty("total")]
+        public double? Total { get; set; }
+
         [JsonProperty("r_projectToInfraDeliveryPlanRelationship_c_grtProjectOverviewId")]
         public long? ProjectToInfraDeliveryPlanRelationshipProjectOverviewId { get; set; }
 
