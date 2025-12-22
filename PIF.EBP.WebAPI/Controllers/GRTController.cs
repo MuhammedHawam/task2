@@ -1,6 +1,8 @@
 using PIF.EBP.Application.GRT;
 using PIF.EBP.Application.GRT.Budget.DTOs;
 using PIF.EBP.Application.GRT.DTOs;
+using PIF.EBP.Application.GRTTable;
+using PIF.EBP.Application.GRTTable.Budget;
 using PIF.EBP.Core.DependencyInjection;
 using PIF.EBP.WebAPI.Middleware.ActionFilter;
 using PIF.EBP.WebAPI.Middleware.Authorize;
@@ -20,10 +22,14 @@ namespace PIF.EBP.WebAPI.Controllers
     public class GRTController : BaseController
     {
         private readonly IGRTAppService _grtAppService;
+        private readonly ILookupAppService _grtTableLookupAppService;
+        private readonly IBudgetTableAppService _budgetTableAppService;
 
         public GRTController()
         {
             _grtAppService = WindsorContainerProvider.Container.Resolve<IGRTAppService>();
+            _grtTableLookupAppService = WindsorContainerProvider.Container.Resolve<ILookupAppService>();
+            _budgetTableAppService = WindsorContainerProvider.Container.Resolve<IBudgetTableAppService>();
         }
 
         #region Lookup And Cycles And Project Overview
@@ -1047,6 +1053,100 @@ namespace PIF.EBP.WebAPI.Controllers
                 {
                     return BadRequest(result.Message);
                 }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+        #endregion
+
+        #region grtTable
+        /// <summary>
+        /// Get project overviews filtered by cycleCompanyMapId (table-based usage).
+        /// Mirrors: /o/c/grtprojectoverviews?filter=...&sort=dateModified:desc
+        /// </summary>
+        [HttpGet]
+        [Route("grtTable/project-overviews")]
+        public async Task<IHttpActionResult> GetProjectOverviewsByCycleCompanyMapId(
+            long cycleCompanyMapId,
+            int page = 1,
+            int pageSize = 1000,
+            string sort = "dateModified:desc",
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (cycleCompanyMapId <= 0)
+            {
+                return BadRequest("cycleCompanyMapId must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0)
+            {
+                return BadRequest("Page size must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _budgetTableAppService.GetProjectOverviewsByCycleCompanyMapIdAsync(
+                    cycleCompanyMapId,
+                    page,
+                    pageSize,
+                    sort,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get list type entries by list type definition external reference code (table-based usage).
+        /// Mirrors: /o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/{erc}/list-type-entries
+        /// </summary>
+        [HttpGet]
+        [Route("grtTable/list-type-entries")]
+        public async Task<IHttpActionResult> GetListTypeEntries(
+            string externalReferenceCode,
+            int page = 1,
+            int pageSize = 1000,
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (string.IsNullOrWhiteSpace(externalReferenceCode))
+            {
+                return BadRequest("externalReferenceCode is required");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0)
+            {
+                return BadRequest("Page size must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtTableLookupAppService.GetListTypeEntriesByExternalReferenceCodeAsync(
+                    externalReferenceCode,
+                    page,
+                    pageSize,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
