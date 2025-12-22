@@ -236,6 +236,8 @@
     <Compile Include="GRTTable\Lookup\DTOs\GRTLookupEntryDto.cs" />
     <Compile Include="GRTTable\Lookup\ILookupAppService.cs" />
     <Compile Include="GRTTable\Lookup\Implementation\LookupAppService.cs" />
+    <Compile Include="GRTTable\MultipleSandU\IMultipleSUTableAppService.cs" />
+    <Compile Include="GRTTable\MultipleSandU\Implementation\MultipleSUTableAppService.cs" />
     <Compile Include="GRT\DTOs\GRTApprovedBPDto.cs" />
     <Compile Include="GRT\Budget\DTOs\GRTBudgetsSummaryDto.cs" />
     <Compile Include="GRT\DTOs\GRTCashflowDto.cs" />
