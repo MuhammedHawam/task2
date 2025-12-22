@@ -77,5 +77,32 @@ namespace PIF.EBP.Core.GRTTable
         [JsonExtensionData]
         public IDictionary<string, JToken> AdditionalData { get; set; }
     }
+
+    /// <summary>
+    /// Update request payload for PUT /o/c/grtbudgettables/{id}
+    /// </summary>
+    public class GRTBudgetTableUpdateRequest
+    {
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("forecastSpendingBudgetByMonth")]
+        public string ForecastSpendingBudgetByMonth { get; set; }
+
+        [JsonProperty("actualSpendingBudgetByMonth")]
+        public string ActualSpendingBudgetByMonth { get; set; }
+
+        [JsonProperty("cashDeposits")]
+        public string CashDeposits { get; set; }
+
+        [JsonProperty("commitments")]
+        public string Commitments { get; set; }
+
+        [JsonProperty("r_projectToBudgetTableRelationship_c_grtProjectOverviewId")]
+        public long? ProjectOverviewId { get; set; }
+
+        [JsonExtensionData]
+        public IDictionary<string, JToken> AdditionalData { get; set; }
+    }
 }
 

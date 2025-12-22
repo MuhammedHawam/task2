@@ -30,6 +30,17 @@ namespace PIF.EBP.Core.GRTTable.Budget.Interfaces
             long? scopeGroupId = null,
             string currentUrl = null,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update budget table by id (PUT).
+        /// Mirrors: PUT /o/c/grtbudgettables/{id}?scopeGroupId=...&currentURL=...
+        /// </summary>
+        Task<GRTBudgetTableItem> UpdateBudgetTableAsync(
+            long id,
+            GRTBudgetTableUpdateRequest request,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default);
     }
 }
 

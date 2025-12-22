@@ -60,6 +60,31 @@ namespace PIF.EBP.Application.GRTTable.Budget.Implementation
                 currentUrl,
                 cancellationToken);
         }
+
+        public async Task<GRTBudgetTableItem> UpdateGrtBudgetTableAsync(
+            long id,
+            GRTBudgetTableUpdateRequest request,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget table ID must be greater than zero", nameof(id));
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request), "Update request cannot be null");
+            }
+
+            return await _budgetIntegrationService.UpdateBudgetTableAsync(
+                id,
+                request,
+                scopeGroupId,
+                currentUrl,
+                cancellationToken);
+        }
     }
 }
 

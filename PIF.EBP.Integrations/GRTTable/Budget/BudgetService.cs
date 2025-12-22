@@ -178,5 +178,67 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                 throw;
             }
         }
+
+        public async Task<GRTBudgetTableItem> UpdateBudgetTableAsync(
+            long id,
+            GRTBudgetTableUpdateRequest request,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Budget table ID must be greater than zero", nameof(id));
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request), "Update request cannot be null");
+            }
+
+            try
+            {
+                var url = $"/o/c/grtbudgettables/{id}";
+
+                var hasQuery = false;
+                if (scopeGroupId.HasValue)
+                {
+                    url += $"{(hasQuery ? "&" : "?")}scopeGroupId={scopeGroupId.Value}";
+                    hasQuery = true;
+                }
+
+                if (!string.IsNullOrWhiteSpace(currentUrl))
+                {
+                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
+                    url += $"{(hasQuery ? "&" : "?")}currentURL={normalized}";
+                    hasQuery = true;
+                }
+
+                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.None
+                });
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(url, content, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<GRTBudgetTableItem>(responseContent);
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Trace.TraceError(
+                    $"GRT API error updating budget table: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                throw new Exception($"Failed to update budget table: {response.StatusCode} - {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception updating budget table: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

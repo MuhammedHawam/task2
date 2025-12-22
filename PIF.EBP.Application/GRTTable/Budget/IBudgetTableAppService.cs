@@ -23,6 +23,13 @@ namespace PIF.EBP.Application.GRTTable.Budget
             long? scopeGroupId = null,
             string currentUrl = null,
             CancellationToken cancellationToken = default);
+
+        Task<GRTBudgetTableItem> UpdateGrtBudgetTableAsync(
+            long id,
+            GRTBudgetTableUpdateRequest request,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default);
     }
 }
 

@@ -1204,6 +1204,48 @@ namespace PIF.EBP.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Update GRT budget table by id (table-based usage).
+        /// Mirrors: PUT /o/c/grtbudgettables/{id}?scopeGroupId=...&currentURL=...
+        /// </summary>
+        [HttpPut]
+        [Route("grtTable/budget/budget-tables/{id:long}")]
+        public async Task<IHttpActionResult> UpdateGrtBudgetTable(
+            long id,
+            [FromBody] PIF.EBP.Core.GRTTable.GRTBudgetTableUpdateRequest request,
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("id must be greater than zero");
+            }
+
+            if (request == null)
+            {
+                return BadRequest("Request body is required");
+            }
+
+            try
+            {
+                var result = await _budgetTableAppService.UpdateGrtBudgetTableAsync(
+                    id,
+                    request,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (ArgumentException argEx)
+            {
+                return BadRequest(argEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
         /// Multiple S&U: project overviews filtered by cycleCompanyMapId (table-based usage).
         /// Mirrors: /o/c/grtprojectoverviews?filter=...&sort=dateModified:desc
         /// </summary>
