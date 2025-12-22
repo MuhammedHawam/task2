@@ -1067,7 +1067,7 @@ namespace PIF.EBP.WebAPI.Controllers
         /// Mirrors: /o/c/grtprojectoverviews?filter=...&sort=dateModified:desc
         /// </summary>
         [HttpGet]
-        [Route("grtTable/project-overviews")]
+        [Route("grtTable/budget/project-overviews")]
         public async Task<IHttpActionResult> GetProjectOverviewsByCycleCompanyMapId(
             long cycleCompanyMapId,
             int page = 1,
@@ -1114,7 +1114,7 @@ namespace PIF.EBP.WebAPI.Controllers
         /// Mirrors: /o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/{erc}/list-type-entries
         /// </summary>
         [HttpGet]
-        [Route("grtTable/list-type-entries")]
+        [Route("grtTable/budget/list-type-entries")]
         public async Task<IHttpActionResult> GetListTypeEntries(
             string externalReferenceCode,
             int page = 1,
