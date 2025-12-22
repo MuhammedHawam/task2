@@ -15,6 +15,14 @@ namespace PIF.EBP.Application.GRTTable.Budget
             long? scopeGroupId = null,
             string currentUrl = null,
             CancellationToken cancellationToken = default);
+
+        Task<GRTBudgetTablesPagedResponse> GetGrtBudgetTablesAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 1,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default);
     }
 }
 

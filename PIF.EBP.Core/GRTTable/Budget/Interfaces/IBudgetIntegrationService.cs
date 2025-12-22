@@ -18,6 +18,18 @@ namespace PIF.EBP.Core.GRTTable.Budget.Interfaces
             long? scopeGroupId = null,
             string currentUrl = null,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Get budget tables by project overview id using Liferay filter:
+        /// r_projectToBudgetTableRelationship_c_grtProjectOverviewId eq '{projectOverviewId}'
+        /// </summary>
+        Task<GRTBudgetTablesPagedResponse> GetBudgetTablesByProjectOverviewIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 1,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default);
     }
 }
 

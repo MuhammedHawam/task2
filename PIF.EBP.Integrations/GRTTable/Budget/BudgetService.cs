@@ -106,5 +106,77 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                 throw;
             }
         }
+
+        public async Task<GRTBudgetTablesPagedResponse> GetBudgetTablesByProjectOverviewIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 1,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (projectOverviewId <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(projectOverviewId));
+            }
+
+            if (page <= 0)
+            {
+                throw new ArgumentException("Page number must be greater than zero", nameof(page));
+            }
+
+            if (pageSize <= 0)
+            {
+                throw new ArgumentException("Page size must be greater than zero", nameof(pageSize));
+            }
+
+            try
+            {
+                var filter = $"r_projectToBudgetTableRelationship_c_grtProjectOverviewId eq '{projectOverviewId}'";
+
+                var url =
+                    $"/o/c/grtbudgettables" +
+                    $"?filter={Uri.EscapeDataString(filter)}" +
+                    $"&page={page}" +
+                    $"&pageSize={pageSize}";
+
+                if (scopeGroupId.HasValue)
+                {
+                    url += $"&scopeGroupId={scopeGroupId.Value}";
+                }
+
+                if (!string.IsNullOrWhiteSpace(currentUrl))
+                {
+                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
+                    url += $"&currentURL={normalized}";
+                }
+
+                var response = await _httpClient.GetAsync(url, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<GRTBudgetTablesPagedResponse>(responseContent);
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Trace.TraceError(
+                    $"GRT API error getting budget tables: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+
+                return new GRTBudgetTablesPagedResponse
+                {
+                    Items = new System.Collections.Generic.List<GRTBudgetTableItem>(),
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalCount = 0,
+                    LastPage = 1
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception getting budget tables: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

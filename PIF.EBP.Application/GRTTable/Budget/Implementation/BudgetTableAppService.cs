@@ -38,6 +38,28 @@ namespace PIF.EBP.Application.GRTTable.Budget.Implementation
                 currentUrl,
                 cancellationToken);
         }
+
+        public async Task<GRTBudgetTablesPagedResponse> GetGrtBudgetTablesAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 1,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (projectOverviewId <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(projectOverviewId));
+            }
+
+            return await _budgetIntegrationService.GetBudgetTablesByProjectOverviewIdAsync(
+                projectOverviewId,
+                page,
+                pageSize,
+                scopeGroupId,
+                currentUrl,
+                cancellationToken);
+        }
     }
 }
 

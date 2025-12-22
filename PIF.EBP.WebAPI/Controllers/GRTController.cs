@@ -1153,6 +1153,51 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+
+        /// <summary>
+        /// Get GRT budget tables by project overview id (table-based usage).
+        /// Mirrors: /o/c/grtbudgettables?filter=...&pageSize=1
+        /// </summary>
+        [HttpGet]
+        [Route("grtTable/budget/budget-tables")]
+        public async Task<IHttpActionResult> GetGrtBudgetTables(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 1,
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("projectOverviewId must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0)
+            {
+                return BadRequest("Page size must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _budgetTableAppService.GetGrtBudgetTablesAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
         #endregion
 
         #region LOI & HMA
