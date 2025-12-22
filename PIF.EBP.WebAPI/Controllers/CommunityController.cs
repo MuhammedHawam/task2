@@ -51,9 +51,9 @@ public class CommunityController : ApiController
                                                               int pageSize = 20,
                                                               string filter = null,
                                                               string sort = null,
-                                                              string search = null)
+                                                              string search = null, string status = null)
     {
-        var result = await _cmService.GetPostsTasksDependsOnRoleAsync(page, pageSize, filter, sort, search);
+        var result = await _cmService.GetPostsTasksDependsOnRoleAsync(page, pageSize, filter, sort, search, status);
         return Ok(result);
     }
 
@@ -63,9 +63,9 @@ public class CommunityController : ApiController
                                                           int pageSize = 20,
                                                           string filter = null,
                                                           string sort = null,
-                                                          string search = null)
+                                                          string search = null, string status = null)
     {
-        var result = await _cmService.GetApprovedCommunitiesReadyToPublishAsync(page, pageSize, filter, sort, search);
+        var result = await _cmService.GetApprovedCommunitiesReadyToPublishAsync(page, pageSize, filter, sort, search, status);
         return Ok(result);
     }
 
@@ -110,6 +110,28 @@ public class CommunityController : ApiController
     public async Task<IHttpActionResult> ApproveCommunity(long communityId)
     {
         var result = await _cmService.ApproveCommunityAsync(communityId);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// POST /api/community/admin/{communityId}/archive - archives a pending community.
+    /// </summary>
+    [HttpPut]
+    [Route("admin/communities/{communityId:long}/archive")]
+    public async Task<IHttpActionResult> ArchiveCommunity(long communityId)
+    {
+        var result = await _cmService.ArchiveCommunityAsync(communityId);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// POST /api/community/admin/{communityId}/unarchive - unarchives a pending community.
+    /// </summary>
+    [HttpPut]
+    [Route("admin/communities/{communityId:long}/unarchive")]
+    public async Task<IHttpActionResult> UnArchiveCommunity(long communityId)
+    {
+        var result = await _cmService.UnArchiveCommunityAsync(communityId);
         return Ok(result);
     }
 
@@ -186,6 +208,29 @@ public class CommunityController : ApiController
         var result = await _cmService.GetPendingPostsAsync(page, pageSize, filter, sort, search);
         return Ok(result);
     }
+
+    /// <summary>
+    /// POST /api/posts/admin/{communityId}/archive - archives a post.
+    /// </summary>
+    [HttpPut]
+    [Route("admin/posts/{communityId:long}/archive")]
+    public async Task<IHttpActionResult> ArchivePosts(long communityId)
+    {
+        var result = await _cmService.ArchivePostsAsync(communityId);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// POST /api/posts/admin/{communityId}/unarchive - unarchives a post.
+    /// </summary>
+    [HttpPut]
+    [Route("admin/posts/{communityId:long}/unarchive")]
+    public async Task<IHttpActionResult> UnArchivePosts(long communityId)
+    {
+        var result = await _cmService.UnArchivePostsAsync(communityId);
+        return Ok(result);
+    }
+
 
     /// <summary>
     /// PUT /api/community/admin/posts/{postId}/status - Updates the status of a post.
@@ -481,9 +526,39 @@ public class CommunityController : ApiController
 
     [HttpGet]
     [Route("user/member-profile")]
-    public async Task<IHttpActionResult> GetProfileMember(string userId)
+    public async Task<IHttpActionResult> GetProfileMember(string userId,string companyId)
     {
-        var result = await _cmService.GetProfileMemberAsync(userId);
+        var result = await _cmService.GetProfileMemberAsync(userId, companyId);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// DELETE /api/community/user/posts/{postId} - Deletes one of the user's posts.
+    /// </summary>
+    [HttpDelete]
+    [Route("user/search/history/clear")]
+    public async Task<IHttpActionResult> DeleteAllHistory()
+    {
+        await _cmService.DeleteAllHistory();
+        return StatusCode(HttpStatusCode.NoContent);
+    }
+
+    /// <summary>
+    /// DELETE /api/community/user/posts/{postId} - Deletes one of the user's posts.
+    /// </summary>
+    [HttpDelete]
+    [Route("user/search/history/{historyId:long}")]
+    public async Task<IHttpActionResult> DeleteHistoryById(long historyId)
+    {
+        await _cmService.DeleteHistoryById(historyId);
+        return StatusCode(HttpStatusCode.NoContent);
+    }
+
+    [HttpGet]
+    [Route("user/search/history")]
+    public async Task<IHttpActionResult> GetSearchHistory()
+    {
+        var result = await _cmService.GetSearchHistory();
         return Ok(result);
     }
     #endregion

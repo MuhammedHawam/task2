@@ -41,6 +41,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             var authValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authValue);
         }
+        #region Lookup And Cycles And Project overview
 
         public async Task<GRTListTypeDefinitionResponse> GetListTypeDefinitionByExternalReferenceCodeAsync(
             string externalReferenceCode,
@@ -133,6 +134,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectoverviews/{id}";
+                url = AddAuditEventsNestedField(url);
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
@@ -222,6 +224,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                     url += $"&search={Uri.EscapeDataString(search)}";
                 }
 
+
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -263,6 +266,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             {
                 // 1) GET cyclecompanymaps
                 var mapUrl = $"/o/c/cyclecompanymaps/?filter=r_companyInCyclesRelationship_c_companiesId%20eq%20%27{companyId}%27";
+                mapUrl = AddAuditEventsNestedField(mapUrl);
                 var mapResponse = await _httpClient.GetAsync(mapUrl, cancellationToken);
 
                 if (!mapResponse.IsSuccessStatusCode)
@@ -300,6 +304,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 // 3) GET cycles batch
                 var idsFilter = string.Join("%27%2C%27", cycleIds);
                 var cyclesUrl = $"/o/c/grtcycleses/?filter=id%20in%20(%27{idsFilter}%27)";
+                cyclesUrl = AddAuditEventsNestedField(cyclesUrl);
                 var cyclesResponse = await _httpClient.GetAsync(cyclesUrl, cancellationToken);
 
                 if (!cyclesResponse.IsSuccessStatusCode)
@@ -409,12 +414,14 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             return "Pending";
         }
 
+        #endregion
+        #region Delivery Plans
         public async Task<GRTDeliveryPlansPagedResponse> GetDeliveryPlansPagedAsync(
-            long projectOverviewId,
-            int page = 1,
-            int pageSize = 20,
-            string search = null,
-            CancellationToken cancellationToken = default)
+          long projectOverviewId,
+          int page = 1,
+          int pageSize = 20,
+          string search = null,
+          CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
             {
@@ -424,7 +431,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToDeliveryPlanRelationship?page={page}&pageSize={pageSize}";
-                
+
                 if (!string.IsNullOrWhiteSpace(search))
                 {
                     url += $"&search={Uri.EscapeDataString(search)}";
@@ -472,6 +479,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtdeliveryplans/{id}";
+
+                url = AddAuditEventsNestedField(url);
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
@@ -589,17 +598,13 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 throw new ArgumentNullException(nameof(request), "Delivery plan request cannot be null");
             }
 
-            if (!request.ProjectToDeliveryPlanRelationshipProjectOverviewId.HasValue || 
-                request.ProjectToDeliveryPlanRelationshipProjectOverviewId.Value <= 0)
-            {
-                throw new ArgumentException("Project overview ID must be provided in the request", nameof(request));
-            }
-
             try
             {
-                var projectOverviewId = request.ProjectToDeliveryPlanRelationshipProjectOverviewId.Value;
-                var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToDeliveryPlanRelationship/{id}";
-                
+                // Update the object entry directly by its ID.
+                // Using the relationship endpoint here can lead to no-op updates if the provided id
+                // is the delivery plan id (object entry id), not the relationship entry id.
+                var url = $"/o/c/grtdeliveryplans/{id}";
+
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
@@ -631,11 +636,13 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             }
         }
 
+        #endregion
+        #region Infra Delivery Plans
         public async Task<GRTInfraDeliveryPlansPagedResponse> GetInfraDeliveryPlansByProjectIdAsync(
-            long projectOverviewId,
-            int page = 1,
-            int pageSize = 20,
-            CancellationToken cancellationToken = default)
+           long projectOverviewId,
+           int page = 1,
+           int pageSize = 20,
+           CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
             {
@@ -688,6 +695,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtinfradeliveryplans/{id}";
+                url = AddAuditEventsNestedField(url);
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
@@ -855,6 +863,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             {
                 var url = $"/o/c/grtinfradeliveryplanyearses/?search={infraDeliveryPlanId}&page={page}&pageSize={pageSize}";
 
+                url = AddAuditEventsNestedField(url);
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1012,12 +1021,13 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 throw;
             }
         }
-
+        #endregion
+        #region Land Sales
         public async Task<GRTLandSalesPagedResponse> GetLandSalesByProjectIdAsync(
-            long projectOverviewId,
-            int page = 1,
-            int pageSize = 20,
-            CancellationToken cancellationToken = default)
+           long projectOverviewId,
+           int page = 1,
+           int pageSize = 20,
+           CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
             {
@@ -1070,6 +1080,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtlandsales/{id}";
+
+                url = AddAuditEventsNestedField(url);
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
@@ -1222,11 +1234,13 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             }
         }
 
+        #endregion
+        #region Cashflows
         public async Task<GRTCashflowsPagedResponse> GetCashflowsByProjectIdAsync(
-            long projectOverviewId,
-            int page = 1,
-            int pageSize = 20,
-            CancellationToken cancellationToken = default)
+      long projectOverviewId,
+      int page = 1,
+      int pageSize = 20,
+      CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
             {
@@ -1236,14 +1250,13 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToCashflowRelationship?page={page}&pageSize={pageSize}";
-
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var result = JsonConvert.DeserializeObject<GRTCashflowsPagedResponse>(responseContent);
-                    
+
                     // If no cashflows exist, create a new one and return it
                     if (result == null || result.Items == null || !result.Items.Any())
                     {
@@ -1251,14 +1264,14 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                         {
                             ProjectToCashflowRelationshipProjectOverviewId = projectOverviewId
                         };
-                        
+
                         var createdCashflow = await CreateCashflowAsync(createRequest, cancellationToken);
-                        
+
                         if (createdCashflow != null)
                         {
                             // Fetch the newly created cashflow to get full details
                             var newCashflow = await GetCashflowByIdAsync(createdCashflow.Id, cancellationToken);
-                            
+
                             return new GRTCashflowsPagedResponse
                             {
                                 Items = newCashflow != null ? new List<GRTCashflow> { newCashflow } : new List<GRTCashflow>(),
@@ -1269,7 +1282,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                             };
                         }
                     }
-                    
+
                     return result;
                 }
                 else
@@ -1306,7 +1319,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = "/o/c/grtcashflows/";
-                
+
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
@@ -1314,7 +1327,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 });
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                
+
                 var response = await _httpClient.PostAsync(url, content, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1350,7 +1363,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtcashflows/{id}";
-                
+                url = AddAuditEventsNestedField(url);
+
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1373,6 +1387,57 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 throw;
             }
         }
+
+        public async Task<GRTCashflowResponse> UpdateCashflowAsync(
+            long id,
+            GRTCashflowRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Cashflow ID must be greater than zero", nameof(id));
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request), "Cashflow request cannot be null");
+            }
+
+            try
+            {
+                var url = $"/o/c/grtcashflows/{id}";
+
+                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.Indented
+                });
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync(url, content, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<GRTCashflowResponse>(responseContent);
+                    return result;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Trace.TraceError(
+                        $"GRT API error updating cashflow: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    throw new Exception($"Failed to update cashflow: {response.StatusCode} - {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception updating cashflow: {ex.Message}");
+                throw;
+            }
+        }
+        #endregion
         #region Budgets
         public async Task<GRTBudgetsResponse> GetGRTBudgetsPagedAsync(long poid, int page = 1, int pageSize = 20, string search = null, CancellationToken cancellationToken = default)
         {
@@ -1425,6 +1490,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtbudgets/{id}";
+                url = AddAuditEventsNestedField(url);
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1610,62 +1676,12 @@ namespace PIF.EBP.Integrations.GRT.Implementation
         }
 
         #endregion
-
-        public async Task<GRTCashflowResponse> UpdateCashflowAsync(
-            long id,
-            GRTCashflowRequest request,
-            CancellationToken cancellationToken = default)
-        {
-            if (id <= 0)
-            {
-                throw new ArgumentException("Cashflow ID must be greater than zero", nameof(id));
-            }
-
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request), "Cashflow request cannot be null");
-            }
-
-            try
-            {
-                var url = $"/o/c/grtcashflows/{id}";
-                
-                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    Formatting = Formatting.Indented
-                });
-
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                
-                var response = await _httpClient.PutAsync(url, content, cancellationToken);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<GRTCashflowResponse>(responseContent);
-                    return result;
-                }
-                else
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    System.Diagnostics.Trace.TraceError(
-                        $"GRT API error updating cashflow: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
-                    throw new Exception($"Failed to update cashflow: {response.StatusCode} - {errorContent}");
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.TraceError($"GRT API exception updating cashflow: {ex.Message}");
-                throw;
-            }
-        }
-
+        #region LOI & HMA
         public async Task<GRTLOIHMAsPagedResponse> GetLOIHMAsByProjectIdAsync(
-            long projectOverviewId,
-            int page = 1,
-            int pageSize = 20,
-            CancellationToken cancellationToken = default)
+          long projectOverviewId,
+          int page = 1,
+          int pageSize = 20,
+          CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
             {
@@ -1675,7 +1691,6 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToLOIHMARelationship?page={page}&pageSize={pageSize}";
-                
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1718,7 +1733,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtlois/{id}";
-                
+                url = AddAuditEventsNestedField(url);
+
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1754,7 +1770,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = "/o/c/grtlois/";
-                
+
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
@@ -1762,7 +1778,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 });
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                
+
                 var response = await _httpClient.PostAsync(url, content, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1810,7 +1826,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToLOIHMARelationship/{id}";
-                
+
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
@@ -1818,7 +1834,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 });
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                
+
                 var response = await _httpClient.PutAsync(url, content, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1854,7 +1870,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtlois/{id}";
-                
+
                 var response = await _httpClient.DeleteAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -1877,6 +1893,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
         }
 
 
+        #endregion
+        #region Project Impact
 
         public async Task<GRTProjectImpact> GetProjectImpactByIdAsync(
                      long id,
@@ -1890,6 +1908,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectimpacts/{id}";
+                url = AddAuditEventsNestedField(url);
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
@@ -1914,8 +1933,56 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             }
         }
 
+        public async Task<GRTProjectImpactPagedResponse> GetProjectImpactByProjectIdAsync(
+                     long projectOverviewId,
+                      int page = 1,
+                      int pageSize = 20,
+                     CancellationToken cancellationToken = default)
+        {
+            if (projectOverviewId <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(projectOverviewId));
+            }
+
+            try
+            {
+
+                var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToProjectImpactRelationship?page={page}&pageSize={pageSize}";
+
+
+                var response = await _httpClient.GetAsync(url, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<GRTProjectImpactPagedResponse>(responseContent);
+                    return result;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Trace.TraceError(
+                        $"GRT API error getting project impact: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    return new GRTProjectImpactPagedResponse
+                    {
+                        Items = new List<GRTProjectImpact>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception getting project impact: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task<GRTProjectImpactResponse> UpdateProjectImpactAsync(
             long id,
+            long projectOverviewId,
             GRTProjectImpactRequest request,
             CancellationToken cancellationToken = default)
         {
@@ -1932,7 +1999,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectimpacts/{id}";
-
+               // var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToProjectImpactRelationship/{id}";
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
@@ -2009,7 +2076,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             }
         }
 
-
+        #endregion
+        #region MultipleSand
 
         public async Task<GRTMultipleSandUsPagedResponse> GetMultipleSandUsByProjectIdAsync(
             long projectOverviewId,
@@ -2025,7 +2093,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToMultipleSandURelationship?page={page}&pageSize={pageSize}";
-                
+
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -2068,7 +2136,8 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtmultiplesandus/{id}";
-                
+                url = AddAuditEventsNestedField(url);
+
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -2104,7 +2173,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = "/o/c/grtmultiplesandus/";
-                
+
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
@@ -2112,7 +2181,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 });
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                
+
                 var response = await _httpClient.PostAsync(url, content, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -2160,7 +2229,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtmultiplesandus/{id}";
-                
+
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
@@ -2168,12 +2237,12 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 });
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                
+
                 var httpRequest = new HttpRequestMessage(new HttpMethod("PATCH"), url)
                 {
                     Content = content
                 };
-                
+
                 var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -2215,7 +2284,7 @@ namespace PIF.EBP.Integrations.GRT.Implementation
             try
             {
                 var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToMultipleSandURelationship/{id}";
-                
+
                 var response = await _httpClient.DeleteAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -2236,5 +2305,235 @@ namespace PIF.EBP.Integrations.GRT.Implementation
                 throw;
             }
         }
+        #endregion
+        #region Approved BP
+        public async Task<GRTApprovedBPsPagedResponse> GetApprovedBPsByProjectIdAsync(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 20,
+            CancellationToken cancellationToken = default)
+        {
+            if (projectOverviewId <= 0)
+            {
+                throw new ArgumentException("Project overview ID must be greater than zero", nameof(projectOverviewId));
+            }
+
+            try
+            {
+                var url = $"/o/c/grtprojectoverviews/{projectOverviewId}/projectToApprovedBPRelationship?page={page}&pageSize={pageSize}";
+                
+                var response = await _httpClient.GetAsync(url, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<GRTApprovedBPsPagedResponse>(responseContent);
+                    return result;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Trace.TraceError(
+                        $"GRT API error getting Approved BP: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    return new GRTApprovedBPsPagedResponse
+                    {
+                        Items = new List<GRTApprovedBP>(),
+                        Page = page,
+                        PageSize = pageSize,
+                        TotalCount = 0,
+                        LastPage = 1
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception getting Approved BP: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTApprovedBP> GetApprovedBPByIdAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Approved BP ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var url = $"/o/c/grtapprovedbps/{id}";
+                url = AddAuditEventsNestedField(url);
+                
+                var response = await _httpClient.GetAsync(url, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<GRTApprovedBP>(responseContent);
+                    return result;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Trace.TraceError(
+                        $"GRT API error getting Approved BP: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception getting Approved BP: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTApprovedBPResponse> CreateApprovedBPAsync(
+            GRTApprovedBPRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request), "Approved BP request cannot be null");
+            }
+
+            try
+            {
+                var url = "/o/c/grtapprovedbps/";
+                
+                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.Indented
+                });
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                
+                var response = await _httpClient.PostAsync(url, content, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<GRTApprovedBPResponse>(responseContent);
+                    return result;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Trace.TraceError(
+                        $"GRT API error creating Approved BP: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    throw new Exception($"Failed to create Approved BP: {response.StatusCode} - {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception creating Approved BP: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<GRTApprovedBPResponse> UpdateApprovedBPAsync(
+            long id,
+            GRTApprovedBPRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Approved BP ID must be greater than zero", nameof(id));
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request), "Approved BP request cannot be null");
+            }
+
+            try
+            {
+                var url = $"/o/c/grtapprovedbps/{id}";
+                
+                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.Indented
+                });
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                
+                var response = await _httpClient.PutAsync(url, content, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<GRTApprovedBPResponse>(responseContent);
+                    return result;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Trace.TraceError(
+                        $"GRT API error updating Approved BP: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    throw new Exception($"Failed to update Approved BP: {response.StatusCode} - {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception updating Approved BP: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteApprovedBPAsync(
+            long id,
+            CancellationToken cancellationToken = default)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Approved BP ID must be greater than zero", nameof(id));
+            }
+
+            try
+            {
+                var url = $"/o/c/grtapprovedbps/{id}";
+                
+                var response = await _httpClient.DeleteAsync(url, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Trace.TraceError(
+                        $"GRT API error deleting Approved BP: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"GRT API exception deleting Approved BP: {ex.Message}");
+                throw;
+            }
+        }
+        #endregion
+
+        #region audit Event
+        private string AddAuditEventsNestedField(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return url;
+
+            // If the URL already has query parameters, use '&'
+            var separator = url.Contains("?") ? "&" : "?";
+
+            // Avoid adding it twice
+            if (url.Contains("nestedFields=auditEvents"))
+                return url;
+
+            return $"{url}{separator}nestedFields=auditEvents";
+        }
+
+        #endregion
     }
 }

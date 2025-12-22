@@ -28,6 +28,12 @@ namespace PIF.EBP.Integrations.Community.Implmentation
         public Task<object> ApproveCommunityAsync(long communityId) =>
             PutAsync<object>($"admin/communities/{communityId}/approve");
 
+        public Task<object> ArchiveCommunityAsync(long communityId) =>
+            PutAsync<object>($"admin/communities/{communityId}/archive");
+
+        public Task<object> UnArchiveCommunityAsync(long communityId) =>
+            PutAsync<object>($"admin/communities/{communityId}/unarchive");
+
         public Task<object> RejectCommunityAsync(long communityId, CommunityRejectRequest request) =>
             PutAsync<object>($"admin/communities/{communityId}/reject", request);
 
@@ -49,9 +55,9 @@ namespace PIF.EBP.Integrations.Community.Implmentation
 
         public Task<object> GetApprovedCommunitiesReadyToPublishAsync(int page = 1, int pageSize = 20,
                                                                  string filter = null, string sort = null,
-                                                                 string search = null)
+                                                                 string search = null, string status = null)
         {
-            var qs = BuildQuery(page, pageSize, filter, sort, search);
+            var qs = BuildQuery(page, pageSize, filter, sort, search, status);
             return GetAsync<object>($"admin/communities/my-tasks{qs}");
         }
         public Task<object> GetAdminKpiAsync() =>
@@ -68,6 +74,13 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             return GetAsync<object>($"admin/posts/pending{qs}");
         }
 
+        public Task<object> ArchivePostsAsync(long postId) =>
+            PutAsync<object>($"admin/posts/{postId}/archive");
+
+        public Task<object> UnArchivePostsAsync(long postId) =>
+            PutAsync<object>($"admin/posts/{postId}/unarchive");
+
+
         public Task<object> UpdatePostStatusAsync(long postId, PostStatusUpdateRequest request) =>
             PutAsync<object>($"admin/posts/{postId}/status", request);
 
@@ -76,9 +89,9 @@ namespace PIF.EBP.Integrations.Community.Implmentation
 
         public Task<object> GetPostsTasksDependsOnRoleAsync(int page = 1, int pageSize = 20,
                                                                string filter = null, string sort = null,
-                                                               string search = null)
+                                                               string search = null, string status = null)
         {
-            var qs = BuildQuery(page, pageSize, filter, sort, search);
+            var qs = BuildQuery(page, pageSize, filter, sort, search, status);
             return GetAsync<object>($"admin/posts/my-tasks{qs}");
         }
         // -------------------------------------------------------
@@ -101,7 +114,7 @@ namespace PIF.EBP.Integrations.Community.Implmentation
         // Helper – builds optional query string parts
         // -------------------------------------------------------
         private static string BuildQuery(int page, int pageSize,
-                                         string filter, string sort, string search)
+                                         string filter, string sort, string search,string status = null)
         {
             var q = new List<string>
             {
@@ -111,6 +124,7 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             if (!string.IsNullOrWhiteSpace(filter)) q.Add($"filter={WebUtility.UrlEncode(filter)}");
             if (!string.IsNullOrWhiteSpace(sort)) q.Add($"sort={WebUtility.UrlEncode(sort)}");
             if (!string.IsNullOrWhiteSpace(search)) q.Add($"search={WebUtility.UrlEncode(search)}");
+            if (!string.IsNullOrWhiteSpace(status)) q.Add($"status={WebUtility.UrlEncode(status)}");
             return "?" + string.Join("&", q);
         }
     }

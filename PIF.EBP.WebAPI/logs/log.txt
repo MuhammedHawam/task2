@@ -3553,3 +3553,275 @@ System.Net.WebException: The remote name could not be resolved: 'testadfs.pif.go
 2025-12-07 20:37:37,775 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : f5236c49-2e9a-4f11-9af7-773f2c0318b1
 2025-12-07 20:38:22,733 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/budgets?poid=282928&[object FormData]&_=1765129102723 - Corl ID : ca4ab3d9-7b9d-4bee-a09d-f0862a3e8f78
 2025-12-07 20:38:26,098 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : ca4ab3d9-7b9d-4bee-a09d-f0862a3e8f78
+2025-12-14 14:07:10,494 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/ - Corl ID : b84fdb97-d8f3-4ee1-b0d5-8b67fd4ad666
+2025-12-14 14:07:10,684 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : b84fdb97-d8f3-4ee1-b0d5-8b67fd4ad666
+2025-12-14 14:07:10,980 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger - Corl ID : 9fb2d74c-bb8b-4079-a441-ac809200645b
+2025-12-14 14:07:10,982 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 9fb2d74c-bb8b-4079-a441-ac809200645b
+2025-12-14 14:07:11,027 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/index - Corl ID : a93db197-1c67-426b-b44f-3f6d2faf7618
+2025-12-14 14:07:11,027 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : a93db197-1c67-426b-b44f-3f6d2faf7618
+2025-12-14 14:07:11,177 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/typography-css - Corl ID : 6174e408-2f17-4206-8e70-1b6f1f0f0e05
+2025-12-14 14:07:11,177 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/screen-css - Corl ID : 63fbf0f7-393e-48d5-884d-eb36f7496a4b
+2025-12-14 14:07:11,179 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 63fbf0f7-393e-48d5-884d-eb36f7496a4b
+2025-12-14 14:07:11,184 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-1-8-0-min-js - Corl ID : 6e5e876f-e064-46e5-b40e-e940f27c1096
+2025-12-14 14:07:11,179 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 6174e408-2f17-4206-8e70-1b6f1f0f0e05
+2025-12-14 14:07:11,188 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/handlebars-4-0-5-js - Corl ID : 7aaba5ea-743c-4d23-9286-73d40bedc034
+2025-12-14 14:07:11,191 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-ba-bbq-min-js - Corl ID : 59fa2614-07cd-4f08-b9e5-9ca27573d9d5
+2025-12-14 14:07:11,191 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-slideto-min-js - Corl ID : 2b14192f-56c1-46ca-af45-42f804386d3c
+2025-12-14 14:07:11,192 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/highlight-9-1-0-pack_extended-js - Corl ID : fc006385-c58a-4d70-a45e-61b579d5dfda
+2025-12-14 14:07:11,196 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 6e5e876f-e064-46e5-b40e-e940f27c1096
+2025-12-14 14:07:11,179 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/reset-css - Corl ID : c14b72bd-6192-4501-ba92-7ca341742eee
+2025-12-14 14:07:11,198 [17] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/lodash-min-js - Corl ID : b8612414-f924-4458-b2b6-d8705f15ff67
+2025-12-14 14:07:11,198 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jsoneditor-min-js - Corl ID : ae327af7-cfc0-4b43-873b-001d2f3bb2b9
+2025-12-14 14:07:11,198 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : c14b72bd-6192-4501-ba92-7ca341742eee
+2025-12-14 14:07:11,198 [17] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : b8612414-f924-4458-b2b6-d8705f15ff67
+2025-12-14 14:07:11,198 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : ae327af7-cfc0-4b43-873b-001d2f3bb2b9
+2025-12-14 14:07:11,198 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 7aaba5ea-743c-4d23-9286-73d40bedc034
+2025-12-14 14:07:11,198 [16] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/marked-js - Corl ID : 5dc42804-1a08-4874-9f1f-1c9c6c1b348b
+2025-12-14 14:07:11,202 [16] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 5dc42804-1a08-4874-9f1f-1c9c6c1b348b
+2025-12-14 14:07:11,202 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-wiggle-min-js - Corl ID : faa31064-951a-49bb-9f02-cc632aec561d
+2025-12-14 14:07:11,202 [19] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/swagger-oauth-js - Corl ID : 6a1eed8d-92f9-4dda-a882-99e6e6c96d7d
+2025-12-14 14:07:11,203 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : faa31064-951a-49bb-9f02-cc632aec561d
+2025-12-14 14:07:11,203 [19] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 6a1eed8d-92f9-4dda-a882-99e6e6c96d7d
+2025-12-14 14:07:11,196 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 59fa2614-07cd-4f08-b9e5-9ca27573d9d5
+2025-12-14 14:07:11,196 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : fc006385-c58a-4d70-a45e-61b579d5dfda
+2025-12-14 14:07:11,203 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 2b14192f-56c1-46ca-af45-42f804386d3c
+2025-12-14 14:07:11,222 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/backbone-min-js - Corl ID : d0213656-d23e-423d-be49-e67f567791e1
+2025-12-14 14:07:11,222 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : d0213656-d23e-423d-be49-e67f567791e1
+2025-12-14 14:07:11,222 [18] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/object-assign-pollyfill-js - Corl ID : 1811d8ce-be0f-479d-b095-6c52cfeda640
+2025-12-14 14:07:11,222 [18] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 1811d8ce-be0f-479d-b095-6c52cfeda640
+2025-12-14 14:07:11,222 [20] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/swagger-ui-min-js - Corl ID : e104c53d-3384-4983-814c-40b87c3c9ed3
+2025-12-14 14:07:11,222 [20] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : e104c53d-3384-4983-814c-40b87c3c9ed3
+2025-12-14 14:07:11,240 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/highlight-9-1-0-pack-js - Corl ID : 1a96ecc7-5aae-446c-b51b-666026aecf6a
+2025-12-14 14:07:11,240 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 1a96ecc7-5aae-446c-b51b-666026aecf6a
+2025-12-14 14:07:11,321 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/logo_small-png - Corl ID : 134b3ca6-6d52-46f2-bd37-383a93d19822
+2025-12-14 14:07:11,321 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 134b3ca6-6d52-46f2-bd37-383a93d19822
+2025-12-14 14:07:11,337 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/print-css - Corl ID : 445749f3-7602-4740-8a52-c9fe4086b810
+2025-12-14 14:07:11,337 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 445749f3-7602-4740-8a52-c9fe4086b810
+2025-12-14 14:07:11,551 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/docs/v1 - Corl ID : a8be8424-1101-4d1f-8cd2-24803220559a
+2025-12-14 14:07:11,551 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : a8be8424-1101-4d1f-8cd2-24803220559a
+2025-12-14 14:07:11,603 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/fonts/DroidSans-Bold-ttf - Corl ID : 1e80682e-e90d-4720-8fb3-f8dae516da6b
+2025-12-14 14:07:11,604 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 1e80682e-e90d-4720-8fb3-f8dae516da6b
+2025-12-14 14:07:11,607 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/fonts/DroidSans-ttf - Corl ID : 27c7500f-2f2d-4f89-9853-6498ca439426
+2025-12-14 14:07:11,609 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 27c7500f-2f2d-4f89-9853-6498ca439426
+2025-12-14 14:07:11,638 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/favicon-32x32-png - Corl ID : 9bf09b07-9df5-4f8b-9b6c-16ce7da07d69
+2025-12-14 14:07:11,638 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 9bf09b07-9df5-4f8b-9b6c-16ce7da07d69
+2025-12-14 15:41:48,432 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/ - Corl ID : 58518d66-5f77-4c3f-a988-6cc11cddd6ee
+2025-12-14 15:41:48,570 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 58518d66-5f77-4c3f-a988-6cc11cddd6ee
+2025-12-14 15:41:48,779 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger - Corl ID : 349b2c02-d0e9-4712-b23a-67842089fbca
+2025-12-14 15:41:48,780 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 349b2c02-d0e9-4712-b23a-67842089fbca
+2025-12-14 15:41:48,829 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/index - Corl ID : 9425d5a8-5295-4dc5-a271-6420d60181fe
+2025-12-14 15:41:48,830 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 9425d5a8-5295-4dc5-a271-6420d60181fe
+2025-12-14 15:41:48,921 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/typography-css - Corl ID : 44e2573e-62f3-446b-ba0f-c9058e209b7f
+2025-12-14 15:41:48,921 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 44e2573e-62f3-446b-ba0f-c9058e209b7f
+2025-12-14 15:41:48,923 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/reset-css - Corl ID : b81a5975-ca47-44d5-9b78-6e2a09c9044f
+2025-12-14 15:41:48,923 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : b81a5975-ca47-44d5-9b78-6e2a09c9044f
+2025-12-14 15:41:48,923 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/screen-css - Corl ID : ca2431d4-84ce-41e3-a3d7-418e2d3808ba
+2025-12-14 15:41:48,927 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : ca2431d4-84ce-41e3-a3d7-418e2d3808ba
+2025-12-14 15:41:48,974 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/object-assign-pollyfill-js - Corl ID : 62abcc50-5159-466a-8148-8cb7ce850abe
+2025-12-14 15:41:48,974 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-1-8-0-min-js - Corl ID : be324a4f-e419-4374-8353-bb5dc3b4012e
+2025-12-14 15:41:48,975 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-slideto-min-js - Corl ID : 362abe36-e712-4c4a-a8e0-e9eacae1667f
+2025-12-14 15:41:48,975 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 62abcc50-5159-466a-8148-8cb7ce850abe
+2025-12-14 15:41:48,982 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : be324a4f-e419-4374-8353-bb5dc3b4012e
+2025-12-14 15:41:48,982 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 362abe36-e712-4c4a-a8e0-e9eacae1667f
+2025-12-14 15:41:49,017 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-wiggle-min-js - Corl ID : 03e3b405-b4b5-42ea-9287-cc243b9d81df
+2025-12-14 15:41:49,018 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 03e3b405-b4b5-42ea-9287-cc243b9d81df
+2025-12-14 15:41:49,024 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-ba-bbq-min-js - Corl ID : 78c470ff-a873-4643-9979-e86528a32575
+2025-12-14 15:41:49,025 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 78c470ff-a873-4643-9979-e86528a32575
+2025-12-14 15:41:49,117 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/handlebars-4-0-5-js - Corl ID : bcadab06-55bb-4448-9f60-a41891d69f84
+2025-12-14 15:41:49,118 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/lodash-min-js - Corl ID : 7bc2c7d3-b014-4c49-92a5-83031139aeda
+2025-12-14 15:41:49,118 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : bcadab06-55bb-4448-9f60-a41891d69f84
+2025-12-14 15:41:49,119 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 7bc2c7d3-b014-4c49-92a5-83031139aeda
+2025-12-14 15:41:49,130 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/backbone-min-js - Corl ID : 3b70fec1-ffb0-464b-b480-3e566519751b
+2025-12-14 15:41:49,131 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 3b70fec1-ffb0-464b-b480-3e566519751b
+2025-12-14 15:41:49,177 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/swagger-ui-min-js - Corl ID : 9dc67068-0a86-494a-9611-34bbfc65e766
+2025-12-14 15:41:49,177 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 9dc67068-0a86-494a-9611-34bbfc65e766
+2025-12-14 15:41:49,178 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/highlight-9-1-0-pack-js - Corl ID : ee0ce345-3eba-454b-a4f8-98469d83aad3
+2025-12-14 15:41:49,181 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : ee0ce345-3eba-454b-a4f8-98469d83aad3
+2025-12-14 15:41:49,194 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/highlight-9-1-0-pack_extended-js - Corl ID : 869984eb-f341-4914-925a-52d7a5f826b5
+2025-12-14 15:41:49,194 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 869984eb-f341-4914-925a-52d7a5f826b5
+2025-12-14 15:41:49,350 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jsoneditor-min-js - Corl ID : ceabd6bd-fedd-4f43-a34e-9fb13d712df1
+2025-12-14 15:41:49,351 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : ceabd6bd-fedd-4f43-a34e-9fb13d712df1
+2025-12-14 15:41:49,354 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/marked-js - Corl ID : d58c1d9c-f59c-46a2-b77a-5d25fe787b56
+2025-12-14 15:41:49,356 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : d58c1d9c-f59c-46a2-b77a-5d25fe787b56
+2025-12-14 15:41:49,409 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/swagger-oauth-js - Corl ID : a7d22c9a-2f26-44fe-9f8a-9b735045552d
+2025-12-14 15:41:49,411 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : a7d22c9a-2f26-44fe-9f8a-9b735045552d
+2025-12-14 15:41:49,463 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/logo_small-png - Corl ID : e2341b6a-a286-4539-90cd-dbf724b33a4a
+2025-12-14 15:41:49,464 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : e2341b6a-a286-4539-90cd-dbf724b33a4a
+2025-12-14 15:41:49,495 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/print-css - Corl ID : 7268d557-71fc-4d5e-b6c5-734ecbba7e17
+2025-12-14 15:41:49,495 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 7268d557-71fc-4d5e-b6c5-734ecbba7e17
+2025-12-14 15:41:49,821 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/docs/v1 - Corl ID : 0cd73569-7fd7-4083-8e26-d50098c32322
+2025-12-14 15:41:49,821 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 0cd73569-7fd7-4083-8e26-d50098c32322
+2025-12-14 15:41:49,879 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/fonts/DroidSans-Bold-ttf - Corl ID : aba9e27e-cfa3-4cbc-a05d-2a482b16ee59
+2025-12-14 15:41:49,881 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : aba9e27e-cfa3-4cbc-a05d-2a482b16ee59
+2025-12-14 15:41:49,883 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/fonts/DroidSans-ttf - Corl ID : 35e18f05-f476-4ab6-b283-ec56e1b01ad1
+2025-12-14 15:41:49,884 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 35e18f05-f476-4ab6-b283-ec56e1b01ad1
+2025-12-14 15:50:32,709 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/throbber-gif - Corl ID : 11171ad6-3b19-4ef8-83f8-bbf9afc5c127
+2025-12-14 15:50:32,709 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 11171ad6-3b19-4ef8-83f8-bbf9afc5c127
+2025-12-14 15:50:32,736 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/257753?[object FormData]&_=1765716632682 - Corl ID : cc45390f-ba61-4b1a-863d-65c75c1496db
+2025-12-14 15:50:35,180 [18] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : cc45390f-ba61-4b1a-863d-65c75c1496db
+2025-12-14 15:54:42,072 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/282928?[object FormData]&_=1765716882044 - Corl ID : 9756cf4d-2ba7-47b7-b542-4c714ad3f44a
+2025-12-14 15:54:43,690 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 9756cf4d-2ba7-47b7-b542-4c714ad3f44a
+2025-12-14 15:54:54,499 [16] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/282928?[object FormData]&_=1765716894490 - Corl ID : 2a9444ee-66fb-43f4-9dcc-22ab37ca71f7
+2025-12-14 15:54:56,109 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 2a9444ee-66fb-43f4-9dcc-22ab37ca71f7
+2025-12-14 15:55:08,735 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/282928?[object FormData]&_=1765716908730 - Corl ID : cdc214d2-5497-4059-82e3-45c334f3e57e
+2025-12-14 15:55:10,323 [16] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : cdc214d2-5497-4059-82e3-45c334f3e57e
+2025-12-14 15:57:27,256 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/282928?[object FormData]&_=1765717047225 - Corl ID : 53c40505-6efa-4b4f-92f8-f6c6219c98c8
+2025-12-14 15:57:28,862 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 53c40505-6efa-4b4f-92f8-f6c6219c98c8
+2025-12-14 15:57:58,829 [22] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/282928?[object FormData]&_=1765717078815 - Corl ID : 7a11367a-9420-4d85-8007-6f95be268659
+2025-12-14 15:58:00,436 [53] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 7a11367a-9420-4d85-8007-6f95be268659
+2025-12-14 15:58:22,750 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/282928?[object FormData]&_=1765717102743 - Corl ID : e34f021c-94f8-47a7-9c24-59d000adf400
+2025-12-14 15:58:24,360 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : e34f021c-94f8-47a7-9c24-59d000adf400
+2025-12-14 15:58:53,648 [22] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/282928?[object FormData]&_=1765717133640 - Corl ID : 1987613c-a502-4005-9f7e-898bcc5ae0c2
+2025-12-14 15:58:55,276 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 1987613c-a502-4005-9f7e-898bcc5ae0c2
+2025-12-14 16:03:40,145 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/ - Corl ID : fe41f3fd-35c6-462f-a25d-479a48bb561e
+2025-12-14 16:03:40,623 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : fe41f3fd-35c6-462f-a25d-479a48bb561e
+2025-12-14 16:03:41,098 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger - Corl ID : ce63a143-5f0e-422b-8d6b-ab47827242df
+2025-12-14 16:03:41,100 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : ce63a143-5f0e-422b-8d6b-ab47827242df
+2025-12-14 16:03:41,176 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/index - Corl ID : 8cf4cfba-bc58-4dfc-ad35-ef85eb0953f4
+2025-12-14 16:03:41,176 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 8cf4cfba-bc58-4dfc-ad35-ef85eb0953f4
+2025-12-14 16:03:41,450 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/typography-css - Corl ID : 50b08bb0-3846-41b9-8f83-5752c98392a4
+2025-12-14 16:03:41,455 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/reset-css - Corl ID : 4970cc6a-43c3-4e22-98a2-66b279fd0662
+2025-12-14 16:03:41,461 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 50b08bb0-3846-41b9-8f83-5752c98392a4
+2025-12-14 16:03:41,472 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/screen-css - Corl ID : 8199f6e5-3632-469d-a2e1-df2984676666
+2025-12-14 16:03:41,473 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 4970cc6a-43c3-4e22-98a2-66b279fd0662
+2025-12-14 16:03:41,473 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/object-assign-pollyfill-js - Corl ID : 259dc7ef-5c5e-439a-8892-664aa49228ee
+2025-12-14 16:03:41,473 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 8199f6e5-3632-469d-a2e1-df2984676666
+2025-12-14 16:03:41,530 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-wiggle-min-js - Corl ID : 2140b5f1-56ad-4a3b-b41e-32e90c5a1788
+2025-12-14 16:03:41,538 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/highlight-9-1-0-pack_extended-js - Corl ID : 7c43bf62-5caf-4781-8482-7553572e888a
+2025-12-14 16:03:41,540 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-ba-bbq-min-js - Corl ID : 8d9fca1e-d39b-4f09-ab76-5e5ca43f114f
+2025-12-14 16:03:41,540 [17] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/handlebars-4-0-5-js - Corl ID : d53985d2-71a5-44ad-9929-314168814e46
+2025-12-14 16:03:41,540 [22] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/highlight-9-1-0-pack-js - Corl ID : de04a253-bce0-4050-9017-c2e20e96fda1
+2025-12-14 16:03:41,540 [20] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/swagger-oauth-js - Corl ID : fefc0a5e-079f-409c-90b8-fe97d868f31d
+2025-12-14 16:03:41,553 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 259dc7ef-5c5e-439a-8892-664aa49228ee
+2025-12-14 16:03:41,559 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-1-8-0-min-js - Corl ID : 1c3bdb06-16c0-4224-97b0-c000c3ea2486
+2025-12-14 16:03:41,559 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 1c3bdb06-16c0-4224-97b0-c000c3ea2486
+2025-12-14 16:03:41,559 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 8d9fca1e-d39b-4f09-ab76-5e5ca43f114f
+2025-12-14 16:03:41,578 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/backbone-min-js - Corl ID : 891d45df-870a-48e5-bd09-875c093ce09a
+2025-12-14 16:03:41,581 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 891d45df-870a-48e5-bd09-875c093ce09a
+2025-12-14 16:03:41,584 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-slideto-min-js - Corl ID : c5ba8271-69d8-4137-b39a-8338d7093b57
+2025-12-14 16:03:41,569 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 2140b5f1-56ad-4a3b-b41e-32e90c5a1788
+2025-12-14 16:03:41,587 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : c5ba8271-69d8-4137-b39a-8338d7093b57
+2025-12-14 16:03:41,572 [19] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/marked-js - Corl ID : a97deeae-7594-4f83-b566-488e0ae0befc
+2025-12-14 16:03:41,563 [22] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : de04a253-bce0-4050-9017-c2e20e96fda1
+2025-12-14 16:03:41,591 [19] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : a97deeae-7594-4f83-b566-488e0ae0befc
+2025-12-14 16:03:41,595 [18] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jsoneditor-min-js - Corl ID : 6d43712e-96b3-4874-a957-ecc1f06c9d4c
+2025-12-14 16:03:41,614 [16] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/swagger-ui-min-js - Corl ID : 563ca955-7c3a-4c87-90fe-d62d515b0491
+2025-12-14 16:03:41,561 [17] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : d53985d2-71a5-44ad-9929-314168814e46
+2025-12-14 16:03:41,615 [16] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 563ca955-7c3a-4c87-90fe-d62d515b0491
+2025-12-14 16:03:41,615 [18] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 6d43712e-96b3-4874-a957-ecc1f06c9d4c
+2025-12-14 16:03:41,563 [20] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : fefc0a5e-079f-409c-90b8-fe97d868f31d
+2025-12-14 16:03:41,638 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/lodash-min-js - Corl ID : 83161c26-e17b-4165-823a-f57d2b30167d
+2025-12-14 16:03:41,615 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 7c43bf62-5caf-4781-8482-7553572e888a
+2025-12-14 16:03:41,638 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 83161c26-e17b-4165-823a-f57d2b30167d
+2025-12-14 16:03:41,803 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/logo_small-png - Corl ID : 0ae84e4e-1f56-4513-b9d6-72388708655d
+2025-12-14 16:03:41,804 [21] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 0ae84e4e-1f56-4513-b9d6-72388708655d
+2025-12-14 16:03:41,843 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/print-css - Corl ID : 33bb9dfc-f8f0-4700-9e34-6711984bbece
+2025-12-14 16:03:41,843 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 33bb9dfc-f8f0-4700-9e34-6711984bbece
+2025-12-14 16:03:42,157 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/docs/v1 - Corl ID : 117d9174-4e84-41a0-844f-3db351726861
+2025-12-14 16:03:42,158 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 117d9174-4e84-41a0-844f-3db351726861
+2025-12-14 16:03:42,202 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/fonts/DroidSans-Bold-ttf - Corl ID : 2e7d6774-ed42-413d-92b5-cdb7cae11452
+2025-12-14 16:03:42,203 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 2e7d6774-ed42-413d-92b5-cdb7cae11452
+2025-12-14 16:03:42,205 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/fonts/DroidSans-ttf - Corl ID : 2d64036b-51b1-42e9-8777-8ab24ad5f91e
+2025-12-14 16:03:42,205 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 2d64036b-51b1-42e9-8777-8ab24ad5f91e
+2025-12-14 16:04:20,043 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/throbber-gif - Corl ID : a60a480d-f3d4-4caf-832a-59aaa9f649cb
+2025-12-14 16:04:20,043 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : a60a480d-f3d4-4caf-832a-59aaa9f649cb
+2025-12-14 16:04:20,065 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/multiple-sandu/257753?[object FormData]&_=1765717460032 - Corl ID : 3e58b592-2a8b-4524-8a38-506d1930419f
+2025-12-14 16:04:22,331 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 3e58b592-2a8b-4524-8a38-506d1930419f
+2025-12-14 16:05:31,062 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/282928/multiple-sandu?[object FormData]&_=1765717530999 - Corl ID : 6843f329-3e3c-48ca-9eee-cac550a6e960
+2025-12-14 16:05:32,945 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 6843f329-3e3c-48ca-9eee-cac550a6e960
+2025-12-14 16:39:57,104 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/ - Corl ID : d956073e-ae69-4ee9-8148-05d2a122385a
+2025-12-14 16:39:57,382 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : d956073e-ae69-4ee9-8148-05d2a122385a
+2025-12-14 16:39:57,714 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger - Corl ID : 87e48265-88cf-40c3-b468-3f44585863b6
+2025-12-14 16:39:57,715 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 87e48265-88cf-40c3-b468-3f44585863b6
+2025-12-14 16:39:57,761 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/index - Corl ID : 9ce2e2f9-a13b-4116-bc13-64b3bcba229a
+2025-12-14 16:39:57,761 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 9ce2e2f9-a13b-4116-bc13-64b3bcba229a
+2025-12-14 16:39:57,970 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/screen-css - Corl ID : d0447cf4-0b6a-4ca7-8697-3cb1316d77ec
+2025-12-14 16:39:57,971 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : d0447cf4-0b6a-4ca7-8697-3cb1316d77ec
+2025-12-14 16:39:57,971 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/typography-css - Corl ID : 4174a87d-fe07-45d2-a44f-23937a87e9d7
+2025-12-14 16:39:57,974 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 4174a87d-fe07-45d2-a44f-23937a87e9d7
+2025-12-14 16:39:57,970 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/reset-css - Corl ID : e68f1859-217b-47cb-af0e-11d265984a36
+2025-12-14 16:39:57,982 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : e68f1859-217b-47cb-af0e-11d265984a36
+2025-12-14 16:39:58,133 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/object-assign-pollyfill-js - Corl ID : 59a06142-18aa-41a4-b664-1c115fe2a14a
+2025-12-14 16:39:58,135 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-slideto-min-js - Corl ID : ee356cad-77d2-41ba-bd8d-602a45adc11b
+2025-12-14 16:39:58,139 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-1-8-0-min-js - Corl ID : 15ef3392-6891-4e2d-b932-5876995171c3
+2025-12-14 16:39:58,140 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 59a06142-18aa-41a4-b664-1c115fe2a14a
+2025-12-14 16:39:58,140 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 15ef3392-6891-4e2d-b932-5876995171c3
+2025-12-14 16:39:58,144 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : ee356cad-77d2-41ba-bd8d-602a45adc11b
+2025-12-14 16:39:58,199 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-wiggle-min-js - Corl ID : 85bd81e3-9df6-44d1-820a-feb8bef2fc96
+2025-12-14 16:39:58,200 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 85bd81e3-9df6-44d1-820a-feb8bef2fc96
+2025-12-14 16:39:58,215 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jquery-ba-bbq-min-js - Corl ID : d8764e81-b0f3-4297-8f2e-b24521749708
+2025-12-14 16:39:58,215 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : d8764e81-b0f3-4297-8f2e-b24521749708
+2025-12-14 16:39:58,407 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/handlebars-4-0-5-js - Corl ID : 0f7aaa09-26b0-48da-a4f8-49ad9d357131
+2025-12-14 16:39:58,407 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 0f7aaa09-26b0-48da-a4f8-49ad9d357131
+2025-12-14 16:39:58,407 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/lodash-min-js - Corl ID : dbbc7434-0d4f-4d7d-a7f4-d6632590b854
+2025-12-14 16:39:58,409 [10] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : dbbc7434-0d4f-4d7d-a7f4-d6632590b854
+2025-12-14 16:39:58,409 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/backbone-min-js - Corl ID : 8e8df5a1-d0b2-4a20-a383-27cb7b04778f
+2025-12-14 16:39:58,413 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 8e8df5a1-d0b2-4a20-a383-27cb7b04778f
+2025-12-14 16:39:58,593 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/swagger-ui-min-js - Corl ID : 04d33668-8e3b-423f-be87-245fdb6fdcdf
+2025-12-14 16:39:58,593 [13] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 04d33668-8e3b-423f-be87-245fdb6fdcdf
+2025-12-14 16:39:58,597 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/highlight-9-1-0-pack-js - Corl ID : d0d59fb3-46b3-488d-a59d-3f7aac96a4bf
+2025-12-14 16:39:58,599 [14] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : d0d59fb3-46b3-488d-a59d-3f7aac96a4bf
+2025-12-14 16:39:58,601 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/highlight-9-1-0-pack_extended-js - Corl ID : 3ffabd9b-9ad7-4c2f-b79d-6e33a8571588
+2025-12-14 16:39:58,603 [15] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 3ffabd9b-9ad7-4c2f-b79d-6e33a8571588
+2025-12-14 16:39:58,687 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/jsoneditor-min-js - Corl ID : 7f533f9c-ba3b-44f9-a6ca-72665d4aa8a4
+2025-12-14 16:39:58,688 [12] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 7f533f9c-ba3b-44f9-a6ca-72665d4aa8a4
+2025-12-14 16:39:58,689 [16] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/marked-js - Corl ID : 34f9c108-6edb-4fda-9b96-1349b4bdd049
+2025-12-14 16:39:58,691 [16] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 34f9c108-6edb-4fda-9b96-1349b4bdd049
+2025-12-14 16:39:58,779 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/lib/swagger-oauth-js - Corl ID : bc05b31e-37c3-40e4-828d-26592ac8bcce
+2025-12-14 16:39:58,780 [9] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : bc05b31e-37c3-40e4-828d-26592ac8bcce
+2025-12-14 16:39:58,807 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/logo_small-png - Corl ID : af013d18-2493-4c3a-a874-ce7826269470
+2025-12-14 16:39:58,807 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : af013d18-2493-4c3a-a874-ce7826269470
+2025-12-14 16:39:58,931 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/css/print-css - Corl ID : a1ac00dc-912f-4bf2-b1bd-29ec79a4fd8f
+2025-12-14 16:39:58,931 [8] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : a1ac00dc-912f-4bf2-b1bd-29ec79a4fd8f
+2025-12-14 16:39:59,067 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/docs/v1 - Corl ID : 59e6650f-78f7-4420-8f9f-e5944cf6c57b
+2025-12-14 16:39:59,068 [11] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 59e6650f-78f7-4420-8f9f-e5944cf6c57b
+2025-12-14 16:39:59,135 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/fonts/DroidSans-Bold-ttf - Corl ID : 4738359d-e97a-4b68-b78a-16137a32bc9b
+2025-12-14 16:39:59,135 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 4738359d-e97a-4b68-b78a-16137a32bc9b
+2025-12-14 16:39:59,139 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/fonts/DroidSans-ttf - Corl ID : 8f440737-fd40-48c2-8c5d-16f49b674e47
+2025-12-14 16:39:59,139 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 8f440737-fd40-48c2-8c5d-16f49b674e47
+2025-12-14 16:45:34,343 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/throbber-gif - Corl ID : 24212eab-df88-46ec-8da6-0b00d0ae2a75
+2025-12-14 16:45:34,343 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 24212eab-df88-46ec-8da6-0b00d0ae2a75
+2025-12-14 16:45:34,360 [33] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/283034/multiple-sandu?[object FormData]&_=1765719934315 - Corl ID : d0258455-d5b6-4633-b22c-5642b50d4282
+2025-12-14 16:45:37,195 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : d0258455-d5b6-4633-b22c-5642b50d4282
+2025-12-14 16:46:13,283 [7] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/282785/multiple-sandu?[object FormData]&_=1765719973273 - Corl ID : 8ba1dd82-9cde-42a4-bc97-f4729c878c40
+2025-12-14 16:46:14,938 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 8ba1dd82-9cde-42a4-bc97-f4729c878c40
+2025-12-14 16:46:57,696 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/283034/multiple-sandu?[object FormData]&_=1765720017689 - Corl ID : d32b1132-daac-4715-9bd9-ba2c2e2206c8
+2025-12-14 16:46:59,322 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : d32b1132-daac-4715-9bd9-ba2c2e2206c8
+2025-12-14 16:47:24,613 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/swagger/ui/images/favicon-32x32-png - Corl ID : 1db2d1b7-dcd2-47f5-b679-638c36382fdf
+2025-12-14 16:47:24,614 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: NotFound - Corl ID : 1db2d1b7-dcd2-47f5-b679-638c36382fdf
+2025-12-14 16:49:27,656 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/282803/multiple-sandu?[object FormData]&_=1765720167647 - Corl ID : 0e226f37-de7c-4092-992f-66f77438a4da
+2025-12-14 16:49:29,276 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 0e226f37-de7c-4092-992f-66f77438a4da
+2025-12-14 16:50:17,943 [24] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/283034/multiple-sandu?[object FormData]&_=1765720217934 - Corl ID : 9561bb2c-3178-4a5a-8632-a70fe2e2c746
+2025-12-14 16:50:18,440 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/283034/multiple-sandu?[object FormData]&_=1765720218433 - Corl ID : 494d6192-2a47-4f92-8d18-24ab4d93f4a1
+2025-12-14 16:50:19,545 [6] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 9561bb2c-3178-4a5a-8632-a70fe2e2c746
+2025-12-14 16:50:20,041 [32] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 494d6192-2a47-4f92-8d18-24ab4d93f4a1
+2025-12-14 16:51:41,741 [55] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/282928/multiple-sandu?[object FormData]&_=1765720301733 - Corl ID : ca8731a7-8d27-449e-96d4-a3b0751cc48d
+2025-12-14 16:51:43,622 [24] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : ca8731a7-8d27-449e-96d4-a3b0751cc48d
+2025-12-14 16:58:26,687 [36] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/multiple-sandu - Corl ID : dc1e1b3a-6702-4711-b19c-e0c36e42a654
+2025-12-14 16:58:29,122 [28] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: BadRequest - Corl ID : dc1e1b3a-6702-4711-b19c-e0c36e42a654
+2025-12-14 16:59:25,045 [36] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/multiple-sandu - Corl ID : 6cf75d65-a886-42f5-b68b-0397baa74575
+2025-12-14 16:59:26,887 [25] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 6cf75d65-a886-42f5-b68b-0397baa74575
+2025-12-14 17:15:00,360 [38] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/loi-hma - Corl ID : 744b8c84-7cb3-4138-bafe-deabd539abb4
+2025-12-14 17:15:02,482 [56] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: BadRequest - Corl ID : 744b8c84-7cb3-4138-bafe-deabd539abb4
+2025-12-14 18:26:34,646 [59] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/loi-hma - Corl ID : 5183545c-779c-48d0-8f28-ecb7286748aa
+2025-12-14 18:42:36,636 [59] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: BadRequest - Corl ID : 5183545c-779c-48d0-8f28-ecb7286748aa
+2025-12-14 19:10:52,191 [100] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/282928/delivery-plans?[object FormData]&_=1765728652166 - Corl ID : ab91bcb7-7f97-470b-90c5-e000c075aa41
+2025-12-14 19:10:53,890 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : ab91bcb7-7f97-470b-90c5-e000c075aa41
+2025-12-14 19:11:52,333 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: PUT https://localhost:44319/GRT/delivery-plan/287131 - Corl ID : 0f4a8389-ed52-45bd-ae93-639af3c8da2b
+2025-12-14 19:11:54,244 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 0f4a8389-ed52-45bd-ae93-639af3c8da2b
+2025-12-14 19:12:05,731 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/282928/delivery-plans?[object FormData]&_=1765728725717 - Corl ID : f4a4d74e-f502-4ca3-b0e9-2f7b5cdaff23
+2025-12-14 19:12:07,322 [67] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : f4a4d74e-f502-4ca3-b0e9-2f7b5cdaff23
+2025-12-14 19:13:18,694 [37] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/282928/infra-delivery-plans?[object FormData]&_=1765728798684 - Corl ID : a0bc46d0-fab6-4112-937f-4f35176ebd3f
+2025-12-14 19:13:20,590 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : a0bc46d0-fab6-4112-937f-4f35176ebd3f
+2025-12-14 19:15:27,979 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/infra-delivery-plan - Corl ID : 8e50661f-b65c-4516-ac55-9874b7f6ad27
+2025-12-14 19:15:29,852 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: BadRequest - Corl ID : 8e50661f-b65c-4516-ac55-9874b7f6ad27
+2025-12-14 19:17:46,452 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/infra-delivery-plan - Corl ID : 9405f7de-0dbe-431e-8e0c-a42d8f6c868e
+2025-12-14 19:17:48,314 [42] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: BadRequest - Corl ID : 9405f7de-0dbe-431e-8e0c-a42d8f6c868e
+2025-12-14 19:18:36,346 [46] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/infra-delivery-plan - Corl ID : 6e869022-9053-43b0-a282-6d9c56a93d75
+2025-12-14 19:18:38,130 [96] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: BadRequest - Corl ID : 6e869022-9053-43b0-a282-6d9c56a93d75
+2025-12-14 19:21:41,881 [46] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/infra-delivery-plan - Corl ID : 8f57cd05-44fb-488b-819e-0ec839bfcba3
+2025-12-14 19:21:41,893 [46] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: BadRequest - Corl ID : 8f57cd05-44fb-488b-819e-0ec839bfcba3
+2025-12-14 19:21:57,163 [46] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: POST https://localhost:44319/GRT/infra-delivery-plan - Corl ID : 9e33b7f2-ddb9-4ad5-b9ea-42c42d64cc68
+2025-12-14 19:21:58,975 [25] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 9e33b7f2-ddb9-4ad5-b9ea-42c42d64cc68
+2025-12-14 19:22:21,282 [44] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Request: GET https://localhost:44319/GRT/project-overview/282928/infra-delivery-plans?[object FormData]&_=1765729341271 - Corl ID : 239c3b4a-4eb7-463b-b71e-f322f56b541c
+2025-12-14 19:22:22,928 [44] INFO  PIF.EBP.WebAPI.Middleware.Logging.LoggingMiddleware - Response: OK - Corl ID : 239c3b4a-4eb7-463b-b71e-f322f56b541c

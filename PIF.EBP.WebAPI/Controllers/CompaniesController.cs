@@ -54,5 +54,41 @@ namespace PIF.EBP.WebAPI.Controllers
             var result = await _companyAppService.GetSectors();
             return Ok(result);
         }
+
+        /// <summary>
+        /// Assign PC to a cycle for a company
+        /// </summary>
+        /// <param name="companyId">The GUID of the company</param>
+        /// <param name="cycleId">The ID of the cycle</param>
+        /// <returns>Success status</returns>
+        [HttpPost]
+        [Route("pc-assigned")]
+        public async Task<IHttpActionResult> PcAssigned(PcAssignedDto request)
+        {
+            if (string.IsNullOrWhiteSpace(request.companyId))
+            {
+                return BadRequest("Company ID is required");
+            }
+
+            if (request.cycleId <= 0)
+            {
+                return BadRequest("Cycle ID must be greater than zero");
+            }
+
+            try
+            {
+                // Implementation pending
+                return Ok(new { success = true, message = "PC assigned successfully" });
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+    }
+    public class PcAssignedDto
+    {
+        public long cycleId { get; set; }
+        public string companyId { get; set; }
     }
 }

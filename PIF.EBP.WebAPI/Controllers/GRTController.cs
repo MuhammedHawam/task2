@@ -1,10 +1,14 @@
 using PIF.EBP.Application.GRT;
+using PIF.EBP.Application.GRT.Budget.DTOs;
 using PIF.EBP.Application.GRT.DTOs;
 using PIF.EBP.Core.DependencyInjection;
 using PIF.EBP.WebAPI.Middleware.ActionFilter;
+using PIF.EBP.WebAPI.Middleware.Authorize;
 using System;
+using System.Drawing.Printing;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.UI;
 
 namespace PIF.EBP.WebAPI.Controllers
 {
@@ -13,13 +17,46 @@ namespace PIF.EBP.WebAPI.Controllers
     /// </summary>
     [ApiResponseWrapper]
     [RoutePrefix("GRT")]
-    public class GRTController : ApiController
+    public class GRTController : BaseController
     {
         private readonly IGRTAppService _grtAppService;
 
         public GRTController()
         {
             _grtAppService = WindsorContainerProvider.Container.Resolve<IGRTAppService>();
+        }
+
+        #region Lookup And Cycles And Project Overview
+        /// <summary>
+        /// Assign PC to a cycle for a company
+        /// </summary>
+        /// <param name="companyId">The GUID of the company</param>
+        /// <param name="cycleId">The ID of the cycle</param>
+        /// <returns>Success status</returns>
+        [APIKEY]
+        [HttpPost]
+        [Route("pc-assigned")]
+        public async Task<IHttpActionResult> PcAssigned(PcAssignedDto request)
+        {
+            if (string.IsNullOrWhiteSpace(request.companyId))
+            {
+                return BadRequest("Company ID is required");
+            }
+
+            if (request.cycleId <= 0)
+            {
+                return BadRequest("Cycle ID must be greater than zero");
+            }
+
+            try
+            {
+                // Implementation pending
+                return Ok(new { success = true, message = "PC assigned successfully" });
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         /// <summary>
@@ -187,7 +224,9 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+        #endregion
 
+        #region Delivery Plans
         /// <summary>
         /// Get GRT Delivery Plans by project overview ID with pagination and optional search
         /// </summary>
@@ -361,7 +400,9 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+        #endregion
 
+        #region Infra Delivery Plans
         /// <summary>
         /// Get infrastructure delivery plans by project overview ID
         /// </summary>
@@ -534,7 +575,9 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+        #endregion
 
+        #region Land Sales
         /// <summary>
         /// Get land sales by project overview ID
         /// </summary>
@@ -707,7 +750,9 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+        #endregion
 
+        #region Cashflows
         /// <summary>
         /// Get cashflows by project overview ID with pagination
         /// </summary>
@@ -775,6 +820,8 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+
+        #endregion
 
         #region Budget
         [HttpGet]
@@ -968,8 +1015,6 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
-        #endregion
-
         /// <summary>
         /// Update cashflow by ID
         /// </summary>
@@ -1008,7 +1053,9 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+        #endregion
 
+        #region LOI & HMA
         /// <summary>
         /// Get LOI & HMA (Approved Business Plan) by project overview ID with pagination
         /// </summary>
@@ -1109,7 +1156,7 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
-
+        
         /// <summary>
         /// Update LOI & HMA by project overview ID and LOI & HMA ID
         /// </summary>
@@ -1187,8 +1234,9 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+        #endregion
 
-
+        #region Project Impact
         /// <summary>
         /// Get project impact by ID with all details
         /// </summary>
@@ -1221,22 +1269,49 @@ namespace PIF.EBP.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Get project impact by ID with all details
+        /// </summary>
+        /// <param name="id">The ID of the project impact (e.g., 284542)</param>
+        /// <returns>Project impact details</returns>
+        [HttpGet]
+        [Route("project-overview/{projectOverviewId}/projectImpact")]
+        public async Task<IHttpActionResult> GetProjectImpactByProject(long projectOverviewId ,int page = 1, int pageSize = 20)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("Project overview ID must be greater than zero");
+            }
+
+            try
+            {
+                var result =  await _grtAppService.GetProjectImpactByProjectIdAsync(projectOverviewId, page, pageSize);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
         /// Update project impact by ID
         /// </summary>
         /// <param name="id">The ID of the project impact (e.g., 284542)</param>
         /// <param name="projectImpact">Project impact data to update</param>
         /// <returns>Update result and metadata</returns>
         [HttpPut]
-        [Route("projectImpact/{id}")]
+        [Route("project-overview/{projectOverviewId}/projectImpact/{id}")]
         public async Task<IHttpActionResult> UpdateProjectImpact(
-            long id,
+            long projectOverviewId, long id,
             [FromBody] GRTProjectImpactDto projectImpact)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Project impact ID must be greater than zero");
-            }
-
+          
             if (projectImpact == null)
             {
                 return BadRequest("Project impact data is required");
@@ -1244,7 +1319,15 @@ namespace PIF.EBP.WebAPI.Controllers
 
             try
             {
-                var result = await _grtAppService.UpdateProjectImpactAsync(id, projectImpact);
+                var result = new GRTProjectImpactResponseDto();
+                if (id <= 0)
+                {
+                     result = await _grtAppService.CreateProjectImpactAsync(projectImpact);
+                }
+                else {
+                     result = await _grtAppService.UpdateProjectImpactAsync(id, projectOverviewId, projectImpact);
+                }
+                   
 
                 if (result.Success)
                 {
@@ -1287,10 +1370,9 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+        #endregion
 
-
-        
-
+        #region Multiple S&U
         /// <summary>
         /// Get Multiple S&U (Sources & Uses) Financial Planning by project overview ID
         /// </summary>
@@ -1475,5 +1557,181 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+        #endregion
+
+        #region Approved BP
+        /// <summary>
+        /// Get Approved BPs by project overview ID with pagination
+        /// </summary>
+        /// <param name="projectOverviewId">The ID of the project overview</param>
+        /// <param name="page">Page number (default: 1)</param>
+        /// <param name="pageSize">Items per page (default: 20)</param>
+        /// <returns>Paginated list of Approved BPs</returns>
+        [HttpGet]
+        [Route("project-overview/{projectOverviewId}/approved-bps")]
+        public async Task<IHttpActionResult> GetApprovedBPsByProject(long projectOverviewId, int page = 1, int pageSize = 20)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("Project overview ID must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0 || pageSize > 100)
+            {
+                return BadRequest("Page size must be between 1 and 100");
+            }
+
+            try
+            {
+                var result = await _grtAppService.GetApprovedBPsByProjectIdAsync(projectOverviewId, page, pageSize);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get Approved BP by ID with all details
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP</param>
+        /// <returns>Approved BP details</returns>
+        [HttpGet]
+        [Route("approved-bp/{id}")]
+        public async Task<IHttpActionResult> GetApprovedBP(long id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Approved BP ID must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtAppService.GetApprovedBPByIdAsync(id);
+                
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Create a new Approved BP
+        /// </summary>
+        /// <param name="approvedBP">Approved BP data</param>
+        /// <returns>Created Approved BP details</returns>
+        [HttpPost]
+        [Route("approved-bp")]
+        public async Task<IHttpActionResult> CreateApprovedBP([FromBody] GRTApprovedBPDto approvedBP)
+        {
+            if (approvedBP == null)
+            {
+                return BadRequest("Approved BP data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.CreateApprovedBPAsync(approvedBP);
+                
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Update Approved BP by ID
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP</param>
+        /// <param name="approvedBP">Approved BP data to update</param>
+        /// <returns>Updated Approved BP details</returns>
+        [HttpPut]
+        [Route("approved-bp/{id}")]
+        public async Task<IHttpActionResult> UpdateApprovedBP(long id, [FromBody] GRTApprovedBPDto approvedBP)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Approved BP ID must be greater than zero");
+            }
+
+            if (approvedBP == null)
+            {
+                return BadRequest("Approved BP data is required");
+            }
+
+            try
+            {
+                var result = await _grtAppService.UpdateApprovedBPAsync(id, approvedBP);
+                
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Delete Approved BP by ID
+        /// </summary>
+        /// <param name="id">The ID of the Approved BP to delete</param>
+        /// <returns>Success status</returns>
+        [HttpDelete]
+        [Route("approved-bp/{id}")]
+        public async Task<IHttpActionResult> DeleteApprovedBP(long id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Approved BP ID must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _grtAppService.DeleteApprovedBPAsync(id);
+                
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Approved BP deleted successfully" });
+                }
+                else
+                {
+                    return BadRequest("Failed to delete Approved BP");
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+        #endregion
     }
 }

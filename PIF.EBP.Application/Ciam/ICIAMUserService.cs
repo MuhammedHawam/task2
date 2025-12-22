@@ -1,6 +1,8 @@
 ﻿using PIF.EBP.Application.ciamcommunication.DTOs;
 using PIF.EBP.Application.CIAMCommunication.DTOs;
+
 using PIF.EBP.Application.Contacts.Dtos;
+using PIF.EBP.Application.PortalAdministration.DTOs;
 using PIF.EBP.Core.CIAMCommunication.DTOs;
 using PIF.EBP.Core.DependencyInjection;
 using System;
@@ -32,5 +34,8 @@ namespace PIF.EBP.Application.CIAMCommunication
         Task<ScimUserDto> GetUserByUserNameAsync(string userName);   
         Task<IList<ScimUserDto>> GetUsersByEmailAsync(string email); 
         Task<ScimOperationResponse> ResendInvitationAsync(string userId);
+        Task<List<ContactListResponse>> GetAllContatcs();
+        Task<List<CompanyDto>> RetrievecompaniesByContactId(string ContactId);
+
     }
 }

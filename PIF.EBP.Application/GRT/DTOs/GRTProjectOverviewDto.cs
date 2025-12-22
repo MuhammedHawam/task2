@@ -1,3 +1,4 @@
+using PIF.EBP.Core.GRT;
 using System;
 using System.Collections.Generic;
 
@@ -85,6 +86,8 @@ namespace PIF.EBP.Application.GRT
         // Relationship fields
         public long? GRTCycleCompanyMapRelationshipId { get; set; }
         public string GRTCycleCompanyMapRelationshipERC { get; set; }
+
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>

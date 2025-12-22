@@ -273,6 +273,7 @@
   <ItemGroup>
     <Compile Include="ciamcommunication\Implmentation\SCIMCommunicationService.cs" />
     <Compile Include="ciamcommunication\Implmentation\ScimOptions.cs" />
+    <Compile Include="Comments\Implementation\ProjectOverviewCommentsIntegrationService.cs" />
     <Compile Include="Community\ApiClient.cs" />
     <Compile Include="Community\Implmentation\AdminService.cs" />
     <Compile Include="Community\Implmentation\CommunityService.cs" />
@@ -283,6 +284,10 @@
     <Compile Include="ESMIntegration\Response\ApiResponse.cs" />
     <Compile Include="FileScanning\Implementation\OpswatBaseOptions.cs" />
     <Compile Include="FileScanning\Implementation\OpswatFileScanningService.cs" />
+    <Compile Include="GRTTable\Budget\BudgetService.cs" />
+    <Compile Include="GRTTable\DeliveryPlan\DeliveryPlanService.cs" />
+    <Compile Include="GRTTable\InfraDeliveryPlan\InfraDeliveryPlanService.cs" />
+    <Compile Include="GRTTable\Lookup\LookupService.cs" />
     <Compile Include="GRT\Implementation\GRTIntegrationService.cs" />
     <Compile Include="PartnersHub\PartnersHubService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -308,7 +313,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NewFolder1\" />
     <Folder Include="PartnersHub\DTOs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

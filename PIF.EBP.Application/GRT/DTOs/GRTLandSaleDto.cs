@@ -1,3 +1,4 @@
+using PIF.EBP.Core.GRT;
 using System;
 using System.Collections.Generic;
 
@@ -84,6 +85,8 @@ namespace PIF.EBP.Application.GRT
         // Relationships
         public long? ProjectToLandSaleRelationshipProjectOverviewId { get; set; }
         public string ProjectToLandSaleRelationshipProjectOverviewERC { get; set; }
+
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>

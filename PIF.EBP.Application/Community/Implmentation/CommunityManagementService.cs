@@ -40,6 +40,11 @@ namespace PIF.EBP.Application.Community.Implmentation
         public Task DeleteCommunityAsync(long communityId) =>
             _adminService.DeleteCommunityAsync(communityId);
 
+        public Task<object> ArchiveCommunityAsync(long communityId) =>
+            _adminService.ArchiveCommunityAsync(communityId);
+
+        public Task<object> UnArchiveCommunityAsync(long communityId) =>
+            _adminService.UnArchiveCommunityAsync(communityId);
         public Task<object> ApproveCommunityAsync(long communityId) =>
             _adminService.ApproveCommunityAsync(communityId);
 
@@ -68,6 +73,12 @@ namespace PIF.EBP.Application.Community.Implmentation
                                                                         string sort = null,
                                                                         string search = null) =>
             _adminService.GetPendingPostsAsync(page, pageSize, filter, sort, search);
+
+
+        public Task<object> UnArchivePostsAsync(long communityId) =>
+            _adminService.UnArchivePostsAsync(communityId);
+        public Task<object> ArchivePostsAsync(long communityId) =>
+            _adminService.ArchivePostsAsync(communityId);
 
         public Task<object> UpdatePostStatusAsync(long postId, PostStatusUpdateRequest request) =>
             _adminService.UpdatePostStatusAsync(postId, request);
@@ -180,19 +191,30 @@ namespace PIF.EBP.Application.Community.Implmentation
             int pageSize = 20,
             string filter = null,
             string sort = null,
-            string search = null)
-          => _adminService.GetPostsTasksDependsOnRoleAsync(page, pageSize, filter, sort, search);
+            string search = null, string status = null)
+          => _adminService.GetPostsTasksDependsOnRoleAsync(page, pageSize, filter, sort, search, status);
 
         public Task<object> GetApprovedCommunitiesReadyToPublishAsync(
             int page = 1,
             int pageSize = 20,
             string filter = null,
             string sort = null,
-            string search = null)
-            => _adminService.GetApprovedCommunitiesReadyToPublishAsync(page, pageSize, filter, sort, search);
+            string search = null, string status = null)
+            => _adminService.GetApprovedCommunitiesReadyToPublishAsync(page, pageSize, filter, sort, search, status);
 
-        public Task<object> GetProfileMemberAsync(string userId) =>
-            _userService.GetProfileMemberAsync(userId);
+        public Task<object> GetProfileMemberAsync(string userId,string companyId) =>
+            _userService.GetProfileMemberAsync(userId, companyId);
+
+        public Task DeleteHistoryById(long historyId) =>
+            _userService.DeleteHistoryById(historyId);
+
+
+        public Task DeleteAllHistory() =>
+            _userService.DeleteAllHistory();
+
+
+        public Task<object> GetSearchHistory() =>
+            _userService.GetSearchHistory();
 
     }
 }

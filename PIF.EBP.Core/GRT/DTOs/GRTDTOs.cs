@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace PIF.EBP.Core.GRT
 {
+    #region Lookup And Common DTOs
     /// <summary>
     /// Response from GRT API for list type definitions
     /// </summary>
@@ -22,6 +23,8 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("name_i18n")]
         public GRTNameI18n Name_i18n { get; set; }
+
+
     }
 
     /// <summary>
@@ -59,7 +62,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("en-US")]
         public string EnUS { get; set; }
     }
+    #endregion
 
+    #region Cycles And Project Overview
     /// <summary>
     /// Request for creating GRT Project Overview
     /// </summary>
@@ -472,6 +477,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("gRTCycleCompanyMapRelationshipERC")]
         public string GRTCycleCompanyMapRelationshipERC { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -592,8 +600,11 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
-    }
 
+    }
+    #endregion
+
+    #region Delivery Plans
     /// <summary>
     /// GRT Delivery Plan item
     /// </summary>
@@ -760,6 +771,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("projectToDeliveryPlanRelationshipERC")]
         public string ProjectToDeliveryPlanRelationshipERC { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -781,6 +795,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -947,7 +964,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("dateModified")]
         public string DateModified { get; set; }
     }
+    #endregion
 
+    #region Cycle Company Maps
     /// <summary>
     /// Cycle Company Map from GRT API
     /// </summary>
@@ -985,6 +1004,10 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
+
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -994,6 +1017,9 @@ namespace PIF.EBP.Core.GRT
     {
         [JsonProperty("items")]
         public List<GRTCycle> Items { get; set; }
+ 
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -1023,8 +1049,11 @@ namespace PIF.EBP.Core.GRT
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
         public int LastPage { get; set; }
-    }
 
+    }
+    #endregion
+
+    #region Infra Delivery Plans
     /// <summary>
     /// GRT Infrastructure Delivery Plan item
     /// </summary>
@@ -1065,6 +1094,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("infrastructureSector")]
         public GRTKeyValue InfrastructureSector { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -1086,6 +1118,7 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
+ 
     }
 
     /// <summary>
@@ -1098,6 +1131,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("infrastructureSector")]
         public GRTKeyValue InfrastructureSector { get; set; }
+
+        [JsonProperty("total")]
+        public double? Total { get; set; }
 
         [JsonProperty("r_projectToInfraDeliveryPlanRelationship_c_grtProjectOverviewId")]
         public long? ProjectToInfraDeliveryPlanRelationshipProjectOverviewId { get; set; }
@@ -1185,6 +1221,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -1207,7 +1246,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("r_infraDeliveryPlanToYearsRelationship_c_grtInfraDeliveryPlanERC")]
         public string InfraDeliveryPlanToYearsRelationshipInfraDeliveryPlanERC { get; set; }
     }
+    #endregion
 
+    #region Land Sales
     /// <summary>
     /// GRT Land Sale item
     /// </summary>
@@ -1275,6 +1316,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("projectToLandSaleRelationshipERC")]
         public string ProjectToLandSaleRelationshipERC { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -1296,6 +1340,7 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
+
     }
 
     /// <summary>
@@ -1363,7 +1408,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("dateModified")]
         public string DateModified { get; set; }
     }
+    #endregion
 
+    #region Cashflows
     /// <summary>
     /// GRT Cashflow item - represents financial data for different asset classes
     /// </summary>
@@ -1447,6 +1494,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("devcoFinancials")]
         public string DevcoFinancials { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -1468,6 +1518,7 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
+
     }
     #region Budgets
     public class GRTBudgetsResponse
@@ -1486,6 +1537,8 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
+
+
     }
 
     public class GRTBudgetRequest
@@ -1594,9 +1647,14 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("commitmentActual")]
         public string CommitmentActual { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
     #endregion
+    #endregion
 
+    #region Cashflow Requests and Responses
     /// <summary>
     /// Request for creating/updating GRT Cashflow
     /// </summary>
@@ -1677,7 +1735,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("dateModified")]
         public string DateModified { get; set; }
     }
+    #endregion
 
+    #region LOI & HMA
     /// <summary>
     /// GRT LOI & HMA (Approved Business Plan) item
     /// </summary>
@@ -1760,6 +1820,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("projectToLOIHMARelationshipERC")]
         public string ProjectToLOIHMARelationshipERC { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -1781,6 +1844,7 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("lastPage")]
         public int LastPage { get; set; }
+
     }
 
     /// <summary>
@@ -1863,9 +1927,9 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("dateModified")]
         public string DateModified { get; set; }
     }
+    #endregion
 
-
-
+    #region Project Impact
     public class GRTProjectImpact
     {
         [JsonProperty("id")]
@@ -1900,6 +1964,9 @@ namespace PIF.EBP.Core.GRT
         public string TotalNumberOfHospitalityStaffLabor { get; set; }
         [JsonProperty("totalPopulationOfTheProjectSection")]
         public string TotalPopulationOfTheProjectSection { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     public class GRTProjectImpactRequest
@@ -1938,7 +2005,30 @@ namespace PIF.EBP.Core.GRT
         public string DateModified { get; set; }
     }
 
+    /// <summary>
+    /// Paginated response for GRT Infrastructure Delivery Plans
+    /// </summary>
+    public class GRTProjectImpactPagedResponse
+    {
+        [JsonProperty("items")]
+        public List<GRTProjectImpact> Items { get; set; }
 
+        [JsonProperty("page")]
+        public int Page { get; set; }
+
+        [JsonProperty("pageSize")]
+        public int PageSize { get; set; }
+
+        [JsonProperty("totalCount")]
+        public int TotalCount { get; set; }
+
+        [JsonProperty("lastPage")]
+        public int LastPage { get; set; }
+    }
+
+    #endregion
+
+    #region Multiple S&U
     /// <summary>
     /// GRT Multiple S&U (Sources & Uses) Financial Planning item
     /// </summary>
@@ -1985,6 +2075,9 @@ namespace PIF.EBP.Core.GRT
 
         [JsonProperty("projectToMultipleSandURelationshipERC")]
         public string ProjectToMultipleSandURelationshipERC { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -2052,4 +2145,257 @@ namespace PIF.EBP.Core.GRT
         [JsonProperty("dateModified")]
         public string DateModified { get; set; }
     }
+    #endregion
+
+    #region Approved BP
+    /// <summary>
+    /// GRT Approved BP item
+    /// </summary>
+    public class GRTApprovedBP
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+
+        [JsonProperty("creator")]
+        public GRTCreator Creator { get; set; }
+
+        [JsonProperty("status")]
+        public GRTStatus Status { get; set; }
+
+        // Overview As Per Approved BP
+        [JsonProperty("firstInfrastructureStartDate")]
+        public GRTKeyValue FirstInfrastructureStartDate { get; set; }
+
+        [JsonProperty("firstInfrastructureStartSate")]
+        public GRTKeyValue FirstInfrastructureStartSate { get; set; }
+
+        [JsonProperty("lastInfrastructureCompleteDate")]
+        public GRTKeyValue LastInfrastructureCompleteDate { get; set; }
+
+        [JsonProperty("firstVerticalConstructionStartDate")]
+        public GRTKeyValue FirstVerticalConstructionStartDate { get; set; }
+
+        [JsonProperty("lastVerticalConstructionCompleteDate")]
+        public GRTKeyValue LastVerticalConstructionCompleteDate { get; set; }
+
+        [JsonProperty("operationsStartDate")]
+        public GRTKeyValue OperationsStartDate { get; set; }
+
+        [JsonProperty("lastYearOfFundingRequired")]
+        public GRTKeyValue LastYearOfFundingRequired { get; set; }
+
+        [JsonProperty("pIFDateOfApproval")]
+        public string PIFDateOfApproval { get; set; }
+
+        // IRR approved by PIF
+        [JsonProperty("projectIRR")]
+        public double? ProjectIRR { get; set; }
+
+        [JsonProperty("iRRAfterGovernmentSubsidies")]
+        public double? IRRAfterGovernmentSubsidies { get; set; }
+
+        [JsonProperty("equityIRR")]
+        public double? EquityIRR { get; set; }
+
+        [JsonProperty("doesApprovedIRRIncludeLand")]
+        public GRTKeyValue DoesApprovedIRRIncludeLand { get; set; }
+
+        [JsonProperty("doesApprovedIRRIncludeInfrastructureCost")]
+        public GRTKeyValue DoesApprovedIRRIncludeInfrastructureCost { get; set; }
+
+        [JsonProperty("doesApprovedIRRIncludeGovernmentSubsidies")]
+        public GRTKeyValue DoesApprovedIRRIncludeGovernmentSubsidies { get; set; }
+
+        [JsonProperty("projectPaybackYear")]
+        public GRTKeyValue ProjectPaybackYear { get; set; }
+
+        [JsonProperty("projectPaybackPeriod")]
+        public int? ProjectPaybackPeriod { get; set; }
+
+        // Development Plans
+        [JsonProperty("developmentPlanBy2030")]
+        public string DevelopmentPlanBy2030 { get; set; }
+
+        [JsonProperty("developmentPlanFullDevelopment")]
+        public string DevelopmentPlanFullDevelopment { get; set; }
+
+        // Sources of Funds
+        [JsonProperty("sourcesOfFunds")]
+        public string SourcesOfFunds { get; set; }
+
+        // Financials
+        [JsonProperty("financials")]
+        public string Financials { get; set; }
+
+        // Relationship
+        [JsonProperty("r_projectToApprovedBPRelationship_c_grtProjectOverviewId")]
+        public long? ProjectToApprovedBPRelationshipProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToApprovedBPRelationship_c_grtProjectOverviewERC")]
+        public string ProjectToApprovedBPRelationshipProjectOverviewERC { get; set; }
+
+        [JsonProperty("projectToApprovedBPRelationshipERC")]
+        public string ProjectToApprovedBPRelationshipERC { get; set; }
+
+        [JsonProperty("auditEvents")]
+        public List<GRTAuditEvent> AuditEvents { get; set; }
+    }
+
+    /// <summary>
+    /// Paginated response for GRT Approved BP
+    /// </summary>
+    public class GRTApprovedBPsPagedResponse
+    {
+        [JsonProperty("items")]
+        public List<GRTApprovedBP> Items { get; set; }
+
+        [JsonProperty("page")]
+        public int Page { get; set; }
+
+        [JsonProperty("pageSize")]
+        public int PageSize { get; set; }
+
+        [JsonProperty("totalCount")]
+        public int TotalCount { get; set; }
+
+        [JsonProperty("lastPage")]
+        public int LastPage { get; set; }
+    }
+
+    /// <summary>
+    /// Request for creating/updating GRT Approved BP
+    /// </summary>
+    public class GRTApprovedBPRequest
+    {
+        // Overview As Per Approved BP
+        [JsonProperty("firstInfrastructureStartDate")]
+        public GRTKeyValue FirstInfrastructureStartDate { get; set; }
+
+        [JsonProperty("firstInfrastructureStartSate")]
+        public GRTKeyValue FirstInfrastructureStartSate { get; set; }
+
+        [JsonProperty("lastInfrastructureCompleteDate")]
+        public GRTKeyValue LastInfrastructureCompleteDate { get; set; }
+
+        [JsonProperty("firstVerticalConstructionStartDate")]
+        public GRTKeyValue FirstVerticalConstructionStartDate { get; set; }
+
+        [JsonProperty("lastVerticalConstructionCompleteDate")]
+        public GRTKeyValue LastVerticalConstructionCompleteDate { get; set; }
+
+        [JsonProperty("operationsStartDate")]
+        public GRTKeyValue OperationsStartDate { get; set; }
+
+        [JsonProperty("lastYearOfFundingRequired")]
+        public GRTKeyValue LastYearOfFundingRequired { get; set; }
+
+        [JsonProperty("pIFDateOfApproval")]
+        public string PIFDateOfApproval { get; set; }
+
+        // IRR approved by PIF
+        [JsonProperty("projectIRR")]
+        public double? ProjectIRR { get; set; }
+
+        [JsonProperty("iRRAfterGovernmentSubsidies")]
+        public double? IRRAfterGovernmentSubsidies { get; set; }
+
+        [JsonProperty("equityIRR")]
+        public double? EquityIRR { get; set; }
+
+        [JsonProperty("doesApprovedIRRIncludeLand")]
+        public GRTKeyValue DoesApprovedIRRIncludeLand { get; set; }
+
+        [JsonProperty("doesApprovedIRRIncludeInfrastructureCost")]
+        public GRTKeyValue DoesApprovedIRRIncludeInfrastructureCost { get; set; }
+
+        [JsonProperty("doesApprovedIRRIncludeGovernmentSubsidies")]
+        public GRTKeyValue DoesApprovedIRRIncludeGovernmentSubsidies { get; set; }
+
+        [JsonProperty("projectPaybackYear")]
+        public GRTKeyValue ProjectPaybackYear { get; set; }
+
+        [JsonProperty("projectPaybackPeriod")]
+        public int? ProjectPaybackPeriod { get; set; }
+
+        // Development Plans
+        [JsonProperty("developmentPlanBy2030")]
+        public string DevelopmentPlanBy2030 { get; set; }
+
+        [JsonProperty("developmentPlanFullDevelopment")]
+        public string DevelopmentPlanFullDevelopment { get; set; }
+
+        // Sources of Funds
+        [JsonProperty("sourcesOfFunds")]
+        public string SourcesOfFunds { get; set; }
+
+        // Financials
+        [JsonProperty("financials")]
+        public string Financials { get; set; }
+
+        // Relationship
+        [JsonProperty("r_projectToApprovedBPRelationship_c_grtProjectOverviewId")]
+        public long? ProjectToApprovedBPRelationshipProjectOverviewId { get; set; }
+
+        [JsonProperty("r_projectToApprovedBPRelationship_c_grtProjectOverviewERC")]
+        public string ProjectToApprovedBPRelationshipProjectOverviewERC { get; set; }
+    }
+
+    /// <summary>
+    /// Response from creating/updating GRT Approved BP
+    /// </summary>
+    public class GRTApprovedBPResponse
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("externalReferenceCode")]
+        public string ExternalReferenceCode { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("dateModified")]
+        public string DateModified { get; set; }
+    }
+    #endregion
+
+    #region Audit Event
+    public class GRTAuditEvent
+    {
+        [JsonProperty("auditFieldChanges")]
+        public List<AuditFieldChange> AuditFieldChanges { get; set; }
+
+        [JsonProperty("creator")]
+        public GRTCreator Creator { get; set; }
+
+        [JsonProperty("dateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("eventType")]
+        public string EventType { get; set; }
+    }
+
+    public class AuditFieldChange
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("newValue")]
+        public object NewValue { get; set; }
+
+        [JsonProperty("oldValue")]
+        public object OldValue { get; set; }
+    }
+
+  
+    #endregion
 }

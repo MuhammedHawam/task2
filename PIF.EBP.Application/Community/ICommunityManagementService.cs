@@ -15,6 +15,8 @@ namespace PIF.EBP.Application.Community
         Task<object> CreateCommunityAsync(CommunityCreateRequest request);
         Task<object> UpdateCommunityAsync(long communityId, CommunityUpdateRequest request);
         Task DeleteCommunityAsync(long communityId);
+        Task<object> ArchiveCommunityAsync(long communityId);
+        Task<object> UnArchiveCommunityAsync(long communityId);
         Task<object> ApproveCommunityAsync(long communityId);
         Task<object> RejectCommunityAsync(long communityId, CommunityRejectRequest request);
         Task<object> PublishCommunityAsync(long communityId, CommunityPublishRequest request);
@@ -31,6 +33,11 @@ namespace PIF.EBP.Application.Community
                                                                    string filter = null,
                                                                    string sort = null,
                                                                    string search = null);
+
+        Task<object> UnArchivePostsAsync(long communityId);
+
+        Task<object> ArchivePostsAsync(long communityId);
+
         Task<object> UpdatePostStatusAsync(long postId, PostStatusUpdateRequest request);
         Task DeleteAdminPostAsync(long postId);
         Task DeleteCommentAsync(long commentId);
@@ -44,13 +51,13 @@ namespace PIF.EBP.Application.Community
             int pageSize = 20,
             string filter = null,
             string sort = null,
-            string search = null);
+            string search = null, string status = null);
         Task<object> GetApprovedCommunitiesReadyToPublishAsync(
             int page = 1,
             int pageSize = 20,
             string filter = null,
             string sort = null,
-            string search = null);
+            string search = null, string status = null);
         #endregion
 
         #region ---- Public community (read‑only) ----
@@ -102,6 +109,11 @@ namespace PIF.EBP.Application.Community
                                                                 int pageSize = 20);
         #endregion
 
-        Task<object> GetProfileMemberAsync(string userId);
+        Task<object> GetProfileMemberAsync(string userId, string companyId);
+        Task DeleteHistoryById(long historyId);
+        Task DeleteAllHistory();
+        Task<object> GetSearchHistory();
+
+
     }
 }

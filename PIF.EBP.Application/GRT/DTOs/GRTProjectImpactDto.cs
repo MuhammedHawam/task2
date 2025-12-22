@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PIF.EBP.Core.GRT;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,7 @@ namespace PIF.EBP.Application.GRT.DTOs
         public string TotalNumberOfEmployees { get; set; }
         public string TotalNumberOfHospitalityStaffLabor { get; set; }
         public string TotalPopulationOfTheProjectSection { get; set; }
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>
@@ -51,5 +53,7 @@ namespace PIF.EBP.Application.GRT.DTOs
         public bool Success { get; set; }
         public string Message { get; set; }
     }
+
+ 
 
 }

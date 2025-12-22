@@ -4,6 +4,8 @@ using PIF.EBP.Application.Accounts.Dtos;
 using PIF.EBP.Application.ciamcommunication.DTOs;
 using PIF.EBP.Application.CIAMCommunication;
 using PIF.EBP.Application.CIAMCommunication.DTOs;
+using PIF.EBP.Application.Contacts;
+using PIF.EBP.Application.Contacts.Dtos;
 using PIF.EBP.Core.CIAMCommunication.DTOs;
 using PIF.EBP.Core.DependencyInjection;
 using PIF.EBP.Core.Exceptions;
@@ -23,12 +25,15 @@ namespace PIF.EBP.WebAPI.Controllers
     {
         private readonly ICIAMUserService _ciamUserService;
         private readonly IAccountAppService _accountService;
+        private readonly IContactAppService _contactAppService;
+
         private readonly bool _logRequests;
 
         public SCIMCommunicationController()
         {
             _ciamUserService = WindsorContainerProvider.Container.Resolve<ICIAMUserService>();
             _accountService = WindsorContainerProvider.Container.Resolve<IAccountAppService>();
+            _contactAppService = WindsorContainerProvider.Container.Resolve<IContactAppService>();
 
             bool.TryParse(ConfigurationManager.AppSettings["LogCiamUserCreation"], out bool enableLogging);
             _logRequests = enableLogging;
@@ -212,6 +217,23 @@ namespace PIF.EBP.WebAPI.Controllers
             {
                 return InternalServerError(ex);
             }
+        }
+
+
+        [HttpGet]
+        [Route("contact-list")]
+        public async Task<IHttpActionResult> GetContacts()
+        {
+            var result = await _ciamUserService.GetAllContatcs();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("get-companies-by-contactid/{contactid}")]
+        public async Task<IHttpActionResult> GetCompaniesByContactId(string contactId)
+        {
+            var result = await _ciamUserService.RetrievecompaniesByContactId(contactId);
+            return Ok(result);
         }
     }
 }

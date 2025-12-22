@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -221,7 +221,21 @@
     <Compile Include="Commercialization\Implementation\CommercializationAppService.cs" />
     <Compile Include="Commercialization\Interfaces\ICommercializationCacheManager.cs" />
     <Compile Include="Commercialization\Interfaces\IESMService.cs" />
-    <Compile Include="GRT\DTOs\GRTBudgetsSummaryDto.cs" />
+    <Compile Include="GRTTable\DeliveryPlan\DTOs\DeliveryPlanDto.cs" />
+    <Compile Include="GRTTable\DeliveryPlan\DTOs\DeliveryPlanResponseDto.cs" />
+    <Compile Include="GRTTable\DeliveryPlan\DTOs\DeliveryPlanPagedDto.cs" />
+    <Compile Include="GRTTable\DeliveryPlan\IDeliveryPlanAppService.cs" />
+    <Compile Include="GRTTable\DeliveryPlan\Implementation\DeliveryPlanAppService.cs" />
+    <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanResponseDto.cs" />
+    <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanPagedDto.cs" />
+    <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanDto.cs" />
+    <Compile Include="GRTTable\InfraDeliveryPlan\IInfraDeliveryPlanAppService.cs" />
+    <Compile Include="GRTTable\InfraDeliveryPlan\Implementation\InfraDeliveryPlanAppService.cs" />
+    <Compile Include="GRTTable\Lookup\DTOs\GRTLookupEntryDto.cs" />
+    <Compile Include="GRTTable\Lookup\ILookupAppService.cs" />
+    <Compile Include="GRTTable\Lookup\Implementation\LookupAppService.cs" />
+    <Compile Include="GRT\DTOs\GRTApprovedBPDto.cs" />
+    <Compile Include="GRT\Budget\DTOs\GRTBudgetsSummaryDto.cs" />
     <Compile Include="GRT\DTOs\GRTCashflowDto.cs" />
     <Compile Include="GRT\DTOs\GRTCycleDto.cs" />
     <Compile Include="GRT\DTOs\GRTDeliveryPlanDto.cs" />
@@ -388,6 +402,9 @@
     <Compile Include="Cache\CacheEnum.cs" />
     <Compile Include="Cache\ICacheAppService.cs" />
     <Compile Include="Cache\Implementation\CacheAppService.cs" />
+    <Compile Include="Comments\DTOs\ProjectOverviewCommentDto.cs" />
+    <Compile Include="Comments\IProjectOverviewCommentsAppService.cs" />
+    <Compile Include="Comments\Implementation\ProjectOverviewCommentsAppService.cs" />
     <Compile Include="Contacts\Dtos\ContactDto.cs" />
     <Compile Include="Contacts\IContactAppService.cs" />
     <Compile Include="Contacts\Implementation\ContactAppService.cs" />
@@ -475,6 +492,7 @@
     <Folder Include="Company\Implementation\" />
     <Folder Include="DataCollection\DTOs\" />
     <Folder Include="FileScanning\Dtos\" />
+    <Folder Include="GRTTable\Budget\DTOs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -91,7 +91,16 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             return "?" + string.Join("&", q);
         }
 
-        public Task<object> GetProfileMemberAsync(string userId) =>
-           GetAsync<object>($"user/member-profile?userId ={userId}");
+        public Task<object> GetProfileMemberAsync(string userId, string companyId) =>
+           GetAsync<object>($"user/member-profile?userId ={userId}&companyId={companyId}");
+
+        public Task DeleteHistoryById(long historyId) =>
+          DeleteAsync($"user/search/history/{historyId}");
+
+        public Task DeleteAllHistory() =>
+          DeleteAsync($"user/search/history/clear");
+
+        public Task<object> GetSearchHistory() =>
+            GetAsync<object>("user/search/history");
     }
 }

@@ -1,3 +1,4 @@
+using PIF.EBP.Core.GRT;
 using System;
 using System.Collections.Generic;
 
@@ -64,6 +65,7 @@ namespace PIF.EBP.Application.GRT
         
         // Year entries
         public List<GRTInfraDeliveryPlanYearDto> Years { get; set; }
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>

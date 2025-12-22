@@ -49,6 +49,11 @@ namespace PIF.EBP.Core.Community
 
         #endregion
 
-        Task<object> GetProfileMemberAsync(string userId);
+        Task<object> GetProfileMemberAsync(string userId, string companyId);
+        Task DeleteHistoryById(long historyId);
+        Task DeleteAllHistory();
+        Task<object> GetSearchHistory();
+
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +13,7 @@ namespace PIF.EBP.Application.GRT
     {
         public string ExternalReferenceCode { get; set; }
         public int Id { get; set; }
+        public string Key { get; set; }
         public string Name { get; set; }
         public string ArSA { get; set; }
         public string EnUS { get; set; }

@@ -1,4 +1,6 @@
+using PIF.EBP.Core.GRT;
 using System;
+using System.Collections.Generic;
 
 namespace PIF.EBP.Application.GRT
 {
@@ -32,6 +34,7 @@ namespace PIF.EBP.Application.GRT
         public string EntertainmentAndSport { get; set; }
         public string UsesOfFunds { get; set; }
         public string DevcoFinancials { get; set; }
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>

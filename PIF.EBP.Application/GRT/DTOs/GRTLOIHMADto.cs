@@ -1,4 +1,6 @@
+using PIF.EBP.Core.GRT;
 using System;
+using System.Collections.Generic;
 
 namespace PIF.EBP.Application.GRT
 {
@@ -35,6 +37,8 @@ namespace PIF.EBP.Application.GRT
         public string OperationalYear { get; set; }
         public string PositionscaleKey { get; set; }
         public string PositionscaleName { get; set; }
+
+        public List<GRTAuditEvent> AuditEvents { get; set; }
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -167,6 +167,8 @@
     <Compile Include="Community\ICommunityService.cs" />
     <Compile Include="Community\ISearchService.cs" />
     <Compile Include="Community\IUserService.cs" />
+    <Compile Include="Comments\DTOs\ProjectOverviewCommentsDtos.cs" />
+    <Compile Include="Comments\IProjectOverviewCommentsIntegrationService.cs" />
     <Compile Include="CRM\ICrmService.cs" />
     <Compile Include="CRM\Implementation\CrmService.cs" />
     <Compile Include="CRM\Implementation\OrganizationServiceFactory.cs" />
@@ -191,6 +193,12 @@
     <Compile Include="FileManagement\DTOs\RenameFilesDto.cs" />
     <Compile Include="FileScanning\DTOs\FileScanningResultDto.cs" />
     <Compile Include="FileScanning\IExternalFileScanningService.cs" />
+    <Compile Include="GRTTable\DeliveryPlan\DTOs\DeliveryPlanDTOs.cs" />
+    <Compile Include="GRTTable\DeliveryPlan\Interfaces\IDeliveryPlanIntegrationService.cs" />
+    <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanDTOs.cs" />
+    <Compile Include="GRTTable\InfraDeliveryPlan\Interfaces\IInfraDeliveryPlanIntegrationService.cs" />
+    <Compile Include="GRTTable\Lookup\DTOs\LookupDTO.cs" />
+    <Compile Include="GRTTable\Lookup\Interfaces\ILookupIntegrationService.cs" />
     <Compile Include="GRT\DTOs\GRTDTOs.cs" />
     <Compile Include="GRT\IGRTIntegrationService.cs" />
     <Compile Include="Messaging\DTOs\MessagingRequestDto.cs" />
@@ -228,6 +236,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CMS\" />
+    <Folder Include="GRTTable\Budget\DTOs\" />
+    <Folder Include="GRTTable\Budget\Interfaces\" />
+    <Folder Include="GRT\Budget\DTOs\" />
+    <Folder Include="GRT\Budget\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

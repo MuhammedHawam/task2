@@ -301,11 +301,13 @@
     <Compile Include="Controllers\AttendeeEventController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\AccessManagementController.cs" />
+    <Compile Include="Controllers\Comments\ProjectOverviewCommentsController.cs" />
     <Compile Include="Controllers\AttendeeEventController.cs" />
     <Compile Include="Controllers\GRTController.cs" />
     <Compile Include="Controllers\CommunityController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
+    <Compile Include="Controllers\GRTTables\GRTTablesController.cs" />
     <Compile Include="Controllers\SCIMCommunicationController.cs" />
     <Compile Include="Controllers\CommercializationController.cs" />
     <Compile Include="Controllers\NetworkingController.cs" />

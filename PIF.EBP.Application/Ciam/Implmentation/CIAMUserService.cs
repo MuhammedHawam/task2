@@ -1,11 +1,16 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Newtonsoft.Json;
+using PIF.EBP.Application.AccessManagement;
 using PIF.EBP.Application.ciamcommunication.DTOs;
 using PIF.EBP.Application.CIAMCommunication.DTOs;
 using PIF.EBP.Application.Contacts.Dtos;
+using PIF.EBP.Application.MetaData.DTOs;
+using PIF.EBP.Application.PortalAdministration.DTOs;
 using PIF.EBP.Application.PortalConfiguration;
 using PIF.EBP.Application.Shared;
+using PIF.EBP.Application.Shared.AppResponse;
+using PIF.EBP.Application.Shared.Helpers;
 using PIF.EBP.Core.CIAMCommunication;
 using PIF.EBP.Core.CIAMCommunication.DTOs;
 using PIF.EBP.Core.CRM;
@@ -17,6 +22,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using static PIF.EBP.Application.Shared.Enums;
 
 namespace PIF.EBP.Application.CIAMCommunication.Implmentation
 {
@@ -26,17 +32,19 @@ namespace PIF.EBP.Application.CIAMCommunication.Implmentation
         private readonly ISessionService _sessionService;
         private readonly IPortalConfigAppService _portalConfigAppService;
         private readonly ICrmService _crmService;
+        private readonly IAccessManagementAppService _accessManagementAppService;
 
         public CIAMCommunicationService(
             ICrmService crmService,
             ISCIMCommunicationService scimUserService,
             ISessionService sessionService,
-            IPortalConfigAppService portalConfigAppService)
+            IPortalConfigAppService portalConfigAppService, IAccessManagementAppService accessManagementAppService)
         {
             _scimUserService = scimUserService ?? throw new ArgumentNullException(nameof(scimUserService));
             _sessionService = sessionService ?? throw new ArgumentNullException(nameof(sessionService));
             _portalConfigAppService = portalConfigAppService ?? throw new ArgumentNullException(nameof(portalConfigAppService));
             _crmService = crmService ?? throw new ArgumentNullException(nameof(crmService));
+            _accessManagementAppService = accessManagementAppService ?? throw new ArgumentNullException(nameof(accessManagementAppService));
         }
 
         public async Task<CreateInvitedUserResponse> CreateInvitedUserAsync(CreateSCIMUserRequest request)
@@ -427,6 +435,182 @@ namespace PIF.EBP.Application.CIAMCommunication.Implmentation
                 Participant = src.Custom?.Participant,
             };
             return dto;
+        }
+
+
+        public async Task<List<ContactListResponse>> GetAllContatcs()
+        {
+
+            ListPagingResponse<ContactListResponse> oResponse = new ListPagingResponse<ContactListResponse>();
+            List<ContactListResponse> contacts = new List<ContactListResponse>();
+            List<ContactListResponse> pinnedContacts = new List<ContactListResponse>();
+
+            var query = new QueryExpression(EntityNames.Contact)
+            {
+                ColumnSet = new ColumnSet("contactid", "firstname", "lastname", "ntw_firstnamearabic", "ntw_lastnamearabic", "emailaddress1", "mobilephone", "pwc_countryid", "pwc_position", "pwc_city", "entityimage"),
+                LinkEntities =
+                {
+                    new LinkEntity
+                    {
+                        LinkFromEntityName = EntityNames.Contact,
+                        LinkFromAttributeName = "contactid",
+                        LinkToEntityName = EntityNames.PortalPinned,
+                        LinkToAttributeName = "pwc_contactid",
+                        Columns= new ColumnSet("pwc_contactid", "pwc_companyidid"),
+                        EntityAlias = "Pin",
+                    }
+
+
+                }
+            };
+            var Countrylink = new LinkEntity
+            {
+                LinkFromEntityName = EntityNames.Contact,
+                LinkFromAttributeName = "pwc_countryid",
+                LinkToEntityName = EntityNames.Country,
+                LinkToAttributeName = "ntw_countryid",
+                JoinOperator = JoinOperator.LeftOuter,
+                Columns = new ColumnSet("ntw_name", "ntw_arabicname"),
+                EntityAlias = "Country"
+            };
+            var Positionlink = new LinkEntity
+            {
+                LinkFromEntityName = EntityNames.Contact,
+                LinkFromAttributeName = "pwc_position",
+                LinkToEntityName = EntityNames.Position,
+                LinkToAttributeName = "ntw_positionid",
+                JoinOperator = JoinOperator.LeftOuter,
+                Columns = new ColumnSet("ntw_name", "ntw_namear"),
+                EntityAlias = "Position"
+            };
+            var citylink = new LinkEntity
+            {
+                LinkFromEntityName = EntityNames.Contact,
+                LinkFromAttributeName = "pwc_city",
+                LinkToEntityName = EntityNames.City,
+                LinkToAttributeName = "ntw_citiesid",
+                JoinOperator = JoinOperator.LeftOuter,
+                Columns = new ColumnSet("ntw_name", "pwc_namear"),
+                EntityAlias = "City"
+            };
+            var RoleAssociation = new LinkEntity
+            {
+                LinkFromEntityName = EntityNames.Contact,
+                LinkFromAttributeName = "contactid",
+                LinkToEntityName = EntityNames.ContactAssociation,
+                LinkToAttributeName = "hexa_contactid",
+                JoinOperator = JoinOperator.LeftOuter,
+                Columns = new ColumnSet("hexa_contactroleassociationid", "hexa_portalroleid"),
+                EntityAlias = "RoleAssociation",
+                LinkEntities =
+                            {
+                                new LinkEntity
+                                {
+                                    LinkFromEntityName = EntityNames.ContactAssociation,
+                                    LinkFromAttributeName = "hexa_portalroleid",
+                                    LinkToEntityName = EntityNames.PortalRole,
+                                    LinkToAttributeName = "hexa_portalroleid",
+                                    JoinOperator = JoinOperator.LeftOuter,
+                                    Columns = new ColumnSet("pwc_roletypetypecode"),
+                                    EntityAlias = "RoleTypeCode",
+                                }
+                            }
+            };
+
+            query.LinkEntities.Add(Countrylink);
+            query.LinkEntities.Add(Positionlink);
+            query.LinkEntities.Add(citylink);
+            query.LinkEntities.Add(RoleAssociation);
+
+            // Execute the query
+            var retrievedContacts = _crmService.GetInstance().RetrieveMultiple(query);
+            var result = retrievedContacts.Entities.Select(entity =>
+            {
+                OptionSetValue roleTypeValue = entity.Contains("RoleTypeCode.pwc_roletypetypecode") ?
+                    (OptionSetValue)((AliasedValue)entity["RoleTypeCode.pwc_roletypetypecode"]).Value
+                    : null;
+
+                var roleTypeCode = roleTypeValue?.Value;
+
+                return new ContactListResponse
+                {
+                    Id = entity.Id,
+                    FirstName = CRMOperations.GetValueByAttributeName<string>(entity, "firstname"),
+                    LastName = CRMOperations.GetValueByAttributeName<string>(entity, "lastname"),
+                    FirstNameAr = CRMOperations.GetValueByAttributeName<string>(entity, "ntw_firstnamearabic"),
+                    LastNameAr = CRMOperations.GetValueByAttributeName<string>(entity, "ntw_lastnamearabic"),
+                    Email = roleTypeCode != (int)RoleType.BoardMember ? CRMOperations.GetValueByAttributeName<string>(entity, "emailaddress1") : null,
+                    MobilePhone = roleTypeCode != (int)RoleType.BoardMember ? CRMOperations.GetValueByAttributeName<string>(entity, "mobilephone") : null,
+                    Country = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_countryid", "Country.ntw_arabicname"),
+                    City = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_city", "City.pwc_namear"),
+                    Position = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_position", "Position.ntw_namear"),
+                    CompanyId = CRMOperations.GetValueByAttrNameAlised(entity, "Pin.pwc_companyidid"),
+                    Entityimage = CRMOperations.GetValueByAttributeName<byte[]>(entity, "entityimage"),
+                    IsPinned = true,
+                };
+            }).ToList();
+
+
+            return result;
+        }
+
+        public async Task<List<CompanyDto>> RetrievecompaniesByContactId(string ContactId)
+        {
+            List<CompanyDto> response = new List<CompanyDto>();
+            var contactRoles = await _accessManagementAppService.GetContactRolesByContactId(ContactId);
+            if (contactRoles == null || !contactRoles.Any())
+            {
+                return response;
+            }
+            var companyIds = contactRoles.Select(x => x.Company.Id).Distinct().ToArray();
+            var query = new QueryExpression(EntityNames.Account)
+            {
+                ColumnSet = new ColumnSet("accountid", "name", "ntw_companynamearabic", "entityimage"),
+                Criteria = { Conditions = { new ConditionExpression("accountid", ConditionOperator.In, companyIds),
+                new ConditionExpression("statecode", ConditionOperator.Equal, 0),
+                        new ConditionExpression("ntw_isitannounced", ConditionOperator.Equal, true) }
+                }
+            };
+
+            var entityCollection = _crmService.GetInstance().RetrieveMultiple(query);
+            var companyDtoList = entityCollection.Entities.Select(FillEntityRoles).ToList();
+
+            foreach (var contactRole in contactRoles)
+            {
+                var oCompanyDto = companyDtoList.FirstOrDefault(x => x.Id == contactRole.Company.Id);
+
+                if (oCompanyDto != null)
+                {
+                    var newCompanyDto = new CompanyDto
+                    {
+                        Id = oCompanyDto.Id,
+                        PortalRoleAssociationId = contactRole.Id,
+                        RoleName = contactRole.PortalRole.Name,
+                        RoleNameAr = contactRole.PortalRole.NameAr,
+                        Name = oCompanyDto.Name,
+                        NameAr = oCompanyDto.NameAr,
+                        EntityImage = oCompanyDto.EntityImage
+                    };
+
+                    // Add the new instance to the response list
+                    response.Add(newCompanyDto);
+                }
+            }
+            return response;
+        }
+
+
+        private CompanyDto FillEntityRoles(Entity entity)
+        {
+            return new CompanyDto
+            {
+                Id = entity.Id.ToString(),
+                Name = CRMUtility.GetAttributeValue(entity, "name", string.Empty),
+                NameAr = CRMUtility.GetAttributeValue(entity, "ntw_companynamearabic", string.Empty),
+                EntityImage = CRMUtility.GetAttributeValue<byte[]>(entity, "entityimage")
+
+            };
+
         }
 
         public class CreateInvitedUserResponse
