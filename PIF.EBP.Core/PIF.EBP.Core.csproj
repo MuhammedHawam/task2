@@ -195,6 +195,14 @@
     <Compile Include="FileScanning\IExternalFileScanningService.cs" />
     <Compile Include="GRTTable\DeliveryPlan\DTOs\DeliveryPlanDTOs.cs" />
     <Compile Include="GRTTable\DeliveryPlan\Interfaces\IDeliveryPlanIntegrationService.cs" />
+    <Compile Include="GRTTable\Budget\DTOs\GRTBudgetTableDTOs.cs" />
+    <Compile Include="GRTTable\Budget\DTOs\GRTProjectOverviewQueryDTOs.cs" />
+    <Compile Include="GRTTable\Budget\Interfaces\IBudgetIntegrationService.cs" />
+    <Compile Include="GRTTable\ApprovedBP\DTOs\ApprovedBPDTOs.cs" />
+    <Compile Include="GRTTable\ApprovedBP\DTOs\CycleCompanyMapDTOs.cs" />
+    <Compile Include="GRTTable\ApprovedBP\Interfaces\IApprovedBPIntegrationService.cs" />
+    <Compile Include="GRTTable\MultipleSandU\DTOs\MultipleSUTableDTOs.cs" />
+    <Compile Include="GRTTable\MultipleSandU\Interfaces\IMultipleSUTableIntegrationService.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanDTOs.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\Interfaces\IInfraDeliveryPlanIntegrationService.cs" />
     <Compile Include="GRTTable\Lookup\DTOs\LookupDTO.cs" />

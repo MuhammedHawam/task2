@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 using PIF.EBP.Core.GRTTable;
-using PIF.EBP.Core.GRTTable.Budget.Interfaces;
+using PIF.EBP.Core.GRTTable.ApprovedBP.Interfaces;
 using System;
 using System.Configuration;
 using System.Net.Http;
@@ -9,14 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PIF.EBP.Integrations.GRTTable.Budget
+namespace PIF.EBP.Integrations.GRTTable.ApprovedBP
 {
-    public class BudgetService : IBudgetIntegrationService
+    public class ApprovedBPService : IApprovedBPIntegrationService
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
 
-        public BudgetService()
+        public ApprovedBPService()
         {
             _baseUrl = ConfigurationManager.AppSettings["GRTApiBaseUrl"] ?? "http://solutionsuat.pif.gov.sa:80";
             var username = ConfigurationManager.AppSettings["GRTApiUsername"] ?? "PartnerHub_Admin@pif.gov.sa";
@@ -34,49 +34,32 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authValue);
         }
 
-        public async Task<GRTProjectOverviewsPagedResponse> GetProjectOverviewsByCycleCompanyMapIdAsync(
-            long cycleCompanyMapId,
-            int page = 1,
-            int pageSize = 1000,
-            string sort = "dateModified:desc",
+        public async Task<GRTCycleCompanyMapItem> GetCycleCompanyMapByIdAsync(
+            long id,
             long? scopeGroupId = null,
             string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
-            if (cycleCompanyMapId <= 0)
+            if (id <= 0)
             {
-                throw new ArgumentException("Cycle company map ID must be greater than zero", nameof(cycleCompanyMapId));
-            }
-
-            if (page <= 0)
-            {
-                throw new ArgumentException("Page number must be greater than zero", nameof(page));
-            }
-
-            if (pageSize <= 0)
-            {
-                throw new ArgumentException("Page size must be greater than zero", nameof(pageSize));
+                throw new ArgumentException("Cycle company map ID must be greater than zero", nameof(id));
             }
 
             try
             {
-                var filter = $"r_gRTCycleCompanyMapRelationship_c_cycleCompanyMapId eq '{cycleCompanyMapId}'";
-                var url =
-                    $"/o/c/grtprojectoverviews" +
-                    $"?filter={Uri.EscapeDataString(filter)}" +
-                    $"&page={page}" +
-                    $"&pageSize={pageSize}" +
-                    $"&sort={Uri.EscapeDataString(sort ?? "dateModified:desc")}";
+                var url = $"/o/c/cyclecompanymaps/{id}";
 
+                var hasQuery = false;
                 if (scopeGroupId.HasValue)
                 {
-                    url += $"&scopeGroupId={scopeGroupId.Value}";
+                    url += $"{(hasQuery ? "&" : "?")}scopeGroupId={scopeGroupId.Value}";
+                    hasQuery = true;
                 }
 
                 if (!string.IsNullOrWhiteSpace(currentUrl))
                 {
                     var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"&currentURL={normalized}";
+                    url += $"{(hasQuery ? "&" : "?")}currentURL={normalized}";
                 }
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
@@ -84,33 +67,25 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<GRTProjectOverviewsPagedResponse>(responseContent);
+                    return JsonConvert.DeserializeObject<GRTCycleCompanyMapItem>(responseContent);
                 }
 
                 var errorContent = await response.Content.ReadAsStringAsync();
                 System.Diagnostics.Trace.TraceError(
-                    $"GRT API error getting project overviews by cycleCompanyMapId: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
-
-                return new GRTProjectOverviewsPagedResponse
-                {
-                    Items = new System.Collections.Generic.List<GRTProjectOverviewListItem>(),
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalCount = 0,
-                    LastPage = 1
-                };
+                    $"GRT API error getting cyclecompanymap: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                throw new Exception($"Failed to get cyclecompanymap: {response.StatusCode} - {errorContent}");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError($"GRT API exception getting project overviews: {ex.Message}");
+                System.Diagnostics.Trace.TraceError($"GRT API exception getting cyclecompanymap: {ex.Message}");
                 throw;
             }
         }
 
-        public async Task<GRTBudgetTablesPagedResponse> GetBudgetTablesByProjectOverviewIdAsync(
+        public async Task<GRTApprovedBPsPagedResponse> GetApprovedBPsByProjectOverviewIdAsync(
             long projectOverviewId,
             int page = 1,
-            int pageSize = 1,
+            int pageSize = 1000,
             long? scopeGroupId = null,
             string currentUrl = null,
             CancellationToken cancellationToken = default)
@@ -132,10 +107,10 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
 
             try
             {
-                var filter = $"r_projectToBudgetTableRelationship_c_grtProjectOverviewId eq '{projectOverviewId}'";
+                var filter = $"r_projectToApprovedBPRelationship_c_grtProjectOverviewId eq '{projectOverviewId}'";
 
                 var url =
-                    $"/o/c/grtbudgettables" +
+                    $"/o/c/grtapprovedbps" +
                     $"?filter={Uri.EscapeDataString(filter)}" +
                     $"&page={page}" +
                     $"&pageSize={pageSize}";
@@ -156,16 +131,16 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<GRTBudgetTablesPagedResponse>(responseContent);
+                    return JsonConvert.DeserializeObject<GRTApprovedBPsPagedResponse>(responseContent);
                 }
 
                 var errorContent = await response.Content.ReadAsStringAsync();
                 System.Diagnostics.Trace.TraceError(
-                    $"GRT API error getting budget tables: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    $"GRT API error getting approvedbps: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
 
-                return new GRTBudgetTablesPagedResponse
+                return new GRTApprovedBPsPagedResponse
                 {
-                    Items = new System.Collections.Generic.List<GRTBudgetTableItem>(),
+                    Items = new System.Collections.Generic.List<GRTApprovedBPItem>(),
                     Page = page,
                     PageSize = pageSize,
                     TotalCount = 0,
@@ -174,31 +149,25 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError($"GRT API exception getting budget tables: {ex.Message}");
+                System.Diagnostics.Trace.TraceError($"GRT API exception getting approvedbps: {ex.Message}");
                 throw;
             }
         }
 
-        public async Task<GRTBudgetTableItem> UpdateBudgetTableAsync(
-            long id,
-            GRTBudgetTableUpdateRequest request,
+        public async Task<GRTApprovedBPItem> CreateApprovedBPAsync(
+            GRTApprovedBPCreateRequest request,
             long? scopeGroupId = null,
             string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
-            if (id <= 0)
-            {
-                throw new ArgumentException("Budget table ID must be greater than zero", nameof(id));
-            }
-
             if (request == null)
             {
-                throw new ArgumentNullException(nameof(request), "Update request cannot be null");
+                throw new ArgumentNullException(nameof(request), "Create request cannot be null");
             }
 
             try
             {
-                var url = $"/o/c/grtbudgettables/{id}";
+                var url = "/o/c/grtapprovedbps";
 
                 var hasQuery = false;
                 if (scopeGroupId.HasValue)
@@ -211,7 +180,6 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                 {
                     var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
                     url += $"{(hasQuery ? "&" : "?")}currentURL={normalized}";
-                    hasQuery = true;
                 }
 
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
@@ -221,24 +189,25 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                 });
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(url, content, cancellationToken);
+                var response = await _httpClient.PostAsync(url, content, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<GRTBudgetTableItem>(responseContent);
+                    return JsonConvert.DeserializeObject<GRTApprovedBPItem>(responseContent);
                 }
 
                 var errorContent = await response.Content.ReadAsStringAsync();
                 System.Diagnostics.Trace.TraceError(
-                    $"GRT API error updating budget table: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
-                throw new Exception($"Failed to update budget table: {response.StatusCode} - {errorContent}");
+                    $"GRT API error creating approvedbp: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                throw new Exception($"Failed to create approvedbp: {response.StatusCode} - {errorContent}");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError($"GRT API exception updating budget table: {ex.Message}");
+                System.Diagnostics.Trace.TraceError($"GRT API exception creating approvedbp: {ex.Message}");
                 throw;
             }
         }
     }
 }
+

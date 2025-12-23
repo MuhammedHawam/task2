@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
-using PIF.EBP.Core.GRTTable;
-using PIF.EBP.Core.GRTTable.Budget.Interfaces;
+using PIF.EBP.Core.GRTTable.MultipleSandU.DTOs;
+using PIF.EBP.Core.GRTTable.MultipleSandU.Interfaces;
 using System;
 using System.Configuration;
 using System.Net.Http;
@@ -9,14 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PIF.EBP.Integrations.GRTTable.Budget
+namespace PIF.EBP.Integrations.GRTTable.MultipleSandU
 {
-    public class BudgetService : IBudgetIntegrationService
+    public class MultipleSUTableService : IMultipleSUTableIntegrationService
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
 
-        public BudgetService()
+        public MultipleSUTableService()
         {
             _baseUrl = ConfigurationManager.AppSettings["GRTApiBaseUrl"] ?? "http://solutionsuat.pif.gov.sa:80";
             var username = ConfigurationManager.AppSettings["GRTApiUsername"] ?? "PartnerHub_Admin@pif.gov.sa";
@@ -34,80 +34,7 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authValue);
         }
 
-        public async Task<GRTProjectOverviewsPagedResponse> GetProjectOverviewsByCycleCompanyMapIdAsync(
-            long cycleCompanyMapId,
-            int page = 1,
-            int pageSize = 1000,
-            string sort = "dateModified:desc",
-            long? scopeGroupId = null,
-            string currentUrl = null,
-            CancellationToken cancellationToken = default)
-        {
-            if (cycleCompanyMapId <= 0)
-            {
-                throw new ArgumentException("Cycle company map ID must be greater than zero", nameof(cycleCompanyMapId));
-            }
-
-            if (page <= 0)
-            {
-                throw new ArgumentException("Page number must be greater than zero", nameof(page));
-            }
-
-            if (pageSize <= 0)
-            {
-                throw new ArgumentException("Page size must be greater than zero", nameof(pageSize));
-            }
-
-            try
-            {
-                var filter = $"r_gRTCycleCompanyMapRelationship_c_cycleCompanyMapId eq '{cycleCompanyMapId}'";
-                var url =
-                    $"/o/c/grtprojectoverviews" +
-                    $"?filter={Uri.EscapeDataString(filter)}" +
-                    $"&page={page}" +
-                    $"&pageSize={pageSize}" +
-                    $"&sort={Uri.EscapeDataString(sort ?? "dateModified:desc")}";
-
-                if (scopeGroupId.HasValue)
-                {
-                    url += $"&scopeGroupId={scopeGroupId.Value}";
-                }
-
-                if (!string.IsNullOrWhiteSpace(currentUrl))
-                {
-                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"&currentURL={normalized}";
-                }
-
-                var response = await _httpClient.GetAsync(url, cancellationToken);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<GRTProjectOverviewsPagedResponse>(responseContent);
-                }
-
-                var errorContent = await response.Content.ReadAsStringAsync();
-                System.Diagnostics.Trace.TraceError(
-                    $"GRT API error getting project overviews by cycleCompanyMapId: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
-
-                return new GRTProjectOverviewsPagedResponse
-                {
-                    Items = new System.Collections.Generic.List<GRTProjectOverviewListItem>(),
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalCount = 0,
-                    LastPage = 1
-                };
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.TraceError($"GRT API exception getting project overviews: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<GRTBudgetTablesPagedResponse> GetBudgetTablesByProjectOverviewIdAsync(
+        public async Task<GRTMultipleSUTablesPagedResponse> GetMultipleSUTablesByProjectOverviewIdAsync(
             long projectOverviewId,
             int page = 1,
             int pageSize = 1,
@@ -132,10 +59,9 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
 
             try
             {
-                var filter = $"r_projectToBudgetTableRelationship_c_grtProjectOverviewId eq '{projectOverviewId}'";
-
+                var filter = $"r_projectToMultipleSUTableRelationship_c_grtProjectOverviewId eq '{projectOverviewId}'";
                 var url =
-                    $"/o/c/grtbudgettables" +
+                    $"/o/c/grtmultiplesutables" +
                     $"?filter={Uri.EscapeDataString(filter)}" +
                     $"&page={page}" +
                     $"&pageSize={pageSize}";
@@ -156,16 +82,16 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<GRTBudgetTablesPagedResponse>(responseContent);
+                    return JsonConvert.DeserializeObject<GRTMultipleSUTablesPagedResponse>(responseContent);
                 }
 
                 var errorContent = await response.Content.ReadAsStringAsync();
                 System.Diagnostics.Trace.TraceError(
-                    $"GRT API error getting budget tables: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                    $"GRT API error getting multiple SU tables: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
 
-                return new GRTBudgetTablesPagedResponse
+                return new GRTMultipleSUTablesPagedResponse
                 {
-                    Items = new System.Collections.Generic.List<GRTBudgetTableItem>(),
+                    Items = new System.Collections.Generic.List<GRTMultipleSUTableItem>(),
                     Page = page,
                     PageSize = pageSize,
                     TotalCount = 0,
@@ -174,21 +100,21 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError($"GRT API exception getting budget tables: {ex.Message}");
+                System.Diagnostics.Trace.TraceError($"GRT API exception getting multiple SU tables: {ex.Message}");
                 throw;
             }
         }
 
-        public async Task<GRTBudgetTableItem> UpdateBudgetTableAsync(
+        public async Task<GRTMultipleSUTableItem> UpdateMultipleSUTableAsync(
             long id,
-            GRTBudgetTableUpdateRequest request,
+            GRTMultipleSUTableUpdateRequest request,
             long? scopeGroupId = null,
             string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (id <= 0)
             {
-                throw new ArgumentException("Budget table ID must be greater than zero", nameof(id));
+                throw new ArgumentException("Multiple S&U table ID must be greater than zero", nameof(id));
             }
 
             if (request == null)
@@ -198,7 +124,7 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
 
             try
             {
-                var url = $"/o/c/grtbudgettables/{id}";
+                var url = $"/o/c/grtmultiplesutables/{id}";
 
                 var hasQuery = false;
                 if (scopeGroupId.HasValue)
@@ -226,19 +152,20 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<GRTBudgetTableItem>(responseContent);
+                    return JsonConvert.DeserializeObject<GRTMultipleSUTableItem>(responseContent);
                 }
 
                 var errorContent = await response.Content.ReadAsStringAsync();
                 System.Diagnostics.Trace.TraceError(
-                    $"GRT API error updating budget table: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
-                throw new Exception($"Failed to update budget table: {response.StatusCode} - {errorContent}");
+                    $"GRT API error updating multiple SU table: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
+                throw new Exception($"Failed to update multiple SU table: {response.StatusCode} - {errorContent}");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError($"GRT API exception updating budget table: {ex.Message}");
+                System.Diagnostics.Trace.TraceError($"GRT API exception updating multiple SU table: {ex.Message}");
                 throw;
             }
         }
     }
 }
+

@@ -226,6 +226,10 @@
     <Compile Include="GRTTable\DeliveryPlan\DTOs\DeliveryPlanPagedDto.cs" />
     <Compile Include="GRTTable\DeliveryPlan\IDeliveryPlanAppService.cs" />
     <Compile Include="GRTTable\DeliveryPlan\Implementation\DeliveryPlanAppService.cs" />
+    <Compile Include="GRTTable\Budget\IBudgetTableAppService.cs" />
+    <Compile Include="GRTTable\Budget\Implementation\BudgetTableAppService.cs" />
+    <Compile Include="GRTTable\ApprovedBP\IApprovedBPAppService.cs" />
+    <Compile Include="GRTTable\ApprovedBP\Implementation\ApprovedBPAppService.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanResponseDto.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanPagedDto.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanDto.cs" />
@@ -234,6 +238,8 @@
     <Compile Include="GRTTable\Lookup\DTOs\GRTLookupEntryDto.cs" />
     <Compile Include="GRTTable\Lookup\ILookupAppService.cs" />
     <Compile Include="GRTTable\Lookup\Implementation\LookupAppService.cs" />
+    <Compile Include="GRTTable\MultipleSandU\IMultipleSUTableAppService.cs" />
+    <Compile Include="GRTTable\MultipleSandU\Implementation\MultipleSUTableAppService.cs" />
     <Compile Include="GRT\DTOs\GRTApprovedBPDto.cs" />
     <Compile Include="GRT\Budget\DTOs\GRTBudgetsSummaryDto.cs" />
     <Compile Include="GRT\DTOs\GRTCashflowDto.cs" />

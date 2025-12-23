@@ -1,4 +1,4 @@
-﻿using PIF.EBP.Core.GRTTable;
+using PIF.EBP.Core.GRTTable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +53,28 @@ namespace PIF.EBP.Application.GRTTable
                 System.Diagnostics.Trace.TraceError($"Error in GRTAppService.GetLookupByExternalReferenceCodeAsync: {ex.Message}");
                 throw;
             }
+        }
+
+        public async Task<GRTListTypeEntriesPagedResponse> GetListTypeEntriesByExternalReferenceCodeAsync(
+            string externalReferenceCode,
+            int page = 1,
+            int pageSize = 1000,
+            long? scopeGroupId = null,
+            string currentUrl = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(externalReferenceCode))
+            {
+                throw new ArgumentNullException(nameof(externalReferenceCode), "External reference code cannot be null or empty");
+            }
+
+            return await _lookupIntegrationService.GetListTypeEntriesByExternalReferenceCodeAsync(
+                externalReferenceCode,
+                page,
+                pageSize,
+                scopeGroupId,
+                currentUrl,
+                cancellationToken);
         }
     }
 }
