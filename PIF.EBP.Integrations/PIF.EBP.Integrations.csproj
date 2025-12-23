@@ -285,6 +285,7 @@
     <Compile Include="FileScanning\Implementation\OpswatBaseOptions.cs" />
     <Compile Include="FileScanning\Implementation\OpswatFileScanningService.cs" />
     <Compile Include="GRTTable\Budget\BudgetService.cs" />
+    <Compile Include="GRTTable\ApprovedBP\ApprovedBPService.cs" />
     <Compile Include="GRTTable\DeliveryPlan\DeliveryPlanService.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\InfraDeliveryPlanService.cs" />
     <Compile Include="GRTTable\Lookup\LookupService.cs" />
