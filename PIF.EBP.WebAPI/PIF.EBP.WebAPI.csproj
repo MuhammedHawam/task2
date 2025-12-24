@@ -304,7 +304,6 @@
     <Compile Include="Controllers\Comments\ProjectOverviewCommentsController.cs" />
     <Compile Include="Controllers\AttendeeEventController.cs" />
     <Compile Include="Controllers\GRTController.cs" />
-    <Compile Include="Controllers\GRTTableController.cs" />
     <Compile Include="Controllers\CommunityController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />

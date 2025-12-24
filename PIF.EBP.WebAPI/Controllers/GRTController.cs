@@ -1,12 +1,7 @@
 using PIF.EBP.Application.GRT;
 using PIF.EBP.Application.GRT.Budget.DTOs;
 using PIF.EBP.Application.GRT.DTOs;
-using PIF.EBP.Application.GRTTable;
-using PIF.EBP.Application.GRTTable.ApprovedBP;
-using PIF.EBP.Application.GRTTable.Budget;
-using PIF.EBP.Application.GRTTable.MultipleSandU;
 using PIF.EBP.Core.DependencyInjection;
-using PIF.EBP.Core.GRTTable.MultipleSandU.DTOs;
 using PIF.EBP.WebAPI.Middleware.ActionFilter;
 using PIF.EBP.WebAPI.Middleware.Authorize;
 using System;
