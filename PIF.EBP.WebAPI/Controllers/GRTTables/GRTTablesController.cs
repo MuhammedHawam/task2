@@ -5,6 +5,7 @@ using PIF.EBP.Application.GRTTable.CashFlow;
 using PIF.EBP.Application.GRTTable.DeliveryPlan;
 using PIF.EBP.Application.GRTTable.InfraDeliveryPlan;
 using PIF.EBP.Application.GRTTable.MultipleSandU;
+using PIF.EBP.Application.GRTTable.ProjectImpact;
 using PIF.EBP.Core.DependencyInjection;
 using PIF.EBP.Core.GRTTable.MultipleSandU.DTOs;
 using PIF.EBP.WebAPI.Middleware.ActionFilter;
@@ -28,6 +29,7 @@ namespace PIF.EBP.WebAPI.Controllers.Comments
         private readonly IMultipleSUTableAppService _multipleSUTableAppService;
         private readonly IApprovedBPAppService _approvedBPAppService;
         private readonly ICashFlowAppService _cashFlowAppService;
+        private readonly IProjectImpactAppService _projectImpactAppService;
 
         public GRTTablesController()
         {
@@ -38,6 +40,7 @@ namespace PIF.EBP.WebAPI.Controllers.Comments
             _multipleSUTableAppService = WindsorContainerProvider.Container.Resolve<IMultipleSUTableAppService>();
             _approvedBPAppService = WindsorContainerProvider.Container.Resolve<IApprovedBPAppService>();
             _cashFlowAppService = WindsorContainerProvider.Container.Resolve<ICashFlowAppService>();
+            _projectImpactAppService = WindsorContainerProvider.Container.Resolve<IProjectImpactAppService>();
         }
         #region Lookup
         /// <summary>
@@ -759,6 +762,144 @@ namespace PIF.EBP.WebAPI.Controllers.Comments
             try
             {
                 var result = await _cashFlowAppService.UpdateCashflowAsync(
+                    id,
+                    request,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (ArgumentException argEx)
+            {
+                return BadRequest(argEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+        #endregion
+
+        #region ProjectImpact (grtTable/*) Endpoints (Absolute Routes Under /GRT)
+        /// <summary>
+        /// ProjectImpact: project overviews filtered by cycleCompanyMapId (table-based usage).
+        /// Mirrors: /o/c/grtprojectoverviews?filter=r_gRTCycleCompanyMapRelationship_c_cycleCompanyMapId+eq+%27312726%27&pageSize=1000&sort=dateModified%3Adesc
+        /// </summary>
+        [HttpGet]
+        [Route("~/GRT/grtTable/project-impact/project-overviews")]
+        public async Task<IHttpActionResult> GetProjectImpactProjectOverviewsByCycleCompanyMapId(
+            long cycleCompanyMapId,
+            int page = 1,
+            int pageSize = 1000,
+            string sort = "dateModified:desc",
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (cycleCompanyMapId <= 0)
+            {
+                return BadRequest("cycleCompanyMapId must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0)
+            {
+                return BadRequest("Page size must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _projectImpactAppService.GetProjectOverviewsByCycleCompanyMapIdAsync(
+                    cycleCompanyMapId,
+                    page,
+                    pageSize,
+                    sort,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// ProjectImpact: get project impacts by project overview id (table-based usage).
+        /// Mirrors: /o/c/grtprojectoverviews/{projectOverviewId}/projectToProjectImpactRelationship?pageSize=1&sort=dateModified:desc
+        /// </summary>
+        [HttpGet]
+        [Route("~/GRT/grtTable/project-impact/project-impacts")]
+        public async Task<IHttpActionResult> GetProjectImpactsByProjectOverviewId(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 1,
+            string sort = "dateModified:desc",
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("projectOverviewId must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0)
+            {
+                return BadRequest("Page size must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _projectImpactAppService.GetProjectImpactsByProjectOverviewIdAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    sort,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// ProjectImpact: update project impact by id (PATCH) (table-based usage).
+        /// Mirrors: PATCH /o/c/grtprojectimpacts/{id}?scopeGroupId=...&currentURL=...
+        /// </summary>
+        [HttpPatch]
+        [Route("~/GRT/grtTable/project-impact/project-impacts/{id:long}")]
+        public async Task<IHttpActionResult> UpdateProjectImpact(
+            long id,
+            [FromBody] PIF.EBP.Core.GRT.GRTProjectImpactRequest request,
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("id must be greater than zero");
+            }
+
+            if (request == null)
+            {
+                return BadRequest("Request body is required");
+            }
+
+            try
+            {
+                var result = await _projectImpactAppService.UpdateProjectImpactAsync(
                     id,
                     request,
                     scopeGroupId,
