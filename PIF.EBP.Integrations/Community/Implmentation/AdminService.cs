@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PIF.EBP.Integrations.Community.Implmentation
 {
-    public class AdminService : ApiClient, IAdminService
+    public class AdminService : CommunityApiClient, IAdminService
     {
         public AdminService(): base() { }
 
@@ -114,7 +114,7 @@ namespace PIF.EBP.Integrations.Community.Implmentation
         // Helper – builds optional query string parts
         // -------------------------------------------------------
         private static string BuildQuery(int page, int pageSize,
-                                         string filter, string sort, string search,string status = null)
+                                         string filter = null, string sort = null, string search = null, string status = null)
         {
             var q = new List<string>
             {
@@ -127,5 +127,35 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             if (!string.IsNullOrWhiteSpace(status)) q.Add($"status={WebUtility.UrlEncode(status)}");
             return "?" + string.Join("&", q);
         }
+
+        // -------------------------------------------------------
+        // Polls (admin)
+        // -------------------------------------------------------
+
+        public Task<object> GetpollstatisticsAsync(long pollId) =>
+            GetAsync<object>($"admin/polls/{pollId}/statistics");
+
+        public Task<object> ArchivePollAsync(long pollId) =>
+            PutAsync<object>($"admin/polls/{pollId}/archive");
+
+        public Task<object> UnArchivePollAsync(long pollId) =>
+            PutAsync<object>($"admin/polls/{pollId}/unarchive");
+
+        public Task<object> UpdatePollAsync(long pollId, UpdatePollsRequest request) =>
+            PutAsync<object>($"admin/polls/{pollId}", request);
+
+        public Task<object> GetPollDetailsByIdAsync(long pollId,string communityId) =>    
+            GetAsync<object>($"admin/polls/{pollId}?communityId={communityId}");
+
+        public Task<object> CreatePollAsync(CreatPollRequest request) =>
+            PutAsync<object>($"admin/polls", request);
+
+        public Task<object> GetPollsListAsync(int page = 1, int pageSize = 20,
+                                                        string search = null, string filter = null, string sort = null)
+        {
+            var qs = BuildQuery(page, pageSize, filter, sort, search);
+            return GetAsync<object>($"admin/polls{qs}");
+        }
+
     }
 }

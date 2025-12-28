@@ -39,7 +39,7 @@ public class CommunityController : ApiController
 
     [HttpGet]
     [Route("admin/communities/{communityId:long}/followers/{userId:long}")]
-    public async Task<IHttpActionResult> GetCommunityFollowersAsync(long communityId, long userId)
+    public async Task<IHttpActionResult> GetCommunityFollowers(long communityId, long userId)
     {
         var result = await _cmService.GetCommunityFollowersAsync(communityId, userId);
         return Ok(result);
@@ -47,7 +47,7 @@ public class CommunityController : ApiController
 
     [HttpGet]
     [Route("admin/posts/my-tasks")]
-    public async Task<IHttpActionResult> GetPostsTasksDependsOnRoleAsync(int page = 1,
+    public async Task<IHttpActionResult> GetPostsTasksDependsOnRole(int page = 1,
                                                               int pageSize = 20,
                                                               string filter = null,
                                                               string sort = null,
@@ -59,7 +59,7 @@ public class CommunityController : ApiController
 
     [HttpGet]
     [Route("admin/communities/my-tasks")]
-    public async Task<IHttpActionResult> GetApprovedCommunitiesReadyToPublishAsync(int page = 1,
+    public async Task<IHttpActionResult> GetApprovedCommunitiesReadyToPublish(int page = 1,
                                                           int pageSize = 20,
                                                           string filter = null,
                                                           string sort = null,
@@ -276,9 +276,77 @@ public class CommunityController : ApiController
         return Ok(result);
     }
 
+
+    [HttpGet]
+    [Route("admin/polls")]
+    public async Task<IHttpActionResult> GetPollsList(int page = 1,
+                                                             int pageSize = 20, string search = null,
+                                                             string filter = null,
+                                                             string sort = null)
+    {
+        var result = await _cmService.GetPollsListAsync(page, pageSize, search, filter, sort);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("admin/polls")]
+    public async Task<IHttpActionResult> CreatePoll([FromBody]CreatPollRequest request)
+    {
+        var result = await _cmService.CreatePollAsync(request);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("admin/polls/{pollId:long}")]
+    public async Task<IHttpActionResult> GetPollDetailsById(long pollId, string communityId)
+    {
+        var result = await _cmService.GetPollDetailsByIdAsync(pollId, communityId);
+        return Ok(result);
+    }
+
+    [HttpPut]
+    [Route("admin/polls/{pollId:long}")]
+    public async Task<IHttpActionResult> UpdatePoll(long pollId, [FromBody] UpdatePollsRequest request)
+    {
+        var result = await _cmService.UpdatePollAsync(pollId, request);
+        return Ok(result);
+    }
+
+
+    /// <summary>
+    /// POST /api/posts/admin/{communityId}/archive - archives a post.
+    /// </summary>
+    [HttpPut]
+    [Route("admin/polls/{pollId:long}/archive")]
+    public async Task<IHttpActionResult> ArchivePoll(long pollId)
+    {
+        var result = await _cmService.ArchivePollAsync(pollId);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// POST /api/posts/admin/{communityId}/unarchive - unarchives a post.
+    /// </summary>
+    [HttpPut]
+    [Route("admin/polls/{pollId:long}/unarchive")]
+    public async Task<IHttpActionResult> UnArchivePoll(long pollId)
+    {
+        var result = await _cmService.UnArchivePollAsync(pollId);
+        return Ok(result);
+    }
+
+
+    [HttpGet]
+    [Route("admin/polls/{pollId:long}/statistics")]
+    public async Task<IHttpActionResult> Getpollstatistics(long pollId)
+    {
+        var result = await _cmService.GetpollstatisticsAsync(pollId);
+        return Ok(result);
+    }
+
     #endregion
 
-    
+
     #region ---- Public Community Endpoints (api/community/public/...) -----------------------------------------------
 
     /// <summary>
@@ -329,7 +397,7 @@ public class CommunityController : ApiController
     /// GET /api/community/public/suggested?search=... - Gets suggested communities.
     /// </summary>
     [HttpGet]
-    [Route("communities/suggestions")]
+    [Route("search/suggestions")]
     public async Task<IHttpActionResult> GetSuggestedCommunities(string search)
     {
         var result = await _cmService.GetSuggestedCommunitiesAsync(search);
@@ -561,6 +629,19 @@ public class CommunityController : ApiController
         var result = await _cmService.GetSearchHistory();
         return Ok(result);
     }
+
+
+    /// <summary>
+    /// POST /api/community/user/polls/{pollId:long}/submit - Submit Answer to Poll.
+    /// </summary>
+    [HttpPost]
+    [Route("user/polls/{pollId:long}/submit")]
+    public async Task<IHttpActionResult> SubmitAnswerForPoll(long pollId, [FromBody] SubmitPollAnswerRequest request)
+    {
+        var result = await _cmService.SubmitAnswerForPollAsync(pollId, request);
+        return Ok(result);
+    }
+
     #endregion
 
 
@@ -578,4 +659,12 @@ public class CommunityController : ApiController
     }
 
     #endregion
+
+    [HttpPost]
+    [Route("notification-hub/send-email")]
+    public async Task<IHttpActionResult> SendEmail(EmailNotificationModel model)
+    {
+        await _cmService.SendEmail(model);
+        return Ok();
+    }
 }

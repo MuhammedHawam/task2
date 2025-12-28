@@ -82,4 +82,32 @@ namespace PIF.EBP.Core.Community.DTOs
         public string body { get; set; }
         public IEnumerable<string> companyIds { get; set; }
     }
+
+
+    public class Option
+    {
+        public long id { get; set; }
+        public string title { get; set; }
+    }
+
+    public class UpdatePollsRequest
+    {
+        public string questionTitle { get; set; }
+        public DateTime dueDate { get; set; }
+        public List<string> options { get; set; }
+        public List<int> communityIds { get; set; }
+    }
+
+    public class CreatPollRequest
+    {
+        public string questionTitle { get; set; }
+        public DateTime dueDate { get; set; }
+        public List<string> options { get; set; }
+        public List<int> communityIds { get; set; }
+    }
+
+    public class SubmitPollAnswerRequest
+    {
+        public int optionId { get; set; }
+    }
 }

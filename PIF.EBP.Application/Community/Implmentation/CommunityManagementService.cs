@@ -12,6 +12,7 @@ namespace PIF.EBP.Application.Community.Implmentation
     {
         private readonly IAdminService _adminService;
         private readonly ICommunityService _publicCommunityService;
+        private readonly INotificationService _notificationService;
         private readonly IUserService _userService;
         private readonly ISearchService _searchService;
 
@@ -19,12 +20,14 @@ namespace PIF.EBP.Application.Community.Implmentation
             IAdminService adminService,
             ICommunityService publicCommunityService,
             IUserService userService,
-            ISearchService searchService)
+            ISearchService searchService,
+            INotificationService notificationService)
         {
             _adminService = adminService ?? throw new ArgumentNullException(nameof(adminService));
             _publicCommunityService = publicCommunityService ?? throw new ArgumentNullException(nameof(publicCommunityService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _searchService = searchService ?? throw new ArgumentNullException(nameof(searchService));
+            _notificationService = notificationService;
         }
 
         #region ---- Admin (community) ----
@@ -215,6 +218,37 @@ namespace PIF.EBP.Application.Community.Implmentation
 
         public Task<object> GetSearchHistory() =>
             _userService.GetSearchHistory();
+
+
+        public Task SendEmail(EmailNotificationModel model) =>
+            _notificationService.SendEmail(model);
+
+        public Task<object> GetPollsListAsync(int page = 1, int pageSize = 20,
+                                                        string search = null, string filter = null, string sort = null)
+        {
+            return _adminService.GetPollsListAsync(page,pageSize, search, filter, sort);
+        }
+
+        public Task<object> CreatePollAsync(CreatPollRequest request)=>
+            _adminService.CreatePollAsync(request);
+
+        public Task<object> GetPollDetailsByIdAsync(long pollId,string communityId) =>
+            _adminService.GetPollDetailsByIdAsync(pollId, communityId);
+
+        public Task<object> UpdatePollAsync(long pollId, UpdatePollsRequest request) =>
+            _adminService.UpdatePollAsync(pollId, request);
+
+        public Task<object> UnArchivePollAsync(long pollId) =>
+            _adminService.UnArchivePollAsync(pollId);
+
+        public Task<object> ArchivePollAsync(long pollId) =>
+            _adminService.ArchivePollAsync(pollId);
+
+        public Task<object> GetpollstatisticsAsync(long pollId) =>
+            _adminService.GetpollstatisticsAsync(pollId);
+
+        public Task<object> SubmitAnswerForPollAsync(long pollId, SubmitPollAnswerRequest request) =>
+            _userService.SubmitAnswerForPollAsync(pollId, request);
 
     }
 }

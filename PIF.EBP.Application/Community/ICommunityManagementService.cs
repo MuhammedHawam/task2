@@ -58,6 +58,17 @@ namespace PIF.EBP.Application.Community
             string filter = null,
             string sort = null,
             string search = null, string status = null);
+
+
+        Task<object> GetPollsListAsync(int page = 1, int pageSize = 20, string search = null,
+                                               string filter = null, string sort = null);
+        Task<object> CreatePollAsync(CreatPollRequest request);
+        Task<object> GetPollDetailsByIdAsync(long pollId, string communityId);
+        Task<object> UpdatePollAsync(long pollId, UpdatePollsRequest request);
+        Task<object> UnArchivePollAsync(long pollId);
+        Task<object> ArchivePollAsync(long pollId);
+        Task<object> GetpollstatisticsAsync(long pollId);
+
         #endregion
 
         #region ---- Public community (read‑only) ----
@@ -101,6 +112,9 @@ namespace PIF.EBP.Application.Community
         Task DeleteMyUserCommentAsync(long commentId);
         Task<object> GetFeedAsync(int page = 1, int pageSize = 20);
         Task<object> GetUserKpiAsync();
+
+        Task<object> SubmitAnswerForPollAsync(long pollId, SubmitPollAnswerRequest request);
+
         #endregion
 
         #region ---- Global search ----
@@ -113,7 +127,7 @@ namespace PIF.EBP.Application.Community
         Task DeleteHistoryById(long historyId);
         Task DeleteAllHistory();
         Task<object> GetSearchHistory();
-
+        Task SendEmail(EmailNotificationModel model);
 
     }
 }

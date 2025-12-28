@@ -54,6 +54,8 @@ namespace PIF.EBP.Core.Community
         Task DeleteAllHistory();
         Task<object> GetSearchHistory();
 
+        Task<object> SubmitAnswerForPollAsync(long pollId, SubmitPollAnswerRequest request);
+
 
     }
 }

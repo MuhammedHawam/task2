@@ -159,5 +159,16 @@ namespace PIF.EBP.Core.Community
             CommunityFollowerCreateRequest request);
 
         #endregion
+
+        #region Polls
+        Task<object> GetPollsListAsync(int page = 1, int pageSize = 20,
+                                                        string search = null, string filter = null, string sort = null);
+        Task<object> CreatePollAsync(CreatPollRequest request);
+        Task<object> GetPollDetailsByIdAsync(long pollId, string communityId);
+        Task<object> UpdatePollAsync(long pollId, UpdatePollsRequest request);
+        Task<object> UnArchivePollAsync(long pollId);
+        Task<object> ArchivePollAsync(long pollId);
+        Task<object> GetpollstatisticsAsync(long pollId);
+        #endregion
     }
 }

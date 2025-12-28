@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PIF.EBP.Integrations.Community.Implmentation
 {
-    public class SearchService : ApiClient, ISearchService
+    public class SearchService : CommunityApiClient, ISearchService
     {
         public SearchService(): base() { }
 

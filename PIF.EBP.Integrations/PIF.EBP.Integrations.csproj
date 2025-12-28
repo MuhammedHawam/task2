@@ -274,11 +274,13 @@
     <Compile Include="ciamcommunication\Implmentation\SCIMCommunicationService.cs" />
     <Compile Include="ciamcommunication\Implmentation\ScimOptions.cs" />
     <Compile Include="Comments\Implementation\ProjectOverviewCommentsIntegrationService.cs" />
-    <Compile Include="Community\ApiClient.cs" />
+    <Compile Include="Community\CommunityApiClient.cs" />
     <Compile Include="Community\Implmentation\AdminService.cs" />
     <Compile Include="Community\Implmentation\CommunityService.cs" />
+    <Compile Include="Community\Implmentation\NotificationService.cs" />
     <Compile Include="Community\Implmentation\SearchService.cs" />
     <Compile Include="Community\Implmentation\UserService.cs" />
+    <Compile Include="Community\NotificationApiClient.cs" />
     <Compile Include="Elasticsearch\Implementation\ElasticsearchService.cs" />
     <Compile Include="ESMIntegration\ESMService.cs" />
     <Compile Include="ESMIntegration\Response\ApiResponse.cs" />

@@ -163,8 +163,10 @@
     <Compile Include="ciamcommunication\DTOs\ScimUserRequest.cs" />
     <Compile Include="ciamcommunication\ISCIMCommunicationService.cs" />
     <Compile Include="Community\DTOs\CommunityDto.cs" />
+    <Compile Include="Community\DTOs\EmailNotificationModel.cs" />
     <Compile Include="Community\IAdminService.cs" />
     <Compile Include="Community\ICommunityService.cs" />
+    <Compile Include="Community\INotificationService.cs" />
     <Compile Include="Community\ISearchService.cs" />
     <Compile Include="Community\IUserService.cs" />
     <Compile Include="Comments\DTOs\ProjectOverviewCommentsDtos.cs" />

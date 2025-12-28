@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PIF.EBP.Integrations.Community.Implmentation
 {
-    public class UserService : ApiClient, IUserService
+    public class UserService : CommunityApiClient, IUserService
     {
         public UserService(): base() { }
 
@@ -102,5 +102,15 @@ namespace PIF.EBP.Integrations.Community.Implmentation
 
         public Task<object> GetSearchHistory() =>
             GetAsync<object>("user/search/history");
+
+
+        // -------------------------------------------------------
+        // Polls
+        // -------------------------------------------------------
+
+
+        public Task<object> SubmitAnswerForPollAsync(long pollId, SubmitPollAnswerRequest request) =>
+            PostAsync<object>($"user/polls/{pollId}/submit", request);
+
     }
 }
