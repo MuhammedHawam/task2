@@ -230,6 +230,10 @@
     <Compile Include="GRTTable\Budget\Implementation\BudgetTableAppService.cs" />
     <Compile Include="GRTTable\ApprovedBP\IApprovedBPAppService.cs" />
     <Compile Include="GRTTable\ApprovedBP\Implementation\ApprovedBPAppService.cs" />
+    <Compile Include="GRTTable\CashFlow\ICashFlowAppService.cs" />
+    <Compile Include="GRTTable\CashFlow\Implementation\CashFlowAppService.cs" />
+    <Compile Include="GRTTable\ProjectImpact\IProjectImpactAppService.cs" />
+    <Compile Include="GRTTable\ProjectImpact\Implementation\ProjectImpactAppService.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanResponseDto.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanPagedDto.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanDto.cs" />

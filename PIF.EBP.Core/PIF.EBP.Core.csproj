@@ -203,6 +203,8 @@
     <Compile Include="GRTTable\ApprovedBP\DTOs\ApprovedBPDTOs.cs" />
     <Compile Include="GRTTable\ApprovedBP\DTOs\CycleCompanyMapDTOs.cs" />
     <Compile Include="GRTTable\ApprovedBP\Interfaces\IApprovedBPIntegrationService.cs" />
+    <Compile Include="GRTTable\CashFlow\Interfaces\ICashFlowIntegrationService.cs" />
+    <Compile Include="GRTTable\ProjectImpact\Interfaces\IProjectImpactIntegrationService.cs" />
     <Compile Include="GRTTable\MultipleSandU\DTOs\MultipleSUTableDTOs.cs" />
     <Compile Include="GRTTable\MultipleSandU\Interfaces\IMultipleSUTableIntegrationService.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanDTOs.cs" />
