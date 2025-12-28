@@ -1,6 +1,7 @@
 using PIF.EBP.Application.GRTTable;
 using PIF.EBP.Application.GRTTable.ApprovedBP;
 using PIF.EBP.Application.GRTTable.Budget;
+using PIF.EBP.Application.GRTTable.CashFlow;
 using PIF.EBP.Application.GRTTable.DeliveryPlan;
 using PIF.EBP.Application.GRTTable.InfraDeliveryPlan;
 using PIF.EBP.Application.GRTTable.MultipleSandU;
@@ -26,6 +27,7 @@ namespace PIF.EBP.WebAPI.Controllers.Comments
         private readonly IBudgetTableAppService _budgetTableAppService;
         private readonly IMultipleSUTableAppService _multipleSUTableAppService;
         private readonly IApprovedBPAppService _approvedBPAppService;
+        private readonly ICashFlowAppService _cashFlowAppService;
 
         public GRTTablesController()
         {
@@ -35,6 +37,7 @@ namespace PIF.EBP.WebAPI.Controllers.Comments
             _budgetTableAppService = WindsorContainerProvider.Container.Resolve<IBudgetTableAppService>();
             _multipleSUTableAppService = WindsorContainerProvider.Container.Resolve<IMultipleSUTableAppService>();
             _approvedBPAppService = WindsorContainerProvider.Container.Resolve<IApprovedBPAppService>();
+            _cashFlowAppService = WindsorContainerProvider.Container.Resolve<ICashFlowAppService>();
         }
         #region Lookup
         /// <summary>
@@ -621,6 +624,142 @@ namespace PIF.EBP.WebAPI.Controllers.Comments
             try
             {
                 var result = await _approvedBPAppService.CreateApprovedBPAsync(
+                    request,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (ArgumentException argEx)
+            {
+                return BadRequest(argEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+        #endregion
+
+        #region CashFlow (grtTable/*) Endpoints (Absolute Routes Under /GRT)
+        /// <summary>
+        /// CashFlow: project overviews filtered by cycleCompanyMapId (table-based usage).
+        /// Mirrors: /o/c/grtprojectoverviews?filter=r_gRTCycleCompanyMapRelationship_c_cycleCompanyMapId+eq+%27312726%27&pageSize=1000&sort=dateModified%3Adesc
+        /// </summary>
+        [HttpGet]
+        [Route("~/GRT/grtTable/cashflow/project-overviews")]
+        public async Task<IHttpActionResult> GetCashFlowProjectOverviewsByCycleCompanyMapId(
+            long cycleCompanyMapId,
+            int page = 1,
+            int pageSize = 1000,
+            string sort = "dateModified:desc",
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (cycleCompanyMapId <= 0)
+            {
+                return BadRequest("cycleCompanyMapId must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0)
+            {
+                return BadRequest("Page size must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _cashFlowAppService.GetProjectOverviewsByCycleCompanyMapIdAsync(
+                    cycleCompanyMapId,
+                    page,
+                    pageSize,
+                    sort,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// CashFlow: get cashflows by project overview id (table-based usage).
+        /// Mirrors: /o/c/grtcashflows?filter=r_projectToCashflowRelationship_c_grtProjectOverviewId+eq+%27312740%27&pageSize=1000
+        /// </summary>
+        [HttpGet]
+        [Route("~/GRT/grtTable/cashflow/cashflows")]
+        public async Task<IHttpActionResult> GetCashflowsByProjectOverviewId(
+            long projectOverviewId,
+            int page = 1,
+            int pageSize = 1000,
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (projectOverviewId <= 0)
+            {
+                return BadRequest("projectOverviewId must be greater than zero");
+            }
+
+            if (page <= 0)
+            {
+                return BadRequest("Page number must be greater than zero");
+            }
+
+            if (pageSize <= 0)
+            {
+                return BadRequest("Page size must be greater than zero");
+            }
+
+            try
+            {
+                var result = await _cashFlowAppService.GetCashflowsByProjectOverviewIdAsync(
+                    projectOverviewId,
+                    page,
+                    pageSize,
+                    scopeGroupId,
+                    currentURL);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// CashFlow: update cashflow by id (PATCH) (table-based usage).
+        /// Mirrors: PATCH /o/c/grtcashflows/{id}?scopeGroupId=...&currentURL=...
+        /// </summary>
+        [HttpPatch]
+        [Route("~/GRT/grtTable/cashflow/cashflows/{id:long}")]
+        public async Task<IHttpActionResult> UpdateCashflow(
+            long id,
+            [FromBody] PIF.EBP.Core.GRT.GRTCashflowRequest request,
+            long? scopeGroupId = null,
+            string currentURL = null)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("id must be greater than zero");
+            }
+
+            if (request == null)
+            {
+                return BadRequest("Request body is required");
+            }
+
+            try
+            {
+                var result = await _cashFlowAppService.UpdateCashflowAsync(
+                    id,
                     request,
                     scopeGroupId,
                     currentURL);
