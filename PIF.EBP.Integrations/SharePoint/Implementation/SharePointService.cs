@@ -1267,14 +1267,32 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
                 throw new ArgumentException("Library path is required (e.g. 'InfraBase' or 'InfraBase/company').", nameof(libraryPath));
             }
 
-            string libraryTitle = parts[0];
+            // The first segment is expected to be the document library URL segment (most reliable),
+            // but in some environments callers may provide the library Title instead.
+            string librarySegmentOrTitle = parts[0];
             string[] subFolders = parts.Skip(1).ToArray();
 
-            List list = spContext.Web.Lists.GetByTitle(libraryTitle);
-            spContext.Load(list, l => l.RootFolder, l => l.RootFolder.ServerRelativeUrl);
+            spContext.Load(spContext.Web, w => w.ServerRelativeUrl);
             spContext.ExecuteQuery();
 
-            Folder current = list.RootFolder;
+            string webRelativeUrl = spContext.Web.ServerRelativeUrl.TrimEnd('/');
+
+            // Preferred: resolve the library root by URL segment under the web.
+            // Example: webRelativeUrl=/sites/mspd and librarySegmentOrTitle=InfraBase => /sites/mspd/InfraBase
+            string libraryRootUrl = $"{webRelativeUrl}/{librarySegmentOrTitle}";
+            Folder current = spContext.Web.GetFolderByServerRelativeUrl(libraryRootUrl);
+            spContext.Load(current, f => f.Exists, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+
+            // Fallback: resolve by list Title if the URL segment didn't exist.
+            if (!current.Exists)
+            {
+                List list = spContext.Web.Lists.GetByTitle(librarySegmentOrTitle);
+                spContext.Load(list, l => l.RootFolder, l => l.RootFolder.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+                current = list.RootFolder;
+            }
+
             foreach (string segment in subFolders)
             {
                 current = GetOrCreateChildFolder(spContext, current, segment);
