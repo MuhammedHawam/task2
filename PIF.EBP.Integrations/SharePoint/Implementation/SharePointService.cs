@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Packaging;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using Microsoft.SharePoint.Client;
@@ -1887,17 +1887,18 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
         {
             // Load the "comp" folder
             Folder compFolder = spContext.Web.GetFolderByServerRelativeUrl(compFolderPath);
-            spContext.Load(compFolder);
+            spContext.Load(compFolder, f => f.Exists, f => f.ServerRelativeUrl);
             spContext.ExecuteQuery();
 
             // Create a new folder inside the "comp" folder
             Folder newFolder = compFolder.Folders.Add($"{folderName}");
-            spContext.Load(newFolder);
-            newFolder.Update();
+            spContext.Load(newFolder, f => f.Exists, f => f.ServerRelativeUrl, f => f.ListItemAllFields);
             spContext.ExecuteQuery();
 
             // Get the ListItem associated with the new folder
             ListItem folderItem = newFolder.ListItemAllFields;
+            spContext.Load(folderItem);
+            spContext.ExecuteQuery();
 
             // Set metadata on the folder
             foreach (var item in metaDataDic)
@@ -1915,17 +1916,18 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
             {
                 // Load the "comp" folder
                 Folder compFolder = spContext.Web.GetFolderByServerRelativeUrl(compFolderPath);
-                spContext.Load(compFolder);
+                spContext.Load(compFolder, f => f.Exists, f => f.ServerRelativeUrl);
                 spContext.ExecuteQuery();
 
                 // Create a new folder inside the "comp" folder
                 Folder newFolder = compFolder.Folders.Add($"{folderName}");
-                spContext.Load(newFolder);
-                newFolder.Update();
+                spContext.Load(newFolder, f => f.Exists, f => f.ServerRelativeUrl, f => f.ListItemAllFields);
                 spContext.ExecuteQuery();
 
                 // Get the ListItem associated with the new folder
                 ListItem folderItem = newFolder.ListItemAllFields;
+                spContext.Load(folderItem);
+                spContext.ExecuteQuery();
 
                 // Set metadata on the folder
                 foreach (var item in metaDataDic)
