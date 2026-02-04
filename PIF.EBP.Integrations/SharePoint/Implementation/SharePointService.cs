@@ -1242,13 +1242,22 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
             spContext.ExecuteQuery();
 
             string childUrl = $"{parentFolder.ServerRelativeUrl.TrimEnd('/')}/{childName}";
-            Folder existing = spContext.Web.GetFolderByServerRelativeUrl(childUrl);
-            spContext.Load(existing, f => f.Exists, f => f.ServerRelativeUrl);
-            spContext.ExecuteQuery();
-
-            if (existing.Exists)
+            try
             {
-                return existing;
+                Folder existing = spContext.Web.GetFolderByServerRelativeUrl(childUrl);
+                spContext.Load(existing, f => f.Exists, f => f.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+
+                if (existing.Exists)
+                {
+                    return existing;
+                }
+            }
+            catch (ServerException ex) when (ex.Message != null &&
+                                            ex.Message.Equals("File Not Found.", StringComparison.OrdinalIgnoreCase))
+            {
+                // SharePoint/CSOM often throws "File Not Found." instead of returning Exists=false
+                // for non-existing folders. Treat this as "doesn't exist" and create it below.
             }
 
             Folder created = parentFolder.Folders.Add(childName);
