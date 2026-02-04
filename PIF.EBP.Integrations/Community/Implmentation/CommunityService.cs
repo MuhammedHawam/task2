@@ -42,7 +42,11 @@ namespace PIF.EBP.Integrations.Community.Implmentation
         // Suggestions (max 4)
         // -------------------------------------------------------
         public Task<object> GetSuggestedCommunitiesAsync(string search) =>
+            GetAsync<object>($"communities/suggestions?search={WebUtility.UrlEncode(search)}");
+
+        public Task<object> GetSuggestedSearchAsync(string search) =>
             GetAsync<object>($"search/suggestions?search={WebUtility.UrlEncode(search)}");
+
 
         // -------------------------------------------------------
         // Paginated list with filters

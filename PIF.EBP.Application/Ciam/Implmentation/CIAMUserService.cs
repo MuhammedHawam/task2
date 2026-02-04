@@ -524,31 +524,38 @@ namespace PIF.EBP.Application.CIAMCommunication.Implmentation
 
             // Execute the query
             var retrievedContacts = _crmService.GetInstance().RetrieveMultiple(query);
-            var result = retrievedContacts.Entities.Select(entity =>
-            {
-                OptionSetValue roleTypeValue = entity.Contains("RoleTypeCode.pwc_roletypetypecode") ?
-                    (OptionSetValue)((AliasedValue)entity["RoleTypeCode.pwc_roletypetypecode"]).Value
-                    : null;
+            var result = retrievedContacts.Entities
+     .Select(entity =>
+     {
+         // Role type extraction logic
+         OptionSetValue roleTypeValue = entity.Contains("RoleTypeCode.pwc_roletypetypecode") ?
+             (OptionSetValue)((AliasedValue)entity["RoleTypeCode.pwc_roletypetypecode"]).Value
+             : null;
 
-                var roleTypeCode = roleTypeValue?.Value;
+         var roleTypeCode = roleTypeValue?.Value;
 
-                return new ContactListResponse
-                {
-                    Id = entity.Id,
-                    FirstName = CRMOperations.GetValueByAttributeName<string>(entity, "firstname"),
-                    LastName = CRMOperations.GetValueByAttributeName<string>(entity, "lastname"),
-                    FirstNameAr = CRMOperations.GetValueByAttributeName<string>(entity, "ntw_firstnamearabic"),
-                    LastNameAr = CRMOperations.GetValueByAttributeName<string>(entity, "ntw_lastnamearabic"),
-                    Email = roleTypeCode != (int)RoleType.BoardMember ? CRMOperations.GetValueByAttributeName<string>(entity, "emailaddress1") : null,
-                    MobilePhone = roleTypeCode != (int)RoleType.BoardMember ? CRMOperations.GetValueByAttributeName<string>(entity, "mobilephone") : null,
-                    Country = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_countryid", "Country.ntw_arabicname"),
-                    City = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_city", "City.pwc_namear"),
-                    Position = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_position", "Position.ntw_namear"),
-                    CompanyId = CRMOperations.GetValueByAttrNameAlised(entity, "Pin.pwc_companyidid"),
-                    Entityimage = CRMOperations.GetValueByAttributeName<byte[]>(entity, "entityimage"),
-                    IsPinned = true,
-                };
-            }).ToList();
+         // Map to DTO
+         return new ContactListResponse
+         {
+             Id = entity.Id,
+             FirstName = CRMOperations.GetValueByAttributeName<string>(entity, "firstname"),
+             LastName = CRMOperations.GetValueByAttributeName<string>(entity, "lastname"),
+             FirstNameAr = CRMOperations.GetValueByAttributeName<string>(entity, "ntw_firstnamearabic"),
+             LastNameAr = CRMOperations.GetValueByAttributeName<string>(entity, "ntw_lastnamearabic"),
+             Email = roleTypeCode != (int)RoleType.BoardMember ? CRMOperations.GetValueByAttributeName<string>(entity, "emailaddress1") : null,
+             MobilePhone = roleTypeCode != (int)RoleType.BoardMember ? CRMOperations.GetValueByAttributeName<string>(entity, "mobilephone") : null,
+             Country = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_countryid", "Country.ntw_arabicname"),
+             City = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_city", "City.pwc_namear"),
+             Position = CRMOperations.GetValueByAttributeName<EntityReferenceDto>(entity, "pwc_position", "Position.ntw_namear"),
+             CompanyId = CRMOperations.GetValueByAttrNameAlised(entity, "Pin.pwc_companyidid"),
+             Entityimage = CRMOperations.GetValueByAttributeName<byte[]>(entity, "entityimage"),
+             IsPinned = true,
+         };
+     })
+     // In .NET 4.6.2, GroupBy + First is the standard way to simulate 'DistinctBy'
+     .GroupBy(c => c.Id)
+     .Select(group => group.First())
+     .ToList();
 
 
             return result;

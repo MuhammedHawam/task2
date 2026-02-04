@@ -213,10 +213,10 @@ public class CommunityController : ApiController
     /// POST /api/posts/admin/{communityId}/archive - archives a post.
     /// </summary>
     [HttpPut]
-    [Route("admin/posts/{communityId:long}/archive")]
-    public async Task<IHttpActionResult> ArchivePosts(long communityId)
+    [Route("admin/posts/{postId:long}/archive")]
+    public async Task<IHttpActionResult> ArchivePosts(long postId)
     {
-        var result = await _cmService.ArchivePostsAsync(communityId);
+        var result = await _cmService.ArchivePostsAsync(postId);
         return Ok(result);
     }
 
@@ -224,10 +224,10 @@ public class CommunityController : ApiController
     /// POST /api/posts/admin/{communityId}/unarchive - unarchives a post.
     /// </summary>
     [HttpPut]
-    [Route("admin/posts/{communityId:long}/unarchive")]
-    public async Task<IHttpActionResult> UnArchivePosts(long communityId)
+    [Route("admin/posts/{postId:long}/unarchive")]
+    public async Task<IHttpActionResult> UnArchivePosts(long postId)
     {
-        var result = await _cmService.UnArchivePostsAsync(communityId);
+        var result = await _cmService.UnArchivePostsAsync(postId);
         return Ok(result);
     }
 
@@ -243,6 +243,20 @@ public class CommunityController : ApiController
         return Ok(result);
     }
 
+    [HttpPost]
+    [Route("admin/posts/{postId:long}/pin")]
+    public async Task<IHttpActionResult> PinPosts(long postId)
+    {
+        var result = await _cmService.PinPostsAsync(postId);
+        return Ok(result);
+    }
+    [HttpPost]
+    [Route("admin/posts/{postId:long}/unpin")]
+    public async Task<IHttpActionResult> UnPinPosts(long postId)
+    {
+        var result = await _cmService.UnPinPostsAsync(postId);
+        return Ok(result);
+    }
     /// <summary>
     /// DELETE /api/community/admin/posts/{postId} - Deletes a post (Admin override).
     /// </summary>
@@ -298,7 +312,7 @@ public class CommunityController : ApiController
 
     [HttpGet]
     [Route("admin/polls/{pollId:long}")]
-    public async Task<IHttpActionResult> GetPollDetailsById(long pollId, string communityId)
+    public async Task<IHttpActionResult> GetPollDetailsById(long pollId, string communityId = null)
     {
         var result = await _cmService.GetPollDetailsByIdAsync(pollId, communityId);
         return Ok(result);
@@ -335,6 +349,20 @@ public class CommunityController : ApiController
         return Ok(result);
     }
 
+    [HttpPost]
+    [Route("admin/polls/{pollId:long}/pin")]
+    public async Task<IHttpActionResult> PinPolls(long pollId)
+    {
+        var result = await _cmService.PinPollsAsync(pollId);
+        return Ok(result);
+    }
+    [HttpPost]
+    [Route("admin/polls/{pollId:long}/unpin")]
+    public async Task<IHttpActionResult> UnPinPolls(long pollId)
+    {
+        var result = await _cmService.UnPinPollsAsync(pollId);
+        return Ok(result);
+    }
 
     [HttpGet]
     [Route("admin/polls/{pollId:long}/statistics")]
@@ -398,6 +426,14 @@ public class CommunityController : ApiController
     /// </summary>
     [HttpGet]
     [Route("search/suggestions")]
+    public async Task<IHttpActionResult> GetSuggestedSearch(string search)
+    {
+        var result = await _cmService.GetSuggestedSearchAsync(search);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("communities/suggestions")]
     public async Task<IHttpActionResult> GetSuggestedCommunities(string search)
     {
         var result = await _cmService.GetSuggestedCommunitiesAsync(search);
@@ -445,6 +481,18 @@ public class CommunityController : ApiController
     public async Task<IHttpActionResult> SuggestCommunity([FromBody] CommunityCreateRequest request)
     {
         var result = await _cmService.SuggestCommunityAsync(request);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("user/communities")]
+    public async Task<IHttpActionResult> GetUserCommunities(int page = 1,
+                                                    int pageSize = 20,
+                                                    string filter = null,
+                                                    string sort = null,
+                                                    string search = null)
+    {
+        var result = await _cmService.GetUserCommunitiesAsync(page, pageSize, filter, sort, search);
         return Ok(result);
     }
 
@@ -594,7 +642,7 @@ public class CommunityController : ApiController
 
     [HttpGet]
     [Route("user/member-profile")]
-    public async Task<IHttpActionResult> GetProfileMember(string userId,string companyId)
+    public async Task<IHttpActionResult> GetProfileMember(string userId,string companyId =null)
     {
         var result = await _cmService.GetProfileMemberAsync(userId, companyId);
         return Ok(result);

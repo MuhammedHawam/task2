@@ -85,6 +85,14 @@ namespace PIF.EBP.WebAPI.Controllers
                 return InternalServerError(ex);
             }
         }
+
+        [HttpGet]
+        [Route("get-company-by-sectorId")]
+        public async Task<IHttpActionResult> GetCompanyBySectorId(string sectorId)
+        {
+            var result = await _companyAppService.GetCompaniesbySectorId(sectorId);
+            return Ok(result);
+        }
     }
     public class PcAssignedDto
     {

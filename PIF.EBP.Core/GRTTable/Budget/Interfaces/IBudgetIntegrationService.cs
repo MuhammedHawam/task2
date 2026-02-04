@@ -15,8 +15,6 @@ namespace PIF.EBP.Core.GRTTable.Budget.Interfaces
             int page = 1,
             int pageSize = 1000,
             string sort = "dateModified:desc",
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -27,8 +25,6 @@ namespace PIF.EBP.Core.GRTTable.Budget.Interfaces
             long projectOverviewId,
             int page = 1,
             int pageSize = 1,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -38,8 +34,6 @@ namespace PIF.EBP.Core.GRTTable.Budget.Interfaces
         Task<GRTBudgetTableItem> UpdateBudgetTableAsync(
             long id,
             GRTBudgetTableUpdateRequest request,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
     }
 }

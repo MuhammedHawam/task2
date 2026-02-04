@@ -35,20 +35,6 @@ namespace PIF.EBP.Integrations.GRTTable
             var authValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authValue);
         }
-        private string AddAuditEventsNestedField(string url)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                return url;
-
-            // If the URL already has query parameters, use '&'
-            var separator = url.Contains("?") ? "&" : "?";
-
-            // Avoid adding it twice
-            if (url.Contains("nestedFields=auditEvents"))
-                return url;
-
-            return $"{url}{separator}nestedFields=auditEvents";
-        }
 
         public async Task<InfraDeliveryPlanTablesPagedResponse> GetInfraDeliveryPlanTablesPagedAsync(
      long projectOverviewId,
@@ -97,87 +83,6 @@ namespace PIF.EBP.Integrations.GRTTable
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError($"GRT API exception getting infra delivery plan tables: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<InfraDeliveryPlanTable> GetInfraDeliveryPlanTableByIdAsync(
-            long id,
-            CancellationToken cancellationToken = default)
-        {
-            if (id <= 0)
-            {
-                throw new ArgumentException("Infrastructure delivery plan table ID must be greater than zero", nameof(id));
-            }
-
-            try
-            {
-                var url = $"/o/c/grtinfradeliveryplantables/{id}";
-                url = AddAuditEventsNestedField(url);
-
-                var response = await _httpClient.GetAsync(url, cancellationToken);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<InfraDeliveryPlanTable>(responseContent);
-                    return result;
-                }
-                else
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    System.Diagnostics.Trace.TraceError(
-                        $"GRT API error getting infra delivery plan table: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.TraceError($"GRT API exception getting infra delivery plan table: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<InfraDeliveryPlanTableResponse> CreateInfraDeliveryPlanTableAsync(
-            InfraDeliveryPlanTableRequest request,
-            CancellationToken cancellationToken = default)
-        {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request), "Infrastructure delivery plan table request cannot be null");
-            }
-
-            try
-            {
-                var url = "/o/c/grtinfradeliveryplantables/";
-
-                var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    Formatting = Formatting.None
-                });
-
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-                var response = await _httpClient.PostAsync(url, content, cancellationToken);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<InfraDeliveryPlanTableResponse>(responseContent);
-                    return result;
-                }
-                else
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    System.Diagnostics.Trace.TraceError(
-                        $"GRT API error creating infra delivery plan table: {response.StatusCode} - {response.ReasonPhrase}. Error: {errorContent}");
-                    throw new Exception($"Failed to create infra delivery plan table: {response.StatusCode} - {errorContent}");
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.TraceError($"GRT API exception creating infra delivery plan table: {ex.Message}");
                 throw;
             }
         }

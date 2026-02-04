@@ -292,8 +292,11 @@
     <Compile Include="GRTTable\ProjectImpact\ProjectImpactService.cs" />
     <Compile Include="GRTTable\DeliveryPlan\DeliveryPlanService.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\InfraDeliveryPlanService.cs" />
+    <Compile Include="GRTTable\LandSale\LandSaleService.cs" />
+    <Compile Include="GRTTable\LOI\LOIService.cs" />
     <Compile Include="GRTTable\Lookup\LookupService.cs" />
     <Compile Include="GRTTable\MultipleSandU\MultipleSUTableService.cs" />
+    <Compile Include="GRTTable\ProjectOverview\ProjectOverviewIntegrationService.cs" />
     <Compile Include="GRT\Implementation\GRTIntegrationService.cs" />
     <Compile Include="PartnersHub\PartnersHubService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

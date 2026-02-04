@@ -69,5 +69,13 @@ namespace PIF.EBP.WebAPI.Controllers
             var result = await _companyAppService.GetCompanySectors();
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("get-company-by-sectorId")]
+        public async Task<IHttpActionResult> GetCompanyBySectorId(string sectorId)
+        {
+            var result = await _companyAppService.GetCompaniesbySectorId(sectorId);
+            return Ok(result);
+        }
     }
 }

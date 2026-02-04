@@ -375,11 +375,11 @@
       <Name>PIF.EBP.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\PIF.EBP.Core\PIF.EBP.Core.csproj">
-      <Project>{B4CC0881-E17D-4F52-A509-89A730535006}</Project>
+      <Project>{b4cc0881-e17d-4f52-a509-89a730535006}</Project>
       <Name>PIF.EBP.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\PIF.EBP.Integrations\PIF.EBP.Integrations.csproj">
-      <Project>{2150D7A0-0285-4DF7-9C2B-3897F829D47B}</Project>
+      <Project>{2150d7a0-0285-4df7-9c2b-3897f829d47b}</Project>
       <Name>PIF.EBP.Integrations</Name>
     </ProjectReference>
   </ItemGroup>

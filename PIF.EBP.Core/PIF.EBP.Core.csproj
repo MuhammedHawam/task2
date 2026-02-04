@@ -209,8 +209,14 @@
     <Compile Include="GRTTable\MultipleSandU\Interfaces\IMultipleSUTableIntegrationService.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\DTOs\InfraDeliveryPlanDTOs.cs" />
     <Compile Include="GRTTable\InfraDeliveryPlan\Interfaces\IInfraDeliveryPlanIntegrationService.cs" />
+    <Compile Include="GRTTable\LandSale\DTOs\LandSaleDTOs.cs" />
+    <Compile Include="GRTTable\LandSale\Interfaces\ILandSaleIntegrationService.cs" />
+    <Compile Include="GRTTable\LOI\DTOs\LOIDTOs.cs" />
+    <Compile Include="GRTTable\LOI\Interfaces\ILOIHMAIntegrationService.cs" />
     <Compile Include="GRTTable\Lookup\DTOs\LookupDTO.cs" />
     <Compile Include="GRTTable\Lookup\Interfaces\ILookupIntegrationService.cs" />
+    <Compile Include="GRTTable\ProjectOverview\DTOs\ProjectOverviewDTOs.cs" />
+    <Compile Include="GRTTable\ProjectOverview\Interfaces\IProjectOverviewIntegrationService.cs" />
     <Compile Include="GRT\DTOs\GRTDTOs.cs" />
     <Compile Include="GRT\IGRTIntegrationService.cs" />
     <Compile Include="Messaging\DTOs\MessagingRequestDto.cs" />
@@ -248,8 +254,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CMS\" />
-    <Folder Include="GRTTable\Budget\DTOs\" />
-    <Folder Include="GRTTable\Budget\Interfaces\" />
     <Folder Include="GRT\Budget\DTOs\" />
     <Folder Include="GRT\Budget\Interfaces\" />
   </ItemGroup>

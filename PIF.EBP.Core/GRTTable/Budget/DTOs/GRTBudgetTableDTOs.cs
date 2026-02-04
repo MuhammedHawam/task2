@@ -9,12 +9,6 @@ namespace PIF.EBP.Core.GRTTable
     /// </summary>
     public class GRTBudgetTablesPagedResponse
     {
-        [JsonProperty("actions")]
-        public JObject Actions { get; set; }
-
-        [JsonProperty("facets")]
-        public JArray Facets { get; set; }
-
         [JsonProperty("items")]
         public List<GRTBudgetTableItem> Items { get; set; }
 

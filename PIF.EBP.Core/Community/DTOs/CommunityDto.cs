@@ -19,8 +19,9 @@ namespace PIF.EBP.Core.Community.DTOs
         public string sector { get; set; }
         public string description { get; set; }
         public object logo { get; set; }
+        public object coverImage { get; set; }
         public string reason { get; set; }
-        public IEnumerable<long> companyIds { get; set; }
+        public IEnumerable<string> companyIds { get; set; }
     }
 
     public class CommunityUpdateRequest : CommunityCreateRequest { }
@@ -39,6 +40,7 @@ namespace PIF.EBP.Core.Community.DTOs
         public string description { get; set; }
         public object logo { get; set; }
         public string reason { get; set; }
+        public object coverImage { get; set; }
         public IEnumerable<long> companyIds { get; set; }
     }
 
@@ -94,8 +96,7 @@ namespace PIF.EBP.Core.Community.DTOs
     {
         public string questionTitle { get; set; }
         public DateTime dueDate { get; set; }
-        public List<string> options { get; set; }
-        public List<int> communityIds { get; set; }
+        public List<Option> options { get; set; }
     }
 
     public class CreatPollRequest

@@ -9,22 +9,17 @@ namespace PIF.EBP.Application.GRTTable.ApprovedBP
     {
         Task<GRTCycleCompanyMapItem> GetCycleCompanyMapByIdAsync(
             long id,
-            long? scopeGroupId = null,
-            string currentUrl = null,
+            
             CancellationToken cancellationToken = default);
 
         Task<GRTApprovedBPsPagedResponse> GetApprovedBPsAsync(
             long projectOverviewId,
             int page = 1,
             int pageSize = 1000,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
 
         Task<GRTApprovedBPItem> CreateApprovedBPAsync(
             GRTApprovedBPCreateRequest request,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
     }
 }

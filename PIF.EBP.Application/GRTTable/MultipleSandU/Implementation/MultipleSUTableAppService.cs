@@ -19,8 +19,6 @@ namespace PIF.EBP.Application.GRTTable.MultipleSandU.Implementation
             long projectOverviewId,
             int page = 1,
             int pageSize = 1,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
@@ -32,16 +30,12 @@ namespace PIF.EBP.Application.GRTTable.MultipleSandU.Implementation
                 projectOverviewId,
                 page,
                 pageSize,
-                scopeGroupId,
-                currentUrl,
                 cancellationToken);
         }
 
         public async Task<GRTMultipleSUTableItem> UpdateMultipleSUTableAsync(
             long id,
             GRTMultipleSUTableUpdateRequest request,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (id <= 0)
@@ -57,8 +51,6 @@ namespace PIF.EBP.Application.GRTTable.MultipleSandU.Implementation
             return await _multipleSUTableIntegrationService.UpdateMultipleSUTableAsync(
                 id,
                 request,
-                scopeGroupId,
-                currentUrl,
                 cancellationToken);
         }
     }

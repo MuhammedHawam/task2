@@ -18,4 +18,11 @@ namespace PIF.EBP.Application.Companies.DTOs
             Companies = new List<CompanyDto>();
         }
     }
+
+    public class companyLookupDto
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string NameAr { get; set; }
+    }
 }

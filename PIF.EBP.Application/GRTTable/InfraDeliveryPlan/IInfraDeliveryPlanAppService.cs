@@ -17,20 +17,6 @@ namespace PIF.EBP.Application.GRTTable.InfraDeliveryPlan
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Get infrastructure delivery plan table by ID
-        /// </summary>
-        Task<InfraDeliveryPlanDto> GetInfraDeliveryPlanTableByIdAsync(
-            long id,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Create a new infrastructure delivery plan table
-        /// </summary>
-        Task<InfraDeliveryPlanResponseDto> CreateInfraDeliveryPlanTableAsync(
-            InfraDeliveryPlanDto infraDeliveryPlanTable,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
         /// Update infrastructure delivery plan table by ID
         /// </summary>
         Task<InfraDeliveryPlanResponseDto> UpdateInfraDeliveryPlanTableAsync(

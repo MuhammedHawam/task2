@@ -17,8 +17,6 @@ namespace PIF.EBP.Application.GRTTable.ApprovedBP.Implementation
 
         public async Task<GRTCycleCompanyMapItem> GetCycleCompanyMapByIdAsync(
             long id,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (id <= 0)
@@ -28,8 +26,6 @@ namespace PIF.EBP.Application.GRTTable.ApprovedBP.Implementation
 
             return await _approvedBPIntegrationService.GetCycleCompanyMapByIdAsync(
                 id,
-                scopeGroupId,
-                currentUrl,
                 cancellationToken);
         }
 
@@ -37,8 +33,6 @@ namespace PIF.EBP.Application.GRTTable.ApprovedBP.Implementation
             long projectOverviewId,
             int page = 1,
             int pageSize = 1000,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
@@ -50,15 +44,11 @@ namespace PIF.EBP.Application.GRTTable.ApprovedBP.Implementation
                 projectOverviewId,
                 page,
                 pageSize,
-                scopeGroupId,
-                currentUrl,
                 cancellationToken);
         }
 
         public async Task<GRTApprovedBPItem> CreateApprovedBPAsync(
             GRTApprovedBPCreateRequest request,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null)
@@ -73,8 +63,6 @@ namespace PIF.EBP.Application.GRTTable.ApprovedBP.Implementation
 
             return await _approvedBPIntegrationService.CreateApprovedBPAsync(
                 request,
-                scopeGroupId,
-                currentUrl,
                 cancellationToken);
         }
     }

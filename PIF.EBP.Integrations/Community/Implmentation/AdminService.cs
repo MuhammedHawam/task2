@@ -94,6 +94,15 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             var qs = BuildQuery(page, pageSize, filter, sort, search, status);
             return GetAsync<object>($"admin/posts/my-tasks{qs}");
         }
+
+
+
+        public Task<object> PinPostsAsync(long postId) =>
+        PostAsync<object>($"admin/posts/{postId}/pin");
+
+        public Task<object> UnPinPostsAsync(long postId) =>
+            PostAsync<object>($"admin/posts/{postId}/unpin");
+
         // -------------------------------------------------------
         // Comments (admin)
         // -------------------------------------------------------
@@ -148,7 +157,7 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             GetAsync<object>($"admin/polls/{pollId}?communityId={communityId}");
 
         public Task<object> CreatePollAsync(CreatPollRequest request) =>
-            PutAsync<object>($"admin/polls", request);
+            PostAsync<object>($"admin/polls", request);
 
         public Task<object> GetPollsListAsync(int page = 1, int pageSize = 20,
                                                         string search = null, string filter = null, string sort = null)
@@ -156,6 +165,12 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             var qs = BuildQuery(page, pageSize, filter, sort, search);
             return GetAsync<object>($"admin/polls{qs}");
         }
+
+        public Task<object> PinPollsAsync(long pollId) =>
+            PostAsync<object>($"admin/polls/{pollId}/pin");
+
+        public Task<object> UnPinPollsAsync(long pollId) =>
+            PostAsync<object>($"admin/polls/{pollId}/unpin");
 
     }
 }

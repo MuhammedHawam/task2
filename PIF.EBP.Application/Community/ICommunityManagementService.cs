@@ -34,7 +34,9 @@ namespace PIF.EBP.Application.Community
                                                                    string sort = null,
                                                                    string search = null);
 
-        Task<object> UnArchivePostsAsync(long communityId);
+        Task<object> PinPostsAsync(long postId);
+        Task<object> UnPinPostsAsync(long postId);
+        Task<object> UnArchivePostsAsync(long postId);
 
         Task<object> ArchivePostsAsync(long communityId);
 
@@ -69,6 +71,9 @@ namespace PIF.EBP.Application.Community
         Task<object> ArchivePollAsync(long pollId);
         Task<object> GetpollstatisticsAsync(long pollId);
 
+        Task<object> PinPollsAsync(long pollId);
+        Task<object> UnPinPollsAsync(long pollId);
+
         #endregion
 
         #region ---- Public community (read‑only) ----
@@ -81,6 +86,7 @@ namespace PIF.EBP.Application.Community
                                                                             int pageSize = 20);
         Task UnfollowCommunityAsync(long communityId);
         Task<object> GetSuggestedCommunitiesAsync(string search);
+        Task<object> GetSuggestedSearchAsync(string search);
         Task<object> GetCommunitiesAsync(int page = 1,
                                                                  int pageSize = 20,
                                                                  bool? followedOnly = null,
@@ -93,6 +99,12 @@ namespace PIF.EBP.Application.Community
         #region ---- User (private) ----
         Task<object> FollowCommunityAsync(long communityId);
         Task<object> SuggestCommunityAsync(CommunityCreateRequest request);
+
+        Task<object> GetUserCommunitiesAsync(int page = 1,
+                                                           int pageSize = 20,
+                                                           string filter = null,
+                                                           string sort = null,
+                                                           string search = null);
 
         Task<object> CreatePostAsync(PostCreateRequest request);
         Task<object> GetMyPostAsync(long postId);
@@ -123,7 +135,7 @@ namespace PIF.EBP.Application.Community
                                                                 int pageSize = 20);
         #endregion
 
-        Task<object> GetProfileMemberAsync(string userId, string companyId);
+        Task<object> GetProfileMemberAsync(string userId, string companyId = null);
         Task DeleteHistoryById(long historyId);
         Task DeleteAllHistory();
         Task<object> GetSearchHistory();

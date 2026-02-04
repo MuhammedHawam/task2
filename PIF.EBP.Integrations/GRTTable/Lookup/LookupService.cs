@@ -73,8 +73,6 @@ namespace PIF.EBP.Integrations.GRTTable.Lookup
             string externalReferenceCode,
             int page = 1,
             int pageSize = 1000,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(externalReferenceCode))
@@ -98,17 +96,7 @@ namespace PIF.EBP.Integrations.GRTTable.Lookup
                     $"/o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/{externalReferenceCode}/list-type-entries" +
                     $"?page={page}&pageSize={pageSize}";
 
-                if (scopeGroupId.HasValue)
-                {
-                    url += $"&scopeGroupId={scopeGroupId.Value}";
-                }
-
-                if (!string.IsNullOrWhiteSpace(currentUrl))
-                {
-                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"&currentURL={normalized}";
-                }
-
+               
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)

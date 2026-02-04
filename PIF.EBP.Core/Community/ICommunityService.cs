@@ -38,6 +38,7 @@ namespace PIF.EBP.Core.Community
         /// Get up‑to‑4 suggested communities for the supplied search term.
         /// </summary>
         Task<object> GetSuggestedCommunitiesAsync(string search);
+        Task<object> GetSuggestedSearchAsync(string search);
 
         /// <summary>
         /// Generic paged list of communities with optional filters.

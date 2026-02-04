@@ -19,6 +19,14 @@ namespace PIF.EBP.Integrations.Community.Implmentation
         public Task<object> SuggestCommunityAsync(CommunityCreateRequest request) =>
             PostAsync<object>("user/communities/suggest", request);
 
+        public Task<object> GetUserCommunitiesAsync(int page = 1, int pageSize = 20,
+                                               string filter = null, string sort = null,
+                                               string search = null)
+        {
+            var qs = BuildQuery(page, pageSize, filter, sort, search);
+            return GetAsync<object>($"user/communities{qs}");
+        }
+
         // -------------------------------------------------------
         // 2️⃣ Posts (CRUD + like / unlike)
         // -------------------------------------------------------
@@ -91,8 +99,8 @@ namespace PIF.EBP.Integrations.Community.Implmentation
             return "?" + string.Join("&", q);
         }
 
-        public Task<object> GetProfileMemberAsync(string userId, string companyId) =>
-           GetAsync<object>($"user/member-profile?userId ={userId}&companyId={companyId}");
+        public Task<object> GetProfileMemberAsync(string userId, string companyId = null) =>
+           GetAsync<object>($"user/member-profile?userId={userId}&companyId={companyId}");
 
         public Task DeleteHistoryById(long historyId) =>
           DeleteAsync($"user/search/history/{historyId}");

@@ -39,8 +39,6 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
             int page = 1,
             int pageSize = 1000,
             string sort = "dateModified:desc",
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (cycleCompanyMapId <= 0)
@@ -67,17 +65,6 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                     $"&page={page}" +
                     $"&pageSize={pageSize}" +
                     $"&sort={Uri.EscapeDataString(sort ?? "dateModified:desc")}";
-
-                if (scopeGroupId.HasValue)
-                {
-                    url += $"&scopeGroupId={scopeGroupId.Value}";
-                }
-
-                if (!string.IsNullOrWhiteSpace(currentUrl))
-                {
-                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"&currentURL={normalized}";
-                }
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
@@ -111,8 +98,6 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
             long projectOverviewId,
             int page = 1,
             int pageSize = 1,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
@@ -139,17 +124,6 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
                     $"?filter={Uri.EscapeDataString(filter)}" +
                     $"&page={page}" +
                     $"&pageSize={pageSize}";
-
-                if (scopeGroupId.HasValue)
-                {
-                    url += $"&scopeGroupId={scopeGroupId.Value}";
-                }
-
-                if (!string.IsNullOrWhiteSpace(currentUrl))
-                {
-                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"&currentURL={normalized}";
-                }
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
@@ -182,8 +156,6 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
         public async Task<GRTBudgetTableItem> UpdateBudgetTableAsync(
             long id,
             GRTBudgetTableUpdateRequest request,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (id <= 0)
@@ -199,20 +171,6 @@ namespace PIF.EBP.Integrations.GRTTable.Budget
             try
             {
                 var url = $"/o/c/grtbudgettables/{id}";
-
-                var hasQuery = false;
-                if (scopeGroupId.HasValue)
-                {
-                    url += $"{(hasQuery ? "&" : "?")}scopeGroupId={scopeGroupId.Value}";
-                    hasQuery = true;
-                }
-
-                if (!string.IsNullOrWhiteSpace(currentUrl))
-                {
-                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"{(hasQuery ? "&" : "?")}currentURL={normalized}";
-                    hasQuery = true;
-                }
 
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {

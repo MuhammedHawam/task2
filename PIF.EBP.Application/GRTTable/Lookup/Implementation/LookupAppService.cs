@@ -59,8 +59,6 @@ namespace PIF.EBP.Application.GRTTable
             string externalReferenceCode,
             int page = 1,
             int pageSize = 1000,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(externalReferenceCode))
@@ -72,8 +70,6 @@ namespace PIF.EBP.Application.GRTTable
                 externalReferenceCode,
                 page,
                 pageSize,
-                scopeGroupId,
-                currentUrl,
                 cancellationToken);
         }
     }

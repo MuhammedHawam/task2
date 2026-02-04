@@ -31,6 +31,61 @@ namespace PIF.EBP.Application.Companies.Implementation
             _partnersHubService = partnersHubService;
         }
 
+        public async Task<List<companyLookupDto>> GetCompaniesbySectorId(string sectorId)
+        {
+            var query = new QueryExpression(EntityNames.Account)
+            {
+                ColumnSet = new ColumnSet(
+                    "accountid",
+                    "name",
+                    "ntw_companynamearabic",
+                    "description",
+                    "ntw_descriptionar",
+                    "createdon"
+                    ),
+                Criteria = new FilterExpression
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions =
+                    {
+                        new ConditionExpression("statecode", ConditionOperator.Equal, 0),
+                        new ConditionExpression("ntw_isitannounced", ConditionOperator.Equal, true)
+                    }
+                },
+                LinkEntities =
+                {
+                    // Link to GICS Sector
+                    new LinkEntity
+                    {
+                        LinkFromEntityName = EntityNames.Account,
+                        LinkFromAttributeName = "ntw_gicssectorid",
+                        LinkToEntityName = EntityNames.GICSSector,
+                        LinkToAttributeName = "ntw_gicssectorid",
+                        JoinOperator = JoinOperator.LeftOuter,
+                        EntityAlias = "sector",
+                        Columns = new ColumnSet("ntw_gicssectorid", "ntw_name", "pwc_referenceidarabic")
+                    }
+                }
+            };
+
+            // Apply sector filter
+            if (sectorId != null)
+            {
+                query.Criteria.AddCondition("ntw_gicssectorid", ConditionOperator.Equal, sectorId);
+            }
+
+            var entityCollection = _crmService.GetInstance().RetrieveMultiple(query);
+
+            return entityCollection.Entities.Select(entity => new companyLookupDto
+            {
+                Id = entity.Id.ToString(),
+                Name = CRMOperations.GetValueByAttributeName<string>(entity, "name"),
+                NameAr = CRMOperations.GetValueByAttributeName<string>(entity, "ntw_companynamearabic"),
+            }).ToList();
+        }
+
+
+
         public async Task<CompanyResponseDto> GetCompanies(CompanyRequestDto request)
         {
             var response = new CompanyResponseDto

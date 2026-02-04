@@ -29,8 +29,6 @@ namespace PIF.EBP.Core.GRTTable
             string externalReferenceCode,
             int page = 1,
             int pageSize = 1000,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
     }
 }

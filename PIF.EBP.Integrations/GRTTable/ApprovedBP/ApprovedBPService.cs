@@ -36,8 +36,6 @@ namespace PIF.EBP.Integrations.GRTTable.ApprovedBP
 
         public async Task<GRTCycleCompanyMapItem> GetCycleCompanyMapByIdAsync(
             long id,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (id <= 0)
@@ -48,19 +46,6 @@ namespace PIF.EBP.Integrations.GRTTable.ApprovedBP
             try
             {
                 var url = $"/o/c/cyclecompanymaps/{id}";
-
-                var hasQuery = false;
-                if (scopeGroupId.HasValue)
-                {
-                    url += $"{(hasQuery ? "&" : "?")}scopeGroupId={scopeGroupId.Value}";
-                    hasQuery = true;
-                }
-
-                if (!string.IsNullOrWhiteSpace(currentUrl))
-                {
-                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"{(hasQuery ? "&" : "?")}currentURL={normalized}";
-                }
 
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
@@ -86,8 +71,6 @@ namespace PIF.EBP.Integrations.GRTTable.ApprovedBP
             long projectOverviewId,
             int page = 1,
             int pageSize = 1000,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (projectOverviewId <= 0)
@@ -115,17 +98,7 @@ namespace PIF.EBP.Integrations.GRTTable.ApprovedBP
                     $"&page={page}" +
                     $"&pageSize={pageSize}";
 
-                if (scopeGroupId.HasValue)
-                {
-                    url += $"&scopeGroupId={scopeGroupId.Value}";
-                }
-
-                if (!string.IsNullOrWhiteSpace(currentUrl))
-                {
-                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"&currentURL={normalized}";
-                }
-
+               
                 var response = await _httpClient.GetAsync(url, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
@@ -156,8 +129,6 @@ namespace PIF.EBP.Integrations.GRTTable.ApprovedBP
 
         public async Task<GRTApprovedBPItem> CreateApprovedBPAsync(
             GRTApprovedBPCreateRequest request,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null)
@@ -168,19 +139,6 @@ namespace PIF.EBP.Integrations.GRTTable.ApprovedBP
             try
             {
                 var url = "/o/c/grtapprovedbps";
-
-                var hasQuery = false;
-                if (scopeGroupId.HasValue)
-                {
-                    url += $"{(hasQuery ? "&" : "?")}scopeGroupId={scopeGroupId.Value}";
-                    hasQuery = true;
-                }
-
-                if (!string.IsNullOrWhiteSpace(currentUrl))
-                {
-                    var normalized = Uri.EscapeDataString(Uri.UnescapeDataString(currentUrl));
-                    url += $"{(hasQuery ? "&" : "?")}currentURL={normalized}";
-                }
 
                 var jsonContent = JsonConvert.SerializeObject(request, new JsonSerializerSettings
                 {

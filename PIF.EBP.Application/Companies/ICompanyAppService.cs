@@ -29,5 +29,7 @@ namespace PIF.EBP.Application.Companies
         /// </summary>
         /// <returns>List of active GICS sectors</returns>
         Task<List<CompanySectorDto>> GetCompanySectors();
+
+        Task<List<companyLookupDto>> GetCompaniesbySectorId(string sectorId);
     }
 }

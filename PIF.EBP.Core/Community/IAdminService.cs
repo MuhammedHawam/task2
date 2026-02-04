@@ -137,6 +137,8 @@ namespace PIF.EBP.Core.Community
             string sort = null,
             string search = null, string status = null);
 
+        Task<object> PinPostsAsync(long postId);
+        Task<object> UnPinPostsAsync(long postId);
         #endregion
 
         #region Comments (admin)
@@ -169,6 +171,8 @@ namespace PIF.EBP.Core.Community
         Task<object> UnArchivePollAsync(long pollId);
         Task<object> ArchivePollAsync(long pollId);
         Task<object> GetpollstatisticsAsync(long pollId);
+        Task<object> PinPollsAsync(long pollId);
+        Task<object> UnPinPollsAsync(long pollId);
         #endregion
     }
 }

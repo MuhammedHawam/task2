@@ -12,8 +12,6 @@ namespace PIF.EBP.Core.GRTTable.ApprovedBP.Interfaces
         /// </summary>
         Task<GRTCycleCompanyMapItem> GetCycleCompanyMapByIdAsync(
             long id,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -25,8 +23,6 @@ namespace PIF.EBP.Core.GRTTable.ApprovedBP.Interfaces
             long projectOverviewId,
             int page = 1,
             int pageSize = 1000,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -35,8 +31,6 @@ namespace PIF.EBP.Core.GRTTable.ApprovedBP.Interfaces
         /// </summary>
         Task<GRTApprovedBPItem> CreateApprovedBPAsync(
             GRTApprovedBPCreateRequest request,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
     }
 }

@@ -15,8 +15,6 @@ namespace PIF.EBP.Core.GRTTable.MultipleSandU.Interfaces
             long projectOverviewId,
             int page = 1,
             int pageSize = 1,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -25,8 +23,6 @@ namespace PIF.EBP.Core.GRTTable.MultipleSandU.Interfaces
         Task<GRTMultipleSUTableItem> UpdateMultipleSUTableAsync(
             long id,
             GRTMultipleSUTableUpdateRequest request,
-            long? scopeGroupId = null,
-            string currentUrl = null,
             CancellationToken cancellationToken = default);
     }
 }

@@ -11,5 +11,7 @@ namespace PIF.EBP.Application.Companies
         Task<CompanyIntegrationResponseDto> GetCompanies(CompanyIntegrationRequestDto request);
         Task<CompanyIntegrationDto> GetCompanyById(Guid companyId);
         Task<List<CompanySectorDto>> GetSectors();
+        Task<List<companyLookupDto>> GetCompaniesbySectorId(string sectorId);
+
     }
 }

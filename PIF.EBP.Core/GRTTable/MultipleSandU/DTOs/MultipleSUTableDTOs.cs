@@ -9,12 +9,6 @@ namespace PIF.EBP.Core.GRTTable.MultipleSandU.DTOs
     /// </summary>
     public class GRTMultipleSUTablesPagedResponse
     {
-        [JsonProperty("actions")]
-        public JObject Actions { get; set; }
-
-        [JsonProperty("facets")]
-        public JArray Facets { get; set; }
-
         [JsonProperty("items")]
         public List<GRTMultipleSUTableItem> Items { get; set; }
 

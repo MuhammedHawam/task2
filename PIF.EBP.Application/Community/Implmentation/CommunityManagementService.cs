@@ -78,8 +78,8 @@ namespace PIF.EBP.Application.Community.Implmentation
             _adminService.GetPendingPostsAsync(page, pageSize, filter, sort, search);
 
 
-        public Task<object> UnArchivePostsAsync(long communityId) =>
-            _adminService.UnArchivePostsAsync(communityId);
+        public Task<object> UnArchivePostsAsync(long postId) =>
+            _adminService.UnArchivePostsAsync(postId);
         public Task<object> ArchivePostsAsync(long communityId) =>
             _adminService.ArchivePostsAsync(communityId);
 
@@ -118,6 +118,9 @@ namespace PIF.EBP.Application.Community.Implmentation
         public Task<object> GetSuggestedCommunitiesAsync(string search) =>
             _publicCommunityService.GetSuggestedCommunitiesAsync(search);
 
+        public Task<object> GetSuggestedSearchAsync(string search) =>
+           _publicCommunityService.GetSuggestedSearchAsync(search);
+
         public Task<object> GetCommunitiesAsync(int page = 1,
                                                                          int pageSize = 20,
                                                                          bool? followedOnly = null,
@@ -135,6 +138,13 @@ namespace PIF.EBP.Application.Community.Implmentation
 
         public Task<object> SuggestCommunityAsync(CommunityCreateRequest request) =>
             _userService.SuggestCommunityAsync(request);
+
+        public Task<object> GetUserCommunitiesAsync(int page = 1,
+                                                           int pageSize = 20,
+                                                           string filter = null,
+                                                           string sort = null,
+                                                           string search = null) =>
+            _userService.GetUserCommunitiesAsync(page, pageSize, filter, sort, search);
 
         public Task<object> CreatePostAsync(PostCreateRequest request) =>
             _userService.CreatePostAsync(request);
@@ -197,6 +207,13 @@ namespace PIF.EBP.Application.Community.Implmentation
             string search = null, string status = null)
           => _adminService.GetPostsTasksDependsOnRoleAsync(page, pageSize, filter, sort, search, status);
 
+
+        public Task<object> PinPostsAsync(long pollId) =>
+            _adminService.PinPostsAsync(pollId);
+
+        public Task<object> UnPinPostsAsync(long pollId) =>
+            _adminService.UnPinPostsAsync(pollId);
+
         public Task<object> GetApprovedCommunitiesReadyToPublishAsync(
             int page = 1,
             int pageSize = 20,
@@ -205,7 +222,7 @@ namespace PIF.EBP.Application.Community.Implmentation
             string search = null, string status = null)
             => _adminService.GetApprovedCommunitiesReadyToPublishAsync(page, pageSize, filter, sort, search, status);
 
-        public Task<object> GetProfileMemberAsync(string userId,string companyId) =>
+        public Task<object> GetProfileMemberAsync(string userId,string companyId =null) =>
             _userService.GetProfileMemberAsync(userId, companyId);
 
         public Task DeleteHistoryById(long historyId) =>
@@ -249,6 +266,12 @@ namespace PIF.EBP.Application.Community.Implmentation
 
         public Task<object> SubmitAnswerForPollAsync(long pollId, SubmitPollAnswerRequest request) =>
             _userService.SubmitAnswerForPollAsync(pollId, request);
+
+        public Task<object> PinPollsAsync(long pollId) =>
+            _adminService.PinPollsAsync(pollId);
+
+        public Task<object> UnPinPollsAsync(long pollId) =>
+            _adminService.UnPinPollsAsync(pollId);
 
     }
 }

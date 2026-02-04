@@ -39,9 +39,6 @@ namespace PIF.EBP.Core.GRTTable
 
     public class GRTApprovedBPItem
     {
-        [JsonProperty("actions")]
-        public JObject Actions { get; set; }
-
         [JsonProperty("id")]
         public long Id { get; set; }
 

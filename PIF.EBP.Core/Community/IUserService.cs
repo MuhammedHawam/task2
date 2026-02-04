@@ -15,6 +15,10 @@ namespace PIF.EBP.Core.Community
         Task<object> FollowCommunityAsync(long communityId);
         Task<object> SuggestCommunityAsync(CommunityCreateRequest request);
 
+        Task<object> GetUserCommunitiesAsync(int page = 1, int pageSize = 20,
+                                               string filter = null, string sort = null,
+                                               string search = null);
+
         #endregion
 
         #region Posts (CRUD + like / unlike)
@@ -49,7 +53,7 @@ namespace PIF.EBP.Core.Community
 
         #endregion
 
-        Task<object> GetProfileMemberAsync(string userId, string companyId);
+        Task<object> GetProfileMemberAsync(string userId, string companyId =null);
         Task DeleteHistoryById(long historyId);
         Task DeleteAllHistory();
         Task<object> GetSearchHistory();
