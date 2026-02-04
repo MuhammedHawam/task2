@@ -1189,13 +1189,13 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
                 {
                     spContext.Load(spContext.Web);
                     spContext.ExecuteQuery();
-                    string webRelativeUrl = spContext.Web.ServerRelativeUrl.TrimEnd('/');
 
                     User CurrentUser = ImpersonateUser(user, spContext);
 
-                    Folder targetFolder = spContext.Web.GetFolderByServerRelativeUrl(webRelativeUrl + relativePath);
-                    spContext.Load(targetFolder);
-                    spContext.ExecuteQuery();
+                    // Resolve the folder in a document-library (list-backed) context to ensure
+                    // file.ListItemAllFields works later when metadata is applied.
+                    var resolvedFolderPath = relativePath?.Trim('/');
+                    Folder targetFolder = ResolveLibraryFolderPath(spContext, resolvedFolderPath);
 
                     ImpersonateFolder(CurrentUser, targetFolder);
 
@@ -1286,20 +1286,42 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
 
             string webRelativeUrl = spContext.Web.ServerRelativeUrl.TrimEnd('/');
 
-            // Preferred: resolve the library root by URL segment under the web.
+            Folder current = null;
+
+            // Attempt 1: resolve by URL segment under the web.
             // Example: webRelativeUrl=/sites/mspd and librarySegmentOrTitle=InfraBase => /sites/mspd/InfraBase
-            string libraryRootUrl = $"{webRelativeUrl}/{librarySegmentOrTitle}";
-            Folder current = spContext.Web.GetFolderByServerRelativeUrl(libraryRootUrl);
-            spContext.Load(current, f => f.Exists, f => f.ServerRelativeUrl);
+            string candidateUrl = $"{webRelativeUrl}/{librarySegmentOrTitle}";
+            Folder candidate = spContext.Web.GetFolderByServerRelativeUrl(candidateUrl);
+            spContext.Load(candidate, f => f.Exists, f => f.ServerRelativeUrl);
             spContext.ExecuteQuery();
 
-            // Fallback: resolve by list Title if the URL segment didn't exist.
-            if (!current.Exists)
+            if (candidate.Exists && IsListBackedFolder(spContext, candidate))
             {
-                List list = spContext.Web.Lists.GetByTitle(librarySegmentOrTitle);
-                spContext.Load(list, l => l.RootFolder, l => l.RootFolder.ServerRelativeUrl);
-                spContext.ExecuteQuery();
-                current = list.RootFolder;
+                current = candidate;
+            }
+            else
+            {
+                // Attempt 2: resolve by list Title.
+                try
+                {
+                    List list = spContext.Web.Lists.GetByTitle(librarySegmentOrTitle);
+                    spContext.Load(list, l => l.RootFolder, l => l.RootFolder.ServerRelativeUrl);
+                    spContext.ExecuteQuery();
+                    current = list.RootFolder;
+                }
+                catch (ServerException)
+                {
+                    // Attempt 3: treat librarySegmentOrTitle as a folder under the default document library.
+                    Folder defaultLibraryRoot = ResolveDefaultDocumentLibraryRootFolder(spContext);
+                    current = GetOrCreateChildFolder(spContext, defaultLibraryRoot, librarySegmentOrTitle);
+                }
+            }
+
+            // If the first segment existed but was NOT list-backed, treat it as a folder under the default library.
+            if (current == null)
+            {
+                Folder defaultLibraryRoot = ResolveDefaultDocumentLibraryRootFolder(spContext);
+                current = GetOrCreateChildFolder(spContext, defaultLibraryRoot, librarySegmentOrTitle);
             }
 
             foreach (string segment in subFolders)
@@ -1308,6 +1330,82 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
             }
 
             return current;
+        }
+
+        private bool IsListBackedFolder(ClientContext spContext, Folder folder)
+        {
+            try
+            {
+                // If the folder is inside a list/document library, this resolves successfully.
+                List list = spContext.Web.GetList(folder.ServerRelativeUrl);
+                spContext.Load(list, l => l.Id);
+                spContext.ExecuteQuery();
+                return true;
+            }
+            catch (ServerException)
+            {
+                return false;
+            }
+        }
+
+        private Folder ResolveDefaultDocumentLibraryRootFolder(ClientContext spContext)
+        {
+            // Optional override: appSetting can provide a library URL segment or Title (e.g. "Shared Documents")
+            // This helps environments where the default library isn't named consistently.
+            string configured = ConfigurationManager.AppSettings["SPDefaultDocumentLibrary_ext"];
+            if (!string.IsNullOrWhiteSpace(configured))
+            {
+                // Try URL segment first under the current web.
+                spContext.Load(spContext.Web, w => w.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+                string webRelativeUrl = spContext.Web.ServerRelativeUrl.TrimEnd('/');
+                string byUrl = $"{webRelativeUrl}/{configured.Trim().Trim('/')}";
+                Folder configuredFolder = spContext.Web.GetFolderByServerRelativeUrl(byUrl);
+                spContext.Load(configuredFolder, f => f.Exists, f => f.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+
+                if (configuredFolder.Exists && IsListBackedFolder(spContext, configuredFolder))
+                {
+                    return configuredFolder;
+                }
+
+                // Fallback by Title
+                List list = spContext.Web.Lists.GetByTitle(configured);
+                spContext.Load(list, l => l.RootFolder, l => l.RootFolder.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+                return list.RootFolder;
+            }
+
+            // Auto-detect a suitable document library in the web.
+            ListCollection lists = spContext.Web.Lists;
+            spContext.Load(lists, col => col.Include(
+                l => l.Title,
+                l => l.Hidden,
+                l => l.BaseTemplate,
+                l => l.RootFolder.ServerRelativeUrl));
+            spContext.ExecuteQuery();
+
+            // Prefer common document library names if present.
+            var candidates = lists
+                .Where(l => !l.Hidden && l.BaseTemplate == 101) // 101 = Document Library
+                .OrderByDescending(l =>
+                    l.Title.Equals("Shared Documents", StringComparison.OrdinalIgnoreCase) ||
+                    l.Title.Equals("Documents", StringComparison.OrdinalIgnoreCase) ||
+                    l.RootFolder.ServerRelativeUrl.EndsWith("/Shared%20Documents", StringComparison.OrdinalIgnoreCase) ||
+                    l.RootFolder.ServerRelativeUrl.EndsWith("/Documents", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            var chosen = candidates.FirstOrDefault();
+            if (chosen == null)
+            {
+                throw new Exception("No document library was found in the SharePoint site. Please configure 'SPDefaultDocumentLibrary_ext' with the target document library name.");
+            }
+
+            // chosen.RootFolder is not directly returned from Include as a Folder instance, so re-fetch as Folder.
+            Folder rootFolder = spContext.Web.GetFolderByServerRelativeUrl(chosen.RootFolder.ServerRelativeUrl);
+            spContext.Load(rootFolder, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+            return rootFolder;
         }
 
         private void UploadLargeFile(ClientContext context, Folder targetFolder, string fileName, byte[] fileBytes, User currentUser, Dictionary<string, object> metadata = null)
