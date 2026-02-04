@@ -1214,16 +1214,73 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
 
         public void CheckFolderStructure(string folderName, string rootFolderPath)
         {
-            var siteName = ConfigurationManager.AppSettings["SPSiteName_ext"];
-            var SPRelativeUriPrefix = siteName;
             using (ClientContext spContext = GetSpConnection_Ext())
             {
-                var isExists = CheckIfPathExistsInSharePoint_Ext($"/{SPRelativeUriPrefix}/{rootFolderPath}/{folderName}");
-                if (!isExists)
-                {
-                    AddSubFolderWithMetaData(folderName, rootFolderPath, spContext, new Dictionary<string, object> { });
-                }
+                // rootFolderPath is expected in the form: "LibraryTitle[/optional/subfolders]"
+                // This approach ensures folders are created under a list/document-library context.
+                AddSubFolderWithMetaData(folderName, rootFolderPath, spContext, new Dictionary<string, object>());
             }
+        }
+
+        private static string[] SplitUrlPath(string path)
+        {
+            return (path ?? string.Empty)
+                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Trim())
+                .Where(p => !string.IsNullOrWhiteSpace(p))
+                .ToArray();
+        }
+
+        private Folder GetOrCreateChildFolder(ClientContext spContext, Folder parentFolder, string childName)
+        {
+            if (spContext == null) throw new ArgumentNullException(nameof(spContext));
+            if (parentFolder == null) throw new ArgumentNullException(nameof(parentFolder));
+            if (string.IsNullOrWhiteSpace(childName)) throw new ArgumentException("Folder name is required.", nameof(childName));
+
+            // Ensure we have a URL for the parent folder.
+            spContext.Load(parentFolder, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+
+            string childUrl = $"{parentFolder.ServerRelativeUrl.TrimEnd('/')}/{childName}";
+            Folder existing = spContext.Web.GetFolderByServerRelativeUrl(childUrl);
+            spContext.Load(existing, f => f.Exists, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+
+            if (existing.Exists)
+            {
+                return existing;
+            }
+
+            Folder created = parentFolder.Folders.Add(childName);
+            spContext.Load(created, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+            return created;
+        }
+
+        private Folder ResolveLibraryFolderPath(ClientContext spContext, string libraryPath)
+        {
+            if (spContext == null) throw new ArgumentNullException(nameof(spContext));
+
+            var parts = SplitUrlPath(libraryPath);
+            if (parts.Length == 0)
+            {
+                throw new ArgumentException("Library path is required (e.g. 'InfraBase' or 'InfraBase/company').", nameof(libraryPath));
+            }
+
+            string libraryTitle = parts[0];
+            string[] subFolders = parts.Skip(1).ToArray();
+
+            List list = spContext.Web.Lists.GetByTitle(libraryTitle);
+            spContext.Load(list, l => l.RootFolder, l => l.RootFolder.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+
+            Folder current = list.RootFolder;
+            foreach (string segment in subFolders)
+            {
+                current = GetOrCreateChildFolder(spContext, current, segment);
+            }
+
+            return current;
         }
 
         private void UploadLargeFile(ClientContext context, Folder targetFolder, string fileName, byte[] fileBytes, User currentUser, Dictionary<string, object> metadata = null)
@@ -1885,59 +1942,34 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
 
         private void AddSubFolderWithMetaData(string folderName, string compFolderPath, ClientContext spContext, Dictionary<string, object> metaDataDic)
         {
-            // Load the "comp" folder
-            Folder compFolder = spContext.Web.GetFolderByServerRelativeUrl(compFolderPath);
-            spContext.Load(compFolder, f => f.Exists, f => f.ServerRelativeUrl);
-            spContext.ExecuteQuery();
+            if (spContext == null) throw new ArgumentNullException(nameof(spContext));
 
-            // Create a new folder inside the "comp" folder
-            Folder newFolder = compFolder.Folders.Add($"{folderName}");
-            spContext.Load(newFolder, f => f.Exists, f => f.ServerRelativeUrl, f => f.ListItemAllFields);
-            spContext.ExecuteQuery();
+            // compFolderPath is expected in the form: "LibraryTitle[/optional/subfolders]"
+            Folder parentFolder = ResolveLibraryFolderPath(spContext, compFolderPath);
 
-            // Get the ListItem associated with the new folder
-            ListItem folderItem = newFolder.ListItemAllFields;
-            spContext.Load(folderItem);
-            spContext.ExecuteQuery();
+            // Create (or get) the target folder.
+            Folder targetFolder = GetOrCreateChildFolder(spContext, parentFolder, folderName);
 
-            // Set metadata on the folder
-            foreach (var item in metaDataDic)
+            // Only attempt folder metadata if requested; folder metadata requires a list-backed folder.
+            if (metaDataDic != null && metaDataDic.Count > 0)
             {
-                folderItem[item.Key] = item.Value;
-            }
-            folderItem.Update();
-
-            // Commit the changes to SharePoint
-            spContext.ExecuteQuery();
-        }
-        public void AddSubFolderWithMetaData(string folderName, string compFolderPath, Dictionary<string, object> metaDataDic)
-        {
-            using (ClientContext spContext = GetSpConnection_Ext())
-            {
-                // Load the "comp" folder
-                Folder compFolder = spContext.Web.GetFolderByServerRelativeUrl(compFolderPath);
-                spContext.Load(compFolder, f => f.Exists, f => f.ServerRelativeUrl);
-                spContext.ExecuteQuery();
-
-                // Create a new folder inside the "comp" folder
-                Folder newFolder = compFolder.Folders.Add($"{folderName}");
-                spContext.Load(newFolder, f => f.Exists, f => f.ServerRelativeUrl, f => f.ListItemAllFields);
-                spContext.ExecuteQuery();
-
-                // Get the ListItem associated with the new folder
-                ListItem folderItem = newFolder.ListItemAllFields;
+                ListItem folderItem = targetFolder.ListItemAllFields;
                 spContext.Load(folderItem);
                 spContext.ExecuteQuery();
 
-                // Set metadata on the folder
                 foreach (var item in metaDataDic)
                 {
                     folderItem[item.Key] = item.Value;
                 }
                 folderItem.Update();
-
-                // Commit the changes to SharePoint
                 spContext.ExecuteQuery();
+            }
+        }
+        public void AddSubFolderWithMetaData(string folderName, string compFolderPath, Dictionary<string, object> metaDataDic)
+        {
+            using (ClientContext spContext = GetSpConnection_Ext())
+            {
+                AddSubFolderWithMetaData(folderName, compFolderPath, spContext, metaDataDic);
             }
         }
 
