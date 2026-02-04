@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Packaging;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using Microsoft.SharePoint.Client;
@@ -1189,13 +1189,13 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
                 {
                     spContext.Load(spContext.Web);
                     spContext.ExecuteQuery();
-                    string webRelativeUrl = spContext.Web.ServerRelativeUrl.TrimEnd('/');
 
                     User CurrentUser = ImpersonateUser(user, spContext);
 
-                    Folder targetFolder = spContext.Web.GetFolderByServerRelativeUrl(webRelativeUrl + relativePath);
-                    spContext.Load(targetFolder);
-                    spContext.ExecuteQuery();
+                    // Resolve the folder in a document-library (list-backed) context to ensure
+                    // file.ListItemAllFields works later when metadata is applied.
+                    var resolvedFolderPath = relativePath?.Trim('/');
+                    Folder targetFolder = ResolveLibraryFolderPath(spContext, resolvedFolderPath);
 
                     ImpersonateFolder(CurrentUser, targetFolder);
 
@@ -1214,16 +1214,198 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
 
         public void CheckFolderStructure(string folderName, string rootFolderPath)
         {
-            var siteName = ConfigurationManager.AppSettings["SPSiteName_ext"];
-            var SPRelativeUriPrefix = siteName;
             using (ClientContext spContext = GetSpConnection_Ext())
             {
-                var isExists = CheckIfPathExistsInSharePoint_Ext($"/{SPRelativeUriPrefix}/{rootFolderPath}/{folderName}");
-                if (!isExists)
+                // rootFolderPath is expected in the form: "LibraryTitle[/optional/subfolders]"
+                // This approach ensures folders are created under a list/document-library context.
+                AddSubFolderWithMetaData(folderName, rootFolderPath, spContext, new Dictionary<string, object>());
+            }
+        }
+
+        private static string[] SplitUrlPath(string path)
+        {
+            return (path ?? string.Empty)
+                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Trim())
+                .Where(p => !string.IsNullOrWhiteSpace(p))
+                .ToArray();
+        }
+
+        private Folder GetOrCreateChildFolder(ClientContext spContext, Folder parentFolder, string childName)
+        {
+            if (spContext == null) throw new ArgumentNullException(nameof(spContext));
+            if (parentFolder == null) throw new ArgumentNullException(nameof(parentFolder));
+            if (string.IsNullOrWhiteSpace(childName)) throw new ArgumentException("Folder name is required.", nameof(childName));
+
+            // Ensure we have a URL for the parent folder.
+            spContext.Load(parentFolder, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+
+            string childUrl = $"{parentFolder.ServerRelativeUrl.TrimEnd('/')}/{childName}";
+            try
+            {
+                Folder existing = spContext.Web.GetFolderByServerRelativeUrl(childUrl);
+                spContext.Load(existing, f => f.Exists, f => f.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+
+                if (existing.Exists)
                 {
-                    AddSubFolderWithMetaData(folderName, rootFolderPath, spContext, new Dictionary<string, object> { });
+                    return existing;
                 }
             }
+            catch (ServerException ex) when (ex.Message != null &&
+                                            ex.Message.Equals("File Not Found.", StringComparison.OrdinalIgnoreCase))
+            {
+                // SharePoint/CSOM often throws "File Not Found." instead of returning Exists=false
+                // for non-existing folders. Treat this as "doesn't exist" and create it below.
+            }
+
+            Folder created = parentFolder.Folders.Add(childName);
+            spContext.Load(created, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+            return created;
+        }
+
+        private Folder ResolveLibraryFolderPath(ClientContext spContext, string libraryPath)
+        {
+            if (spContext == null) throw new ArgumentNullException(nameof(spContext));
+
+            var parts = SplitUrlPath(libraryPath);
+            if (parts.Length == 0)
+            {
+                throw new ArgumentException("Library path is required (e.g. 'InfraBase' or 'InfraBase/company').", nameof(libraryPath));
+            }
+
+            // The first segment is expected to be the document library URL segment (most reliable),
+            // but in some environments callers may provide the library Title instead.
+            string librarySegmentOrTitle = parts[0];
+            string[] subFolders = parts.Skip(1).ToArray();
+
+            spContext.Load(spContext.Web, w => w.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+
+            string webRelativeUrl = spContext.Web.ServerRelativeUrl.TrimEnd('/');
+
+            Folder current = null;
+
+            // Attempt 1: resolve by URL segment under the web.
+            // Example: webRelativeUrl=/sites/mspd and librarySegmentOrTitle=InfraBase => /sites/mspd/InfraBase
+            string candidateUrl = $"{webRelativeUrl}/{librarySegmentOrTitle}";
+            Folder candidate = spContext.Web.GetFolderByServerRelativeUrl(candidateUrl);
+            spContext.Load(candidate, f => f.Exists, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+
+            if (candidate.Exists && IsListBackedFolder(spContext, candidate))
+            {
+                current = candidate;
+            }
+            else
+            {
+                // Attempt 2: resolve by list Title.
+                try
+                {
+                    List list = spContext.Web.Lists.GetByTitle(librarySegmentOrTitle);
+                    spContext.Load(list, l => l.RootFolder, l => l.RootFolder.ServerRelativeUrl);
+                    spContext.ExecuteQuery();
+                    current = list.RootFolder;
+                }
+                catch (ServerException)
+                {
+                    // Attempt 3: treat librarySegmentOrTitle as a folder under the default document library.
+                    Folder defaultLibraryRoot = ResolveDefaultDocumentLibraryRootFolder(spContext);
+                    current = GetOrCreateChildFolder(spContext, defaultLibraryRoot, librarySegmentOrTitle);
+                }
+            }
+
+            // If the first segment existed but was NOT list-backed, treat it as a folder under the default library.
+            if (current == null)
+            {
+                Folder defaultLibraryRoot = ResolveDefaultDocumentLibraryRootFolder(spContext);
+                current = GetOrCreateChildFolder(spContext, defaultLibraryRoot, librarySegmentOrTitle);
+            }
+
+            foreach (string segment in subFolders)
+            {
+                current = GetOrCreateChildFolder(spContext, current, segment);
+            }
+
+            return current;
+        }
+
+        private bool IsListBackedFolder(ClientContext spContext, Folder folder)
+        {
+            try
+            {
+                // If the folder is inside a list/document library, this resolves successfully.
+                List list = spContext.Web.GetList(folder.ServerRelativeUrl);
+                spContext.Load(list, l => l.Id);
+                spContext.ExecuteQuery();
+                return true;
+            }
+            catch (ServerException)
+            {
+                return false;
+            }
+        }
+
+        private Folder ResolveDefaultDocumentLibraryRootFolder(ClientContext spContext)
+        {
+            // Optional override: appSetting can provide a library URL segment or Title (e.g. "Shared Documents")
+            // This helps environments where the default library isn't named consistently.
+            string configured = ConfigurationManager.AppSettings["SPDefaultDocumentLibrary_ext"];
+            if (!string.IsNullOrWhiteSpace(configured))
+            {
+                // Try URL segment first under the current web.
+                spContext.Load(spContext.Web, w => w.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+                string webRelativeUrl = spContext.Web.ServerRelativeUrl.TrimEnd('/');
+                string byUrl = $"{webRelativeUrl}/{configured.Trim().Trim('/')}";
+                Folder configuredFolder = spContext.Web.GetFolderByServerRelativeUrl(byUrl);
+                spContext.Load(configuredFolder, f => f.Exists, f => f.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+
+                if (configuredFolder.Exists && IsListBackedFolder(spContext, configuredFolder))
+                {
+                    return configuredFolder;
+                }
+
+                // Fallback by Title
+                List list = spContext.Web.Lists.GetByTitle(configured);
+                spContext.Load(list, l => l.RootFolder, l => l.RootFolder.ServerRelativeUrl);
+                spContext.ExecuteQuery();
+                return list.RootFolder;
+            }
+
+            // Auto-detect a suitable document library in the web.
+            ListCollection lists = spContext.Web.Lists;
+            spContext.Load(lists, col => col.Include(
+                l => l.Title,
+                l => l.Hidden,
+                l => l.BaseTemplate,
+                l => l.RootFolder.ServerRelativeUrl));
+            spContext.ExecuteQuery();
+
+            // Prefer common document library names if present.
+            var candidates = lists
+                .Where(l => !l.Hidden && l.BaseTemplate == 101) // 101 = Document Library
+                .OrderByDescending(l =>
+                    l.Title.Equals("Shared Documents", StringComparison.OrdinalIgnoreCase) ||
+                    l.Title.Equals("Documents", StringComparison.OrdinalIgnoreCase) ||
+                    l.RootFolder.ServerRelativeUrl.EndsWith("/Shared%20Documents", StringComparison.OrdinalIgnoreCase) ||
+                    l.RootFolder.ServerRelativeUrl.EndsWith("/Documents", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            var chosen = candidates.FirstOrDefault();
+            if (chosen == null)
+            {
+                throw new Exception("No document library was found in the SharePoint site. Please configure 'SPDefaultDocumentLibrary_ext' with the target document library name.");
+            }
+
+            // chosen.RootFolder is not directly returned from Include as a Folder instance, so re-fetch as Folder.
+            Folder rootFolder = spContext.Web.GetFolderByServerRelativeUrl(chosen.RootFolder.ServerRelativeUrl);
+            spContext.Load(rootFolder, f => f.ServerRelativeUrl);
+            spContext.ExecuteQuery();
+            return rootFolder;
         }
 
         private void UploadLargeFile(ClientContext context, Folder targetFolder, string fileName, byte[] fileBytes, User currentUser, Dictionary<string, object> metadata = null)
@@ -1885,57 +2067,34 @@ namespace PIF.EBP.Integrations.SharePoint.Implementation
 
         private void AddSubFolderWithMetaData(string folderName, string compFolderPath, ClientContext spContext, Dictionary<string, object> metaDataDic)
         {
-            // Load the "comp" folder
-            Folder compFolder = spContext.Web.GetFolderByServerRelativeUrl(compFolderPath);
-            spContext.Load(compFolder);
-            spContext.ExecuteQuery();
+            if (spContext == null) throw new ArgumentNullException(nameof(spContext));
 
-            // Create a new folder inside the "comp" folder
-            Folder newFolder = compFolder.Folders.Add($"{folderName}");
-            spContext.Load(newFolder);
-            newFolder.Update();
-            spContext.ExecuteQuery();
+            // compFolderPath is expected in the form: "LibraryTitle[/optional/subfolders]"
+            Folder parentFolder = ResolveLibraryFolderPath(spContext, compFolderPath);
 
-            // Get the ListItem associated with the new folder
-            ListItem folderItem = newFolder.ListItemAllFields;
+            // Create (or get) the target folder.
+            Folder targetFolder = GetOrCreateChildFolder(spContext, parentFolder, folderName);
 
-            // Set metadata on the folder
-            foreach (var item in metaDataDic)
+            // Only attempt folder metadata if requested; folder metadata requires a list-backed folder.
+            if (metaDataDic != null && metaDataDic.Count > 0)
             {
-                folderItem[item.Key] = item.Value;
-            }
-            folderItem.Update();
-
-            // Commit the changes to SharePoint
-            spContext.ExecuteQuery();
-        }
-        public void AddSubFolderWithMetaData(string folderName, string compFolderPath, Dictionary<string, object> metaDataDic)
-        {
-            using (ClientContext spContext = GetSpConnection_Ext())
-            {
-                // Load the "comp" folder
-                Folder compFolder = spContext.Web.GetFolderByServerRelativeUrl(compFolderPath);
-                spContext.Load(compFolder);
+                ListItem folderItem = targetFolder.ListItemAllFields;
+                spContext.Load(folderItem);
                 spContext.ExecuteQuery();
 
-                // Create a new folder inside the "comp" folder
-                Folder newFolder = compFolder.Folders.Add($"{folderName}");
-                spContext.Load(newFolder);
-                newFolder.Update();
-                spContext.ExecuteQuery();
-
-                // Get the ListItem associated with the new folder
-                ListItem folderItem = newFolder.ListItemAllFields;
-
-                // Set metadata on the folder
                 foreach (var item in metaDataDic)
                 {
                     folderItem[item.Key] = item.Value;
                 }
                 folderItem.Update();
-
-                // Commit the changes to SharePoint
                 spContext.ExecuteQuery();
+            }
+        }
+        public void AddSubFolderWithMetaData(string folderName, string compFolderPath, Dictionary<string, object> metaDataDic)
+        {
+            using (ClientContext spContext = GetSpConnection_Ext())
+            {
+                AddSubFolderWithMetaData(folderName, compFolderPath, spContext, metaDataDic);
             }
         }
 
